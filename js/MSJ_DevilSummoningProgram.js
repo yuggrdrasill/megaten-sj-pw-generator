@@ -526,15 +526,6 @@ for (var j=0 ,len = skillMap.length; j < len; j++) {
 }
 var cachedOptionsClassifySkill = [];
 
-for (var i=0 ,len = elementClass.length; i < len; i++) {
-  var options =[];
-  for (var j=0 ,len = elementClass[i].length; j < len; j++) {
-    options[j] = new Option(
-      elementClass[i][j].toDetailString(), elementClass[i][j].skillID
-    );
-  }
-  cachedOptionsClassifySkill[i] = options;
-}
 
 var devilJSON = {
   //{{{
@@ -1299,56 +1290,44 @@ function createSkillElements() {
   };
 }
 
-function changeSkillElements(value) {
-  alert(value.value);
+/**
+ * 敵専用チェックボックスを変更した際に呼ぶ関数です。
+ * 悪魔リストとスキルリストに敵専用のモノを追加や除去します。
+ */ 
+function changeEnemyExclusive() {
+  createDevilOptions();
+  createSkillSelectOptions();
 }
 
-var selectSkillElements = document.getElementById('skill-element');
-$('skill-element').on("change" , function (elm, value) {
-  console.log("change");
+/**
+ * 悪魔リストを生成します。
+ * 敵専用チェックボックスがチェックされている場合、
+ * 敵専用のモノを追加します。
+ */
+function createDevilOptions (){
+//{{{
+
+// リストを空にしてから追加しないと重複してしまう
+  for (var i=0 ,len = document.foMain.slDevil.options.length; i < len; i++) {
+    document.foMain.slDevil.options.remove();
+  }
+
+  for ( i in devilMap ) {
+    var devil = devilMap[i];
+    if(devil.playerUses){
+      var len = document.foMain.slDevil.options.length;
+      document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
+    } else if(document.foMain.enemyExclusive.checked){
+      document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
+    }
+  }
+  //}}}
 }
 
-                     ).change();
-
-                     /**
-                      * 敵専用チェックボックスを変更した際に呼ぶ関数です。
-                      * 悪魔リストとスキルリストに敵専用のモノを追加や除去します。
-                      */ 
-                     function changeEnemyExclusive() {
-                       createDevilOptions();
-                       createSkillSelectOptions();
-                     }
-
-                     /**
-                      * 悪魔リストを生成します。
-                      * 敵専用チェックボックスがチェックされている場合、
-                      * 敵専用のモノを追加します。
-                      */
-                     function createDevilOptions (){
-                       //{{{
-
-                       // リストを空にしてから追加しないと重複してしまう
-                       for (var i=0 ,len = document.foMain.slDevil.options.length; i < len; i++) {
-                         document.foMain.slDevil.options.remove();
-                       }
-
-                       for ( i in devilMap ) {
-                         var devil = devilMap[i];
-                         if(devil.playerUses){
-                           var len = document.foMain.slDevil.options.length;
-                           document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
-                         } else if(document.foMain.enemyExclusive.checked){
-                           document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
-                         }
-                       }
-                       //}}}
-                     }
-
-                     /**
-                      * スキルドロップダウンを生成します。
-                      * 敵専用チェックボックスがチェックされている場合、
-                      * 敵専用のモノを追加します。
-                      */
+/** * スキルドロップダウンを生成します。
+ * 敵専用チェックボックスがチェックされている場合、
+ * 敵専用のモノを追加します。
+ */
 function createSkillSelectOptions() {
   var isSkillDemonikaModoki = function (skillID) {
     return skillID == 228//{{{
@@ -1366,6 +1345,19 @@ function createSkillSelectOptions() {
       options.remove();
     }
   }
+  
+  var createSkillOptionElement = function (skill) {
+    var elm = new Option(skill.toDetailString(), skill.skillID);
+    elm.className = "element-" + skill.element.id;
+    var info = skill.info();
+    elm.title = info;
+    return elm;
+  }
+  var isCheckedEnemyExclusiveSkill = function(skill) {
+    return skill.cost != -1 
+    || isSkillDemonikaModoki(skill.skillID)
+    || document.foMain.enemyExclusive.checked
+  }
 
   //***********  処理開始
   deleteOptions(document.foMain.slSkill0.options);
@@ -1378,40 +1370,29 @@ function createSkillSelectOptions() {
   // 追加する
   for (var i in skillMap ) {
     var skill = skillMap[i];
-    if (skill.cost != -1 
-        || isSkillDemonikaModoki(skill.skillID)
-      || document.foMain.enemyExclusive.checked 
-      //敵専用スキルにチェックが入っていたら全て表示する
-       ) {
-         var len = document.foMain.slSkill1.options.length;
-
-         document.foMain.slSkill0.options[len] = new Option(skill.toDetailString(), skill.skillID);
-
-         document.foMain.slSkill1.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         document.foMain.slSkill2.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         document.foMain.slSkill3.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         document.foMain.slSkill4.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         document.foMain.slSkill5.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         var costStr = skill.info();
-         document.foMain.slSkill0.options[len].title = costStr;
-         document.foMain.slSkill1.options[len].title = costStr;
-         document.foMain.slSkill2.options[len].title = costStr;
-         document.foMain.slSkill3.options[len].title = costStr;
-         document.foMain.slSkill4.options[len].title = costStr;
-         document.foMain.slSkill5.options[len].title = costStr;
-         
-         document.foMain.slSkill0.options[len].className = "element-" + skill.element.id;
-         document.foMain.slSkill1.options[len].className = "element-" + skill.element.id;
-         document.foMain.slSkill2.options[len].className = "element-" + skill.element.id;
-         document.foMain.slSkill3.options[len].className = "element-" + skill.element.id;
-         document.foMain.slSkill4.options[len].className = "element-" + skill.element.id;
-         document.foMain.slSkill5.options[len].className = "element-" + skill.element.id;
+    if (isCheckedEnemyExclusiveSkill(skill)) {
+      var len = document.foMain.slSkill1.options.length; 
+      document.foMain.slSkill0.options[len] = createSkillOptionElement(skill);
+      document.foMain.slSkill1.options[len] = createSkillOptionElement(skill);
+      document.foMain.slSkill2.options[len] = createSkillOptionElement(skill);
+      document.foMain.slSkill3.options[len] = createSkillOptionElement(skill);
+      document.foMain.slSkill4.options[len] = createSkillOptionElement(skill);
+      document.foMain.slSkill5.options[len] = createSkillOptionElement(skill);
+    }
+  }
+  
+  // 属性別 option キャッシュ作成
+  for (var i=0 ,len = elementClass.length; i < len; i++) {
+    var options =[];
+         for (var j=0 ,len = elementClass[i].length; j < len; j++) {
+           var elmc = elementClass[i][j];
+           if (isCheckedEnemyExclusiveSkill(elmc)) {
+                options[j] = createSkillOptionElement(elmc);
+              }
+         cachedOptionsClassifySkill[i] = options;
        }
-
   }
 }
-
-
 /**
  * 
  */
