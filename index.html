@@ -4,12 +4,10 @@
     <meta charset="utf-8">
     <title>真・女神転生 ストレンジ ジャーニー 悪魔召喚プログラム</title>
     <meta name="viewport" content="width=device-width">
-    <script type="text/javascript" src="js/plugins.js"></script>
-    <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
-  <body onload="init()">
+  <body onload="">
     <div id="wrapper">
       [<a href="http://www20.atwiki.jp/strange_journey/">まとめサイトに戻る</a>]
       <hr>
@@ -50,7 +48,7 @@
 
           ■入力
           　【 パターン
-          　<select name="slPattern" onchange="doRefresh()"></select> 】
+          　<select name="slPattern" id="password-pattern" ></select> 】
           <label for="enemy-exclusive"
             title="エラーになるスキルや敵専用のモノを表示します">
             敵専用スキル・仲間に出来ない敵を表示する</label>
@@ -60,7 +58,7 @@
 
           　□悪魔 ID (0～490)
           <div class="left-indent">
-            　<select name="slDevil" onchange="doRefresh()"></select>
+            　<select name="slDevil" ></select>
             <input id="set-default" name="setDefault" type="button"
             onclick="doSetDefault()"
             title="悪魔が本来持っているステータスとスキルを設定します。"
@@ -69,15 +67,15 @@
 
           　□Lv (1～99)<br>
           <div class="left-indent">
-            　<select name="slLv" onchange="doRefresh()"></select><br>
+            　<select name="slLv" id="lv"></select><br>
           </div>
 
 
           　□経験値 (0～<span id="exp-max">2097151</span>) (※ NEXT が 0 以下になるような値は不可)<br>
           <div class="left-indent">
             <input type="number" 
-            name="txExp" value="0" 
-            size="12" min="0" max="2097151" onchange="doRefresh()"><br>
+            id="exp" name="txExp" value="0" 
+            size="12" min="0" max="2097151" ><br>
           </div>
 
           <div id="status">
@@ -85,15 +83,15 @@
             <div class="left-indent" title="ラベルをダブルクリックすると99になります。
               すでに99の場合は1になります。">
               <label for="slStr" ondblclick="toggleStatusMaxMin(document.foMain.slStr)">力</label>
-              <select id="slStr" name="slStr" onchange="doRefresh()"></select>
+              <select id="slStr" name="slStr" ></select>
               <label for="slInt" ondblclick="toggleStatusMaxMin(document.foMain.slInt)">魔</label>
-              <select id="slInt" name="slInt" onchange="doRefresh()"></select>
+              <select id="slInt" name="slInt" ></select>
               <label for="slVit" ondblclick="toggleStatusMaxMin(document.foMain.slVit)">体</label>
-              <select id="slVit" name="slVit" onchange="doRefresh()"></select>
+              <select id="slVit" name="slVit" ></select>
               <label for="slAgi" ondblclick="toggleStatusMaxMin(document.foMain.slAgi)">速</label>
-              <select id="slAgi" name="slAgi" onchange="doRefresh()"></select>
+              <select id="slAgi" name="slAgi" ></select>
               <label for="slLuc" ondblclick="toggleStatusMaxMin(document.foMain.slLuc)">運</label>
-              <select id="slLuc" name="slLuc" onchange="doRefresh()"></select><br>
+              <select id="slLuc" name="slLuc" ></select><br>
             </div>
           </div>
 
@@ -102,21 +100,21 @@
             <div class="left-indent">
               <label for="slStrBase"
                 ondblclick="toggleStatusMaxMin(document.foMain.slStrBase)">力</label>
-              <select id="slStrBase" name="slStrBase" onchange="doRefresh()"></select>
+              <select id="slStrBase" name="slStrBase" ></select>
               <label for="slIntBase"
                 ondblclick="toggleStatusMaxMin(document.foMain.slIntBase)">魔</label>
-              <select id="slIntBase" name="slIntBase" onchange="doRefresh()"></select>
+              <select id="slIntBase" name="slIntBase" ></select>
               <label for="slVitBase"
                 ondblclick="toggleStatusMaxMin(document.foMain.slVitBase)">体</label>
-              <select id="slVitBase" name="slVitBase" onchange="doRefresh()"></select>
+              <select id="slVitBase" name="slVitBase" ></select>
               <label for="slAgiBase"
                 ondblclick="toggleStatusMaxMin(document.foMain.slAgiBase)">速</label>
-              <select id="slAgiBase" name="slAgiBase" onchange="doRefresh()"></select>
+              <select id="slAgiBase" name="slAgiBase" ></select>
               <label for="slLucBase"
                 ondblclick="toggleStatusMaxMin(document.foMain.slLucBase)">運</label>
-              <select id="slLucBase" name="slLucBase" onchange="doRefresh()"></select>
+              <select id="slLucBase" name="slLucBase" ></select>
 
-              <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal" onchange="doRefresh()">
+              <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal" >
               <label for="cbBaseEqReal">実値と同じ値を使う</label>
             </div>
           </div>
@@ -125,25 +123,33 @@
             　□スキル (0～419)<br>
             <div class="left-indent">
               <label for="slSkill0">[1]</label>
-              <select id="slSkill0"  name="slSkill0" onchange="doRefresh()"></select>
+              <select id="slSkill0"  name="slSkill0" class="skills"></select>
               <label for="slSkill1">[2]</label>
-              <select id="slSkill1"  name="slSkill1" onchange="doRefresh()"></select>
+              <select id="slSkill1"  name="slSkill1" class="skills"></select>
               <label for="slSkill2">[3]</label>
-              <select id="slSkill2"  name="slSkill2" onchange="doRefresh()"></select><br>
+              <select id="slSkill2"  name="slSkill2" class="skills"></select><br>
               <label for="slSkill3">[4]</label>
-              <select id="slSkill3"  name="slSkill3" onchange="doRefresh()"></select>
+              <select id="slSkill3"  name="slSkill3" class="skills"></select>
               <label for="slSkill4">[5]</label>
-              <select id="slSkill4"  name="slSkill4" onchange="doRefresh()"></select>
+              <select id="slSkill4"  name="slSkill4" class="skills"></select>
               <label for="slSkill5">[6]</label>
-              <select id="slSkill5"  name="slSkill5" onchange="doRefresh()"></select><br>
+              <select id="slSkill5"  name="slSkill5" class="skills"></select><br>
+            </div>
+            <div id="elemental">
+              <label for="skill-element">
+                スキルをフィルタリングする
+              </label>
+              <select id="skill-element" name="element">
+              </select>
             </div>
           </div>
           <div id="password-input">
             　☆パスワード入力欄
             　<input type="radio" name="rbInputMode" id="rbCharMode" value="0" checked><label for="rbCharMode">文字モード</label>
-            　<input type="radio" name="rbInputMode" id="rbBitMode" value="1"><label for="rbBitMode">ビットモード</label>
+            　<input type="radio" name="rbInputMode" id="rbBitMode"
+            value="1"><label for="rbBitMode">ビットモード</label>
             <br>
-            　<textarea name="taIn" cols="80" rows="1"></textarea>
+            　<textarea name="taIn" cols="80" rows="2"></textarea>
             　<input type="button" name="btIn" onclick="doInput()" value="入力"><br>
             <br>
           </div>
@@ -152,7 +158,7 @@
 
             ■出力
             　<input type="checkbox" name="cbDebugMode" id="debug-mode"
-            onchange="doRefresh()"> 
+            > 
             <label for="debug-mode" id="debug-mode-label">デバッグモード</label
               ><br>
 
@@ -247,5 +253,23 @@
           (C) 2009 ATLUS CO., LTD. ALL RIGHTS RESERVED.
         </p>
       </div>
+    <script type="text/javascript" src="js/plugins.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
+    <script src="https://raw.github.com/hugoware/jlinq-beta/master/jlinq.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
+       <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36468856-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+
+       </script>
+
     </body>
   </html>

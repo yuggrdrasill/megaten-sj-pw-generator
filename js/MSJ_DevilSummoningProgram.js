@@ -1,8 +1,30 @@
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // 真・女神転生 ストレンジ ジャーニー 悪魔召還プログラム ver 1.1/02 mod
 // (c) http://www20.atwiki.jp/strange_journey/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 'use strict';
+// They are atomic already
+//var atomic = [ Boolean, Number, String, Date, RegExp ];
+//for (var i = 0, l = atomic.length; i < l; i++){
+//atomic[i].prototype.clone = function(){ return this; }
+//}
+//// now the moment of truth!
+//Object.prototype.clone = function(){
+//if (this.prototype && this.prototype.clone 
+//&& this.prototype.clone !== Object.prototype.clone)
+//return this.clone();
+//var clone = new (this.constructor);
+//for (var p in this) {
+//clone[p] = typeof this[p] == 'object' ? this[p].clone() : this[p];
+//}
+//return clone;
+//}
+// Array needs some special care
+//Array.prototype.clone = function(){
+//return Array.apply(null,this); 
+//}
+
 // -------------------------------------------------------------------------------------------------
 // データ
 // -------------------------------------------------------------------------------------------------
@@ -72,7 +94,7 @@ genusMap["53"] = new Genus(53, "審判者", "審判");
 genusMap["54"] = new Genus(54, "聖柱", "聖柱");
 genusMap["55"] = new Genus(55, "偽人", "偽人");//}}}
 
-var elementJSON = ({
+var elementJSON = ({ // {{{ 攻撃属性データ
   0:  { id: 0 , name: "特殊" },
   1:  { id: 1 , name: "物理" },
   2:  { id: 2 , name: "銃" },
@@ -88,14 +110,14 @@ var elementJSON = ({
   12: { id: 12, name: "補助" },
   13: { id: 13, name: "自動" }
 });
-
-var attackGroup = ({
+// }}}
+var attackGroup = ({//{{{ 攻撃威力算出分類
   0 : {id: 0 ,  name:''}, 
   1 : {id: 1 ,  name:'物理'}, 
   2 : {id: 2 ,  name:'魔法'}
-})
+})//}}}
 
-var skillJSON =({
+var skillJSON =({ /// {{{ 
   0:{id:0,name:"－",cost:0,element:elementJSON[0],attackGroup:attackGroup[2]},
   1:{id:1,name:"アギ",cost:112,element:elementJSON[3],attackGroup:attackGroup[2]},
   2:{id:2,name:"アギラオ",cost:347,element:elementJSON[3],attackGroup:attackGroup[2]},
@@ -407,7 +429,7 @@ var skillJSON =({
   335:{id:335,name:"[マハムドオン]",cost:-1,element:elementJSON[8],attackGroup:attackGroup[2]},
   336:{id:336,name:"[マハンマオン]",cost:-1,element:elementJSON[7],attackGroup:attackGroup[2]},
   337:{id:337,name:"[災厄の輪廻]",cost:-1,element:elementJSON[9],attackGroup:attackGroup[2]},
-  338:{id:338,name:"[ビッグバン]",cost:-1,element:elementJSON[13],attackGroup:attackGroup[0]},
+  338:{id:338,name:"[ビッグバン]",cost:-1,element:elementJSON[9],attackGroup:attackGroup[0]},
   339:{id:339,name:"[ラスタキャンディ]",cost:-1,element:elementJSON[12],attackGroup:attackGroup[0]},
   340:{id:340,name:"てっけんせいさい",cost:175543,element:elementJSON[1],attackGroup:attackGroup[1]},
   341:{id:341,name:"うちまくり",cost:175543,element:elementJSON[9],attackGroup:attackGroup[1]},
@@ -481,398 +503,38 @@ var skillJSON =({
   418:{id:418,name:"二分の魔脈",cost:1666,element:elementJSON[13],attackGroup:attackGroup[0]},
   419:{id:419,name:"三分の魔脈",cost:21943,element:elementJSON[13],attackGroup:attackGroup[0]}
 });
+// }}}
 
 // スキル
 var skillMap = new Array();
 for (var i in skillJSON) {
   skillMap[i] = new Skill(skillJSON[i]);
 };
-//{{{
-//skillMap["0"] = new Skill(0,"－",0)
-//skillMap["1"] = new Skill(1,"アギ",112)
-//skillMap["2"] = new Skill(2,"アギラオ",347)
-//skillMap["3"] = new Skill(3,"アギダイン",3020)
-//skillMap["4"] = new Skill(4,"マハラギ",155)
-//skillMap["5"] = new Skill(5,"マハラギオン",952)
-//skillMap["6"] = new Skill(6,"マハラギダイン",10972)
-//skillMap["7"] = new Skill(7,"ファイアブレス",347)
-//skillMap["8"] = new Skill(8,"トリスアギオン",21943)
-//skillMap["9"] = new Skill(9,"ラグナロク",87772)
-//skillMap["10"] = new Skill(10,"ブフ",112)
-//skillMap["11"] = new Skill(11,"ブフーラ",347)
-//skillMap["12"] = new Skill(12,"ブフダイン",3020)
-//skillMap["13"] = new Skill(13,"マハブフ",155)
-//skillMap["14"] = new Skill(14,"マハブフーラ",952)
-//skillMap["15"] = new Skill(15,"マハブフダイン",10972)
-//skillMap["16"] = new Skill(16,"アイスブレス",347)
-//skillMap["17"] = new Skill(17,"絶対零度",21943)
-//skillMap["18"] = new Skill(18,"大冷界",87772)
-//skillMap["19"] = new Skill(19,"ジオ",112)
-//skillMap["20"] = new Skill(20,"ジオンガ",347)
-//skillMap["21"] = new Skill(21,"ジオダイン",3020)
-//skillMap["22"] = new Skill(22,"マハジオ",155)
-//skillMap["23"] = new Skill(23,"マハジオンガ",952)
-//skillMap["24"] = new Skill(24,"マハジオダイン",10972)
-//skillMap["25"] = new Skill(25,"放電",347)
-//skillMap["26"] = new Skill(26,"真理の雷",21943)
-//skillMap["27"] = new Skill(27,"魅惑の雷撃",87772)
-//skillMap["28"] = new Skill(28,"ガル",112)
-//skillMap["29"] = new Skill(29,"ガルーラ",347)
-//skillMap["30"] = new Skill(30,"ガルダイン",3020)
-//skillMap["31"] = new Skill(31,"マハガル",155)
-//skillMap["32"] = new Skill(32,"マハガルーラ",952)
-//skillMap["33"] = new Skill(33,"マハガルダイン",10972)
-//skillMap["34"] = new Skill(34,"ウインドブレス",347)
-//skillMap["35"] = new Skill(35,"殺風激",21943)
-//skillMap["36"] = new Skill(36,"妖花烈風",87772)
-//skillMap["37"] = new Skill(37,"メギド",952)
-//skillMap["38"] = new Skill(38,"メギドラ",10972)
-//skillMap["39"] = new Skill(39,"メギドラオン",43886)
-//skillMap["40"] = new Skill(40,"ビッグバン",87772)
-//skillMap["41"] = new Skill(41,"ジハード",175543)
-//skillMap["42"] = new Skill(42,"バビロンの杯",175543)
-//skillMap["43"] = new Skill(43,"天罰",3020)
-//skillMap["44"] = new Skill(44,"ジャッジメント",3020)
-//skillMap["45"] = new Skill(45,"混沌の海",3020)
-//skillMap["46"] = new Skill(46,"特攻",1666)
-//skillMap["47"] = new Skill(47,"自爆",5663)
-//skillMap["48"] = new Skill(48,"吸血",564)
-//skillMap["49"] = new Skill(49,"吸魔",1666)
-//skillMap["50"] = new Skill(50,"エナジードレイン",21943)
-//skillMap["51"] = new Skill(51,"運命の角笛",1666)
-//skillMap["52"] = new Skill(52,"永眠への誘い",10972)
-//skillMap["53"] = new Skill(53,"ムド",155)
-//skillMap["54"] = new Skill(54,"ムドオン",347)
-//skillMap["55"] = new Skill(55,"マハムド",952)
-//skillMap["56"] = new Skill(56,"マハムドオン",3020)
-//skillMap["57"] = new Skill(57,"死んでくれる？",21943)
-//skillMap["58"] = new Skill(58,"ハマ",155)
-//skillMap["59"] = new Skill(59,"ハマオン",347)
-//skillMap["60"] = new Skill(60,"マハンマ",952)
-//skillMap["61"] = new Skill(61,"マハンマオン",3020)
-//skillMap["62"] = new Skill(62,"審判の光",21943)
-//skillMap["63"] = new Skill(63,"ドルミナー",112)
-//skillMap["64"] = new Skill(64,"子守唄",564)
-//skillMap["65"] = new Skill(65,"ポイズマ",112)
-//skillMap["66"] = new Skill(66,"毒ガスブレス",564)
-//skillMap["67"] = new Skill(67,"シバブー",155)
-//skillMap["68"] = new Skill(68,"バインドボイス",952)
-//skillMap["69"] = new Skill(69,"マリンカリン",155)
-//skillMap["70"] = new Skill(70,"ファイナルヌード",952)
-//skillMap["71"] = new Skill(71,"石化の呪い",222)
-//skillMap["72"] = new Skill(72,"石化ブレス",1666)
-//skillMap["73"] = new Skill(73,"ポパスマ",112)
-//skillMap["74"] = new Skill(74,"戦慄の眼光",564)
-//skillMap["75"] = new Skill(75,"マカジャマ",112)
-//skillMap["76"] = new Skill(76,"トリッキーダンス",564)
-//skillMap["77"] = new Skill(77,"[ダウノマ]",-1)
-//skillMap["78"] = new Skill(78,"[渇きの海]",-1)
-//skillMap["79"] = new Skill(79,"[バイツァ・ダスト]",-1)
-//skillMap["80"] = new Skill(80,"[シャッフラー]",-1)
-//skillMap["81"] = new Skill(81,"[太古の呪怨]",-1)
-//skillMap["82"] = new Skill(82,"忌念の戦慄",43886)
-//skillMap["83"] = new Skill(83,"[怪光線]",-1)
-//skillMap["84"] = new Skill(84,"[大怪光線]",-1)
-//skillMap["85"] = new Skill(85,"[マッカビーム]",-1)
-//skillMap["86"] = new Skill(86,"[宵越し銭金]",-1)
-//skillMap["87"] = new Skill(87,"[魂砕波]",-1)
-//skillMap["101"] = new Skill(101,"ディア",112)
-//skillMap["102"] = new Skill(102,"ディアラマ",564)
-//skillMap["103"] = new Skill(103,"ディアラハン",5663)
-//skillMap["104"] = new Skill(104,"メディア",222)
-//skillMap["105"] = new Skill(105,"メディラマ",1666)
-//skillMap["106"] = new Skill(106,"メディアラハン",21943)
-//skillMap["107"] = new Skill(107,"メシアライザー",175543)
-//skillMap["108"] = new Skill(108,"パトラ",155)
-//skillMap["109"] = new Skill(109,"メパトラ",347)
-//skillMap["110"] = new Skill(110,"ポズムディ",112)
-//skillMap["111"] = new Skill(111,"パララディ",112)
-//skillMap["112"] = new Skill(112,"チャームディ",112)
-//skillMap["113"] = new Skill(113,"ペトラディ",112)
-//skillMap["114"] = new Skill(114,"クロズディ",112)
-//skillMap["115"] = new Skill(115,"ダウンディ",222)
-//skillMap["116"] = new Skill(116,"ボムディ",112)
-//skillMap["117"] = new Skill(117,"アムリタ",1666)
-//skillMap["118"] = new Skill(118,"リカーム",564)
-//skillMap["119"] = new Skill(119,"サマリカーム",10972)
-//skillMap["120"] = new Skill(120,"リカームドラ",43886)
-//skillMap["121"] = new Skill(121,"タルカジャ",347)
-//skillMap["122"] = new Skill(122,"スクカジャ",347)
-//skillMap["123"] = new Skill(123,"ラクカジャ",347)
-//skillMap["124"] = new Skill(124,"ラスタキャンディ",5663)
-//skillMap["125"] = new Skill(125,"デカジャ",952)
-//skillMap["126"] = new Skill(126,"タルンダ",222)
-//skillMap["127"] = new Skill(127,"スクンダ",222)
-//skillMap["128"] = new Skill(128,"ラクンダ",222)
-//skillMap["129"] = new Skill(129,"ランダマイザ",3020)
-//skillMap["130"] = new Skill(130,"デクンダ",952)
-//skillMap["131"] = new Skill(131,"静寂の祈り",10972)
-//skillMap["133"] = new Skill(133,"雄叫び",1666)
-//skillMap["134"] = new Skill(134,"フォッグブレス",1666)
-//skillMap["135"] = new Skill(135,"溶解ブレス",1666)
-//skillMap["136"] = new Skill(136,"挑発",952)
-//skillMap["137"] = new Skill(137,"天命反転",10972)
-//skillMap["138"] = new Skill(138,"魂捧げの夜伽",952)
-//skillMap["139"] = new Skill(139,"テトラカーン",10972)
-//skillMap["140"] = new Skill(140,"マカラカーン",10972)
-//skillMap["141"] = new Skill(141,"テトラジャ",3020)
-//skillMap["142"] = new Skill(142,"チャージ",1666)
-//skillMap["143"] = new Skill(143,"コンセントレイト",1666)
-//skillMap["144"] = new Skill(144,"捧魂の法",10972)
-//skillMap["145"] = new Skill(145,"ロストワード",10972)
-//skillMap["146"] = new Skill(146,"サバトマ",952)
-//skillMap["147"] = new Skill(147,"招来の舞踏",43886)
-//skillMap["151"] = new Skill(151,"突撃",112)
-//skillMap["152"] = new Skill(152,"爆砕拳",347)
-//skillMap["153"] = new Skill(153,"モータルジハード",1666)
-//skillMap["154"] = new Skill(154,"暴れまくり",952)
-//skillMap["155"] = new Skill(155,"メガトンプレス",10972)
-//skillMap["156"] = new Skill(156,"狂気の粉砕",43886)
-//skillMap["157"] = new Skill(157,"三日月斬り",112)
-//skillMap["158"] = new Skill(158,"渾身脳天割り",347)
-//skillMap["159"] = new Skill(159,"怪力乱神",1666)
-//skillMap["160"] = new Skill(160,"ヒートウェイブ",155)
-//skillMap["161"] = new Skill(161,"デスバウンド",564)
-//skillMap["162"] = new Skill(162,"冥界破",5663)
-//skillMap["163"] = new Skill(163,"引っ掻き",112)
-//skillMap["164"] = new Skill(164,"メガクロー",347)
-//skillMap["165"] = new Skill(165,"虚空爪激",1666)
-//skillMap["166"] = new Skill(166,"大切断",155)
-//skillMap["167"] = new Skill(167,"アクセルクロー",564)
-//skillMap["168"] = new Skill(168,"狂乱の剛爪",5663)
-//skillMap["169"] = new Skill(169,"牙折り",155)
-//skillMap["170"] = new Skill(170,"成仏の拳",222)
-//skillMap["171"] = new Skill(171,"狂気の暴虐",1666)
-//skillMap["172"] = new Skill(172,"[ナックルボム]",-1)
-//skillMap["173"] = new Skill(173,"奇襲",952)
-//skillMap["174"] = new Skill(174,"月影",564)
-//skillMap["175"] = new Skill(175,"残影",564)
-//skillMap["176"] = new Skill(176,"ベノンザッパー",1666)
-//skillMap["177"] = new Skill(177,"奥義一閃",21943)
-//skillMap["178"] = new Skill(178,"麻痺引っ掻き",222)
-//skillMap["179"] = new Skill(179,"毒引っ掻き",155)
-//skillMap["180"] = new Skill(180,"九十九針",112)
-//skillMap["181"] = new Skill(181,"地獄突き",347)
-//skillMap["182"] = new Skill(182,"グランドタック",1666)
-//skillMap["183"] = new Skill(183,"至高の魔弾",87772)
-//skillMap["184"] = new Skill(184,"八百万針",222)
-//skillMap["185"] = new Skill(185,"アローレイン",564)
-//skillMap["186"] = new Skill(186,"天扇弓",5663)
-//skillMap["187"] = new Skill(187,"夢見針",155)
-//skillMap["188"] = new Skill(188,"毒針",222)
-//skillMap["189"] = new Skill(189,"ピーターパイパー",347)
-//skillMap["190"] = new Skill(190,"魅了突き",347)
-//skillMap["191"] = new Skill(191,"切なさ乱れ撃ち",1666)
-//skillMap["192"] = new Skill(192,"刹那五月雨撃ち",43886)
-//skillMap["201"] = new Skill(201,"[火炎撃]",-1)
-//skillMap["202"] = new Skill(202,"[猛炎撃]",-1)
-//skillMap["203"] = new Skill(203,"[豪炎撃]",-1)
-//skillMap["204"] = new Skill(204,"[火炎乱撃]",-1)
-//skillMap["205"] = new Skill(205,"[猛炎乱撃]",-1)
-//skillMap["206"] = new Skill(206,"[豪炎乱撃]",-1)
-//skillMap["207"] = new Skill(207,"[氷結撃]",-1)
-//skillMap["208"] = new Skill(208,"[猛氷撃]",-1)
-//skillMap["209"] = new Skill(209,"[豪氷撃]",-1)
-//skillMap["210"] = new Skill(210,"[氷結乱撃]",-1)
-//skillMap["211"] = new Skill(211,"[猛氷乱撃]",-1)
-//skillMap["212"] = new Skill(212,"[豪氷乱撃]",-1)
-//skillMap["213"] = new Skill(213,"[雷電撃]",-1)
-//skillMap["214"] = new Skill(214,"[猛雷撃]",-1)
-//skillMap["215"] = new Skill(215,"[豪電撃]",-1)
-//skillMap["216"] = new Skill(216,"[雷電乱撃]",-1)
-//skillMap["217"] = new Skill(217,"[猛雷乱撃]",-1)
-//skillMap["218"] = new Skill(218,"[豪電乱撃]",-1)
-//skillMap["219"] = new Skill(219,"[疾風撃]",-1)
-//skillMap["220"] = new Skill(220,"[猛風撃]",-1)
-//skillMap["221"] = new Skill(221,"[豪風撃]",-1)
-//skillMap["222"] = new Skill(222,"[疾風乱撃]",-1)
-//skillMap["223"] = new Skill(223,"[猛風乱撃]",-1)
-//skillMap["224"] = new Skill(224,"[豪風乱撃]",-1)
-//skillMap["225"] = new Skill(225,"[至高の魔弾コピー]",-1)
-//skillMap["226"] = new Skill(226,"[フライシュッツ]",-1)
-//skillMap["227"] = new Skill(227,"[モーンバレット]",-1)
-//skillMap["228"] = new Skill(228,"[精密射撃]",-1)
-//skillMap["229"] = new Skill(229,"[ウィークショット]",-1)
-//skillMap["230"] = new Skill(230,"[グレイトフルワン]",-1)
-//skillMap["231"] = new Skill(231,"[掃射]",-1)
-//skillMap["232"] = new Skill(232,"[十字砲火]",-1)
-//skillMap["233"] = new Skill(233,"[デスペラード]",-1)
-//skillMap["234"] = new Skill(234,"[ＢＣ弾]",-1)
-//skillMap["235"] = new Skill(235,"[ランディショット]",-1)
-//skillMap["236"] = new Skill(236,"[影縫]",-1)
-//skillMap["237"] = new Skill(237,"[ロックバレット]",-1)
-//skillMap["238"] = new Skill(238,"[グッナイマム]",-1)
-//skillMap["239"] = new Skill(239,"[フィアーショット]",-1)
-//skillMap["240"] = new Skill(240,"[ヘッドショット]",-1)
-//skillMap["241"] = new Skill(241,"[レッグショット]",-1)
-//skillMap["242"] = new Skill(242,"[急所射撃]",-1)
-//skillMap["243"] = new Skill(243,"[アームショット]",-1)
-//skillMap["244"] = new Skill(244,"[アースライトレイ]",-1)
-//skillMap["245"] = new Skill(245,"[ムーンライトレイ]",-1)
-//skillMap["246"] = new Skill(246,"[猫パンチショット]",-1)
-//skillMap["247"] = new Skill(247,"[ソウルスキャナー]",-1)
-//skillMap["248"] = new Skill(248,"[仲間呼び]",-1)
-//skillMap["251"] = new Skill(251,"[ゲヘナ]",-1)
-//skillMap["252"] = new Skill(252,"[巨角の連撃]",-1)
-//skillMap["253"] = new Skill(253,"[幻虚夢]",-1)
-//skillMap["254"] = new Skill(254,"[秩序の光]",-1)
-//skillMap["255"] = new Skill(255,"[暴飲暴食]",-1)
-//skillMap["256"] = new Skill(256,"[食材調達]",-1)
-//skillMap["257"] = new Skill(257,"[エアダイブ]",-1)
-//skillMap["258"] = new Skill(258,"[丸かじり]",-1)
-//skillMap["259"] = new Skill(259,"[アスラローガ]",-1)
-//skillMap["260"] = new Skill(260,"[阿修羅]",-1)
-//skillMap["261"] = new Skill(261,"[極炎の闇]",-1)
-//skillMap["262"] = new Skill(262,"[災厄の輪廻]",-1)
-//skillMap["263"] = new Skill(263,"[豪雷]",-1)
-//skillMap["264"] = new Skill(264,"[シックウェイブ]",-1)
-//skillMap["265"] = new Skill(265,"[シングルショット]",-1)
-//skillMap["266"] = new Skill(266,"[ヘッドショット]",-1)
-//skillMap["267"] = new Skill(267,"[掃射]",-1)
-//skillMap["268"] = new Skill(268,"[母なる大地]",-1)
-//skillMap["269"] = new Skill(269,"[ピュアブルー]",-1)
-//skillMap["270"] = new Skill(270,"[黄昏の旋律]",-1)
-//skillMap["271"] = new Skill(271,"[幻影の秘儀]",-1)
-//skillMap["272"] = new Skill(272,"[極めし魔渦]",-1)
-//skillMap["273"] = new Skill(273,"[荒れ狂う暴乱]",-1)
-//skillMap["274"] = new Skill(274,"[ラビリンス]",-1)
-//skillMap["275"] = new Skill(275,"[巨斧の連撃]",-1)
-//skillMap["276"] = new Skill(276,"[クレオフィスの夢]",-1)
-//skillMap["277"] = new Skill(277,"[離別の光]",-1)
-//skillMap["278"] = new Skill(278,"[悪夢の晩餐]",-1)
-//skillMap["279"] = new Skill(279,"[食材調達]",-1)
-//skillMap["280"] = new Skill(280,"[エアダイブ]",-1)
-//skillMap["281"] = new Skill(281,"[丸かじり]",-1)
-//skillMap["282"] = new Skill(282,"[アスラローガ]",-1)
-//skillMap["283"] = new Skill(283,"[阿修羅]",-1)
-//skillMap["284"] = new Skill(284,"[極炎の闇]",-1)
-//skillMap["285"] = new Skill(285,"[天上打]",-1)
-//skillMap["286"] = new Skill(286,"[五月雨撃ち]",-1)
-//skillMap["287"] = new Skill(287,"[克己]",-1)
-//skillMap["288"] = new Skill(288,"[汚れ無き風]",-1)
-//skillMap["289"] = new Skill(289,"[大いなる嘆願]",-1)
-//skillMap["290"] = new Skill(290,"[ジャッジメント]",-1)
-//skillMap["291"] = new Skill(291,"[メル・ファイズ]",-1)
-//skillMap["292"] = new Skill(292,"[咎歌]",-1)
-//skillMap["293"] = new Skill(293,"[メギトの雷火]",-1)
-//skillMap["294"] = new Skill(294,"[ライトハンド]",-1)
-//skillMap["295"] = new Skill(295,"[天恵の矢]",-1)
-//skillMap["296"] = new Skill(296,"[レクイエム]",-1)
-//skillMap["297"] = new Skill(297,"[地獄の業火]",-1)
-//skillMap["298"] = new Skill(298,"[レフトハンド]",-1)
-//skillMap["299"] = new Skill(299,"[ケイオスタック]",-1)
-//skillMap["300"] = new Skill(300,"[混沌の悪夢]",-1)
-//skillMap["301"] = new Skill(301,"[ＭＡ]",-1)
-//skillMap["302"] = new Skill(302,"[始祖の理]",-1)
-//skillMap["303"] = new Skill(303,"[大洪水]",-1)
-//skillMap["304"] = new Skill(304,"[キス・マー]",-1)
-//skillMap["305"] = new Skill(305,"[メム＝アレフ]",-1)
-//skillMap["306"] = new Skill(306,"[メム＝アレフ]",-1)
-//skillMap["307"] = new Skill(307,"[メム＝アレフ]",-1)
-//skillMap["308"] = new Skill(308,"[断末波]",-1)
-//skillMap["309"] = new Skill(309,"[アスラローガ]",-1)
-//skillMap["310"] = new Skill(310,"[Ｅ．Ｎ．Ｄ．]",-1)
-//skillMap["311"] = new Skill(311,"[陰業]",-1)
-//skillMap["312"] = new Skill(312,"[当意即妙]",-1)
-//skillMap["313"] = new Skill(313,"[アギゲイト]",-1)
-//skillMap["314"] = new Skill(314,"[ブフゲイト]",-1)
-//skillMap["315"] = new Skill(315,"[ジオゲイト]",-1)
-//skillMap["316"] = new Skill(316,"[ガルゲイト]",-1)
-//skillMap["317"] = new Skill(317,"[ダークマター]",-1)
-//skillMap["318"] = new Skill(318,"[シャッフラー]",-1)
-//skillMap["319"] = new Skill(319,"[火]",-1)
-//skillMap["320"] = new Skill(320,"[氷]",-1)
-//skillMap["321"] = new Skill(321,"[雷]",-1)
-//skillMap["322"] = new Skill(322,"[風]",-1)
-//skillMap["323"] = new Skill(323,"[光]",-1)
-//skillMap["324"] = new Skill(324,"[闇]",-1)
-//skillMap["325"] = new Skill(325,"[メギドの雷火]",-1)
-//skillMap["326"] = new Skill(326,"[咎歌]",-1)
-//skillMap["327"] = new Skill(327,"[アギゲイト]",-1)
-//skillMap["328"] = new Skill(328,"[ブフゲイト]",-1)
-//skillMap["329"] = new Skill(329,"[ジオゲイト]",-1)
-//skillMap["330"] = new Skill(330,"[ガルゲイト]",-1)
-//skillMap["331"] = new Skill(331,"[キス・マー]",-1)
-//skillMap["332"] = new Skill(332,"[ジハード]",-1)
-//skillMap["333"] = new Skill(333,"[ディアラマ]",-1)
-//skillMap["334"] = new Skill(334,"[天上打]",-1)
-//skillMap["335"] = new Skill(335,"[マハムドオン]",-1)
-//skillMap["336"] = new Skill(336,"[マハンマオン]",-1)
-//skillMap["337"] = new Skill(337,"[災厄の輪廻]",-1)
-//skillMap["338"] = new Skill(338,"[ビッグバン]",-1)
-//skillMap["339"] = new Skill(339,"[ラスタキャンディ]",-1)
-//skillMap["340"] = new Skill(340,"てっけんせいさい",175543)
-//skillMap["341"] = new Skill(341,"うちまくり",175543)
-//skillMap["342"] = new Skill(342,"といき",175543)
-//skillMap["351"] = new Skill(351,"物理耐性",952)
-//skillMap["352"] = new Skill(352,"物理無効",10972)
-//skillMap["353"] = new Skill(353,"物理反射",43886)
-//skillMap["354"] = new Skill(354,"物理吸収",87772)
-//skillMap["355"] = new Skill(355,"銃耐性",952)
-//skillMap["356"] = new Skill(356,"銃無効",10972)
-//skillMap["357"] = new Skill(357,"銃反射",43886)
-//skillMap["358"] = new Skill(358,"銃吸収",87772)
-//skillMap["359"] = new Skill(359,"火炎耐性",564)
-//skillMap["360"] = new Skill(360,"火炎無効",5663)
-//skillMap["361"] = new Skill(361,"火炎反射",21943)
-//skillMap["362"] = new Skill(362,"火炎吸収",43886)
-//skillMap["363"] = new Skill(363,"氷結耐性",564)
-//skillMap["364"] = new Skill(364,"氷結無効",5663)
-//skillMap["365"] = new Skill(365,"氷結反射",21943)
-//skillMap["366"] = new Skill(366,"氷結吸収",43886)
-//skillMap["367"] = new Skill(367,"電撃耐性",564)
-//skillMap["368"] = new Skill(368,"電撃無効",5663)
-//skillMap["369"] = new Skill(369,"電撃反射",21943)
-//skillMap["370"] = new Skill(370,"電撃吸収",43886)
-//skillMap["371"] = new Skill(371,"疾風耐性",564)
-//skillMap["372"] = new Skill(372,"疾風無効",5663)
-//skillMap["373"] = new Skill(373,"疾風反射",21943)
-//skillMap["374"] = new Skill(374,"疾風吸収",43886)
-//skillMap["375"] = new Skill(375,"呪殺耐性",564)
-//skillMap["376"] = new Skill(376,"呪殺無効",3020)
-//skillMap["377"] = new Skill(377,"破魔耐性",564)
-//skillMap["378"] = new Skill(378,"破魔無効",3020)
-//skillMap["379"] = new Skill(379,"精神異常無効",10972)
-//skillMap["380"] = new Skill(380,"身体異常無効",21943)
-//skillMap["381"] = new Skill(381,"火炎ブースタ",564)
-//skillMap["382"] = new Skill(382,"火炎ハイブースタ",10972)
-//skillMap["383"] = new Skill(383,"氷結ブースタ",564)
-//skillMap["384"] = new Skill(384,"氷結ハイブースタ",10972)
-//skillMap["385"] = new Skill(385,"電撃ブースタ",564)
-//skillMap["386"] = new Skill(386,"電撃ハイブースタ",10972)
-//skillMap["387"] = new Skill(387,"疾風ブースタ",564)
-//skillMap["388"] = new Skill(388,"疾風ハイブースタ",10972)
-//skillMap["389"] = new Skill(389,"食いしばり",5663)
-//skillMap["390"] = new Skill(390,"不屈の闘志",87772)
-//skillMap["391"] = new Skill(391,"反撃",564)
-//skillMap["392"] = new Skill(392,"猛反撃",5663)
-//skillMap["393"] = new Skill(393,"勝利の息吹",3020)
-//skillMap["394"] = new Skill(394,"勝利のチャクラ",43886)
-//skillMap["395"] = new Skill(395,"勝利の雄叫び",175543)
-//skillMap["396"] = new Skill(396,"生命の泉",155)
-//skillMap["397"] = new Skill(397,"チャクラウォーク",3020)
-//skillMap["398"] = new Skill(398,"見覚えの成長",222)
-//skillMap["399"] = new Skill(399,"見覚えの大成長",952)
-//skillMap["400"] = new Skill(400,"アボイドスリーパ",3020)
-//skillMap["401"] = new Skill(401,"ラプラスの魔",1666)
-//skillMap["402"] = new Skill(402,"追撃の心得",21943)
-//skillMap["403"] = new Skill(403,"銃ハイブースタ",21943)
-//skillMap["405"] = new Skill(405,"[自動回復]",-1)
-//skillMap["406"] = new Skill(406,"[自動ダメージ]",-1)
-//skillMap["407"] = new Skill(407,"[永久の咎罰]",-1)
-//skillMap["408"] = new Skill(408,"[不負の法]",-1)
-//skillMap["409"] = new Skill(409,"物理ブースタ",952)
-//skillMap["410"] = new Skill(410,"物理ハイブースタ",21943)
-//skillMap["411"] = new Skill(411,"銃ブースタ",952)
-//skillMap["412"] = new Skill(412,"回復ブースタ",347)
-//skillMap["413"] = new Skill(413,"回復ハイブースタ",5663)
-//skillMap["414"] = new Skill(414,"一分の活泉",222)
-//skillMap["415"] = new Skill(415,"二分の活泉",1666)
-//skillMap["416"] = new Skill(416,"三分の活泉",21943)
-//skillMap["417"] = new Skill(417,"一分の魔脈",222)
-//skillMap["418"] = new Skill(418,"二分の魔脈",1666)
-//skillMap["419"] = new Skill(419,"三分の魔脈",21943)//}}}
 
+var elementClass = [];
+for (var i in elementJSON) {
+  elementClass[i] = [];
+};
+
+// 攻撃属性ごとにスキルを分類する
+for (var j=0 ,len = skillMap.length; j < len; j++) {
+  var skill = skillMap[j];
+  if (skill) {
+    console.log(skillMap[j].skillID + " " + skillMap[j].name);
+    elementClass[skill.element.id].push(skill);
+  } 
+}
+var cachedOptionsClassifySkill = [];
+
+for (var i=0 ,len = elementClass.length; i < len; i++) {
+  var options =[];
+  for (var j=0 ,len = elementClass[i].length; j < len; j++) {
+    options[j] = new Option(
+      elementClass[i][j].toDetailString(), elementClass[i][j].skillID
+    );
+  }
+  cachedOptionsClassifySkill[i] = options;
+}
 
 var devilJSON = {
   //{{{
@@ -1379,7 +1041,7 @@ function createDevilMap(json){
 var devilMap = createDevilMap(devilJSON);
 
 var indexMap      = new Array();
-//{{{
+// {{{
 indexMap[0]   = [21,19,9,15,17,12,10,2,13,11,16,18,7,8,20,6,1,3,4,14,5,0];
 indexMap[2]   = [20,15,17,5,10,13,18,8,4,6,3,14,12,21,7,16,19,2,9,0,11,1];
 indexMap[6]   = [5,17,12,9,21,13,19,3,14,10,1,8,7,20,2,11,18,16,6,15,4,0];
@@ -1452,7 +1114,8 @@ indexMap[243] = [20,21,18,15,16,13,7,17,14,12,11,5,4,6,2,9,10,3,8,19,1,0];
 indexMap[244] = [15,21,10,18,12,17,16,6,14,19,11,20,4,9,1,13,0,2,7,3,8,5];
 indexMap[245] = [14,17,12,9,19,15,13,20,5,21,11,6,18,7,8,16,3,4,10,1,2,0];
 indexMap[252] = [16,14,8,0,19,12,20,13,21,5,9,7,3,15,2,4,17,1,6,11,18,10];
-indexMap[254] = [21,19,17,12,18,5,15,9,7,8,4,16,14,1,13,6,2,11,3,0,20,10];//}}}
+indexMap[254] = [21,19,17,12,18,5,15,9,7,8,4,16,14,1,13,6,2,11,3,0,20,10];
+//}}}
 
 var charMap = "し,ん,い,く,み,Ｂ,や,る,Ｙ,け,ひ,Ｋ,Ｆ,と,Ｈ,む,Ａ,ち,に,Ｚ,き,Ｗ,よ,Ｌ,を,の,た,れ,Ｎ,え,Ｓ,ふ,わ,Ｊ,そ,り,す,Ｃ,め,Ｐ,へ,Ｑ,Ｇ,Ｒ,Ｄ,こ,Ｍ,Ｔ,ま,つ,せ,か,は,Ｅ,Ｕ,て,さ,な,あ,も,ゆ,お,う,ろ".split(",");
 
@@ -1591,7 +1254,7 @@ function init() {
   }
   document.foMain.slPattern.selectedIndex = 46;
   setPattern(170);
-  
+
   // 能力値リスト初期化
   for ( i = 1; i < 100; i++ ) {
     var len = document.foMain.slLv.options.length;
@@ -1607,59 +1270,85 @@ function init() {
     document.foMain.slAgiBase.options[len] = new Option(i, i);
     document.foMain.slLucBase.options[len] = new Option(i, i);
   }
-  
+
+  createSkillElements();
+
   // 経験値フィールド初期化
   document.foMain.txExp.value = "0";
-  
+
   createSkillSelectOptions(); 
-  
+
   // 悪魔リスト初期化
   createDevilOptions();
 
-  
+
   document.foMain.taOut.value = "初期化完了。";
   isReady = true;
 }//}}}
 
 /**
- * 敵専用チェックボックスを変更した際に呼ぶ関数です。
- * 悪魔リストとスキルリストに敵専用のモノを追加や除去します。
- */ 
-function changeEnemyExclusive() {
-  createDevilOptions();
-  createSkillSelectOptions();
+ * スキル攻撃属性リスト生成
+ */
+function createSkillElements() {
+  document.getElementById('skill-element').options[0] 
+  = new Option("フィルタリング無し", -1);
+  for (var i in elementJSON) {
+    var len = document.getElementById('skill-element').options.length;
+    document.getElementById('skill-element').options[len] 
+    = new Option(elementJSON[i].name, elementJSON[i].id);
+  };
 }
 
-/**
- * 悪魔リストを生成します。
- * 敵専用チェックボックスがチェックされている場合、
- * 敵専用のモノを追加します。
- */
-function createDevilOptions (){
-  //{{{
-  
-  // リストを空にしてから追加しないと重複してしまう
-  for (var i=0 ,len = document.foMain.slDevil.options.length; i < len; i++) {
-    document.foMain.slDevil.options.remove();
-  }
-  
-  for ( i in devilMap ) {
-    var devil = devilMap[i];
-    if(devil.playerUses){
-      var len = document.foMain.slDevil.options.length;
-      document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
-    } else if(document.foMain.enemyExclusive.checked){
-      document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
-    }
-  }
-  //}}}
+function changeSkillElements(value) {
+  alert(value.value);
 }
 
-/**
- * スキルドロップダウンを生成します。
- * 敵専用チェックボックスがチェックされている場合、
- * 敵専用のモノを追加します。
- */
+var selectSkillElements = document.getElementById('skill-element');
+$('skill-element').on("change" , function (elm, value) {
+  console.log("change");
+}
+
+                     ).change();
+
+                     /**
+                      * 敵専用チェックボックスを変更した際に呼ぶ関数です。
+                      * 悪魔リストとスキルリストに敵専用のモノを追加や除去します。
+                      */ 
+                     function changeEnemyExclusive() {
+                       createDevilOptions();
+                       createSkillSelectOptions();
+                     }
+
+                     /**
+                      * 悪魔リストを生成します。
+                      * 敵専用チェックボックスがチェックされている場合、
+                      * 敵専用のモノを追加します。
+                      */
+                     function createDevilOptions (){
+                       //{{{
+
+                       // リストを空にしてから追加しないと重複してしまう
+                       for (var i=0 ,len = document.foMain.slDevil.options.length; i < len; i++) {
+                         document.foMain.slDevil.options.remove();
+                       }
+
+                       for ( i in devilMap ) {
+                         var devil = devilMap[i];
+                         if(devil.playerUses){
+                           var len = document.foMain.slDevil.options.length;
+                           document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
+                         } else if(document.foMain.enemyExclusive.checked){
+                           document.foMain.slDevil.options[len] = new Option(devil.toString(), devil.devilID);
+                         }
+                       }
+                       //}}}
+                     }
+
+                     /**
+                      * スキルドロップダウンを生成します。
+                      * 敵専用チェックボックスがチェックされている場合、
+                      * 敵専用のモノを追加します。
+                      */
 function createSkillSelectOptions() {
   var isSkillDemonikaModoki = function (skillID) {
     return skillID == 228//{{{
@@ -1670,14 +1359,14 @@ function createSkillSelectOptions() {
     //}}}
   }
 
-  
+
   // スキルリスト初期化
   var deleteOptions = function (options) {
     for (var i=0 ,len = options.length; i < len; i++) {
       options.remove();
-   }
+    }
   }
-  
+
   //***********  処理開始
   deleteOptions(document.foMain.slSkill0.options);
   deleteOptions(document.foMain.slSkill1.options);
@@ -1685,32 +1374,40 @@ function createSkillSelectOptions() {
   deleteOptions(document.foMain.slSkill3.options);
   deleteOptions(document.foMain.slSkill4.options);
   deleteOptions(document.foMain.slSkill5.options);
-  
+
   // 追加する
   for (var i in skillMap ) {
     var skill = skillMap[i];
     if (skill.cost != -1 
         || isSkillDemonikaModoki(skill.skillID)
-        || document.foMain.enemyExclusive.checked 
-            //敵専用スキルにチェックが入っていたら全て表示する
+      || document.foMain.enemyExclusive.checked 
+      //敵専用スキルにチェックが入っていたら全て表示する
        ) {
          var len = document.foMain.slSkill1.options.length;
-            
+
          document.foMain.slSkill0.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         
+
          document.foMain.slSkill1.options[len] = new Option(skill.toDetailString(), skill.skillID);
          document.foMain.slSkill2.options[len] = new Option(skill.toDetailString(), skill.skillID);
          document.foMain.slSkill3.options[len] = new Option(skill.toDetailString(), skill.skillID);
          document.foMain.slSkill4.options[len] = new Option(skill.toDetailString(), skill.skillID);
          document.foMain.slSkill5.options[len] = new Option(skill.toDetailString(), skill.skillID);
-         var costStr = skill.toStringCost();
+         var costStr = skill.info();
          document.foMain.slSkill0.options[len].title = costStr;
          document.foMain.slSkill1.options[len].title = costStr;
          document.foMain.slSkill2.options[len].title = costStr;
          document.foMain.slSkill3.options[len].title = costStr;
          document.foMain.slSkill4.options[len].title = costStr;
          document.foMain.slSkill5.options[len].title = costStr;
+         
+         document.foMain.slSkill0.options[len].className = "element-" + skill.element.id;
+         document.foMain.slSkill1.options[len].className = "element-" + skill.element.id;
+         document.foMain.slSkill2.options[len].className = "element-" + skill.element.id;
+         document.foMain.slSkill3.options[len].className = "element-" + skill.element.id;
+         document.foMain.slSkill4.options[len].className = "element-" + skill.element.id;
+         document.foMain.slSkill5.options[len].className = "element-" + skill.element.id;
        }
+
   }
 }
 
@@ -1722,11 +1419,11 @@ function toggleStatusMaxMin(select) {
   //{{{
   MAX = select.length-1;
   MIN = 0;
-  
+
   select.selectedIndex == 98 ? 
     select.selectedIndex = MIN 
-  : select.selectedIndex = MAX;
-  
+    : select.selectedIndex = MAX;
+
 }//}}}
 /**
  * 活泉・魔脈スキルによるHP・MPの増加分%を返します。
@@ -1734,18 +1431,18 @@ function toggleStatusMaxMin(select) {
 function getHPMPupParcent(skillID) {
   //{{{
   switch (parseInt(skillID)) {
-    case 414:
-      return {"target":"hp","parcent":0.1};
-    case 417:
-      return {"target":"mp","parcent":0.1};
-    case 415:
-      return {"target":"hp","parcent":0.2};
-    case 418:
-      return {"target":"mp","parcent":0.2};
-    case 416:
-      return {"target":"hp","parcent":0.3};
-    case 419:
-      return {"target":"mp","parcent":0.3};
+  case 414:
+    return {"target":"hp","parcent":0.1};
+  case 417:
+    return {"target":"mp","parcent":0.1};
+  case 415:
+    return {"target":"hp","parcent":0.2};
+  case 418:
+    return {"target":"mp","parcent":0.2};
+  case 416:
+    return {"target":"hp","parcent":0.3};
+  case 419:
+    return {"target":"mp","parcent":0.3};
   }
   return {"target":"none","parcent":0};
 }//}}}
@@ -1756,15 +1453,15 @@ function getHPMPupParcent(skillID) {
 function calcHPMPParcent(skillList) {
   //{{{
   var result = {"totalHPParcent":1,"totalMPParcent":1};
-  
+
   for (var i=0,len = skillList.length ; i < len;i++) {
     var upPatcent = getHPMPupParcent(skillList[i]);
     switch (upPatcent.target){
-      case "hp":
-        result.totalHPParcent = result.totalHPParcent + upPatcent.parcent;
+    case "hp":
+      result.totalHPParcent = result.totalHPParcent + upPatcent.parcent;
       break;
-      case "mp":
-        result.totalMPParcent = result.totalMPParcent + upPatcent.parcent;
+    case "mp":
+      result.totalMPParcent = result.totalMPParcent + upPatcent.parcent;
       break;
     }
   };
@@ -1799,94 +1496,94 @@ function calculateMP(lv,int,addNum,upMPpercent,skillList) {
 function doSetDefault() {
   // 悪魔 ID の入力値を取得//{{{
   var devilID    = document.foMain.slDevil.options[document.foMain.slDevil.selectedIndex].value;
-  
+
   // 悪魔 ID に対応する悪魔オブジェクトの複製を取得
   var devil      = getDevil(devilID).clone();
-  
-  // ステータスをセット
-  document.foMain.slLv.value = devil.lv;
-  document.foMain.txExp.value = devil.exp;
-  
-  // 能力値・実値
-  document.foMain.slStr.value = devil.str;
-  document.foMain.slInt.value = devil.int;
-  document.foMain.slVit.value = devil.vit;
-  document.foMain.slAgi.value = devil.agi;
-  document.foMain.slLuc.value = devil.luc;
-  // 
-  // 能力値・基準値
-  devil = setStatusBase(devil);
-  
-  // スキル
-  document.foMain.slSkill0.value = devil.skill[0];
-  document.foMain.slSkill1.value = devil.skill[1];
-  document.foMain.slSkill2.value = devil.skill[2];
-  document.foMain.slSkill3.value = devil.skill[3];
-  document.foMain.slSkill4.value = devil.skill[4];
-  document.foMain.slSkill5.value = devil.skill[5];
 
-  devil.HP = calculateHP(devil.lv,devil.vit,devil.addHP,devil.baseHP,devil.skill);
-  devil.MP = calculateMP(devil.lv,devil.int,devil.addMP,devil.baseHP,devil.skill);
-  
-  setEXPMax(devil);
-  
-  // 悪魔情報を取得して表示
-  document.foMain.taOut.value = devil.getSimpleInformation();
-  //}}}
-};
+    // ステータスをセット
+    document.foMain.slLv.value = devil.lv;
+    document.foMain.txExp.value = devil.exp;
 
-// 入力値更新時の処理
-function doRefresh() {
-  //{{{
-  if ( !isReady ) {
-    return;
-  }
-  
-  // パターンのセット
-  setPattern(eval(document.foMain.slPattern.options[document.foMain.slPattern.selectedIndex].value));
-  
-  // 悪魔 ID の入力値を取得
-  var devilID    = document.foMain.slDevil.options[document.foMain.slDevil.selectedIndex].value;
-  
-  // 悪魔 ID に対応する悪魔オブジェクトの複製を取得
-  var devil      = getDevil(devilID).clone();
-  
-  setEXPMax(devil);
-  
-  // ステータスをセット
-  devil.lv       = document.foMain.slLv.options[document.foMain.slLv.selectedIndex].value;
-  devil.exp      = document.foMain.txExp.value;
-  
-  // 能力値・実値
-  devil.str      = document.foMain.slStr.options[document.foMain.slStr.selectedIndex].value;
-  devil.int      = document.foMain.slInt.options[document.foMain.slInt.selectedIndex].value;
-  devil.vit      = document.foMain.slVit.options[document.foMain.slVit.selectedIndex].value;
-  devil.agi      = document.foMain.slAgi.options[document.foMain.slAgi.selectedIndex].value;
-  devil.luc      = document.foMain.slLuc.options[document.foMain.slLuc.selectedIndex].value;
-  
-  devil = setStatusBase(devil);
-  
-  // スキル
-  devil.skill[0] = document.foMain.slSkill0.options[document.foMain.slSkill0.selectedIndex].value;
-  devil.skill[1] = document.foMain.slSkill1.options[document.foMain.slSkill1.selectedIndex].value;
-  devil.skill[2] = document.foMain.slSkill2.options[document.foMain.slSkill2.selectedIndex].value;
-  devil.skill[3] = document.foMain.slSkill3.options[document.foMain.slSkill3.selectedIndex].value;
-  devil.skill[4] = document.foMain.slSkill4.options[document.foMain.slSkill4.selectedIndex].value;
-  devil.skill[5] = document.foMain.slSkill5.options[document.foMain.slSkill5.selectedIndex].value;
+    // 能力値・実値
+    document.foMain.slStr.value = devil.str;
+    document.foMain.slInt.value = devil.int;
+    document.foMain.slVit.value = devil.vit;
+    document.foMain.slAgi.value = devil.agi;
+    document.foMain.slLuc.value = devil.luc;
+    // 
+    // 能力値・基準値
+    devil = setStatusBase(devil);
 
-  devil.HP = calculateHP(devil.lv,devil.vit,devil.addHP,devil.baseHP,devil.skill);
-  devil.MP = calculateMP(devil.lv,devil.int,devil.addMP,devil.baseHP,devil.skill);
-  
-  
-  // 悪魔情報を取得して表示
-  document.foMain.taOut.value = devil.getSimpleInformation();
-//}}}
-}
+    // スキル
+    document.foMain.slSkill0.value = devil.skill[0];
+    document.foMain.slSkill1.value = devil.skill[1];
+    document.foMain.slSkill2.value = devil.skill[2];
+    document.foMain.slSkill3.value = devil.skill[3];
+    document.foMain.slSkill4.value = devil.skill[4];
+    document.foMain.slSkill5.value = devil.skill[5];
 
-/**
- * 能力値基準値を画面へ設定します。
- * @param {Devil} devil データの入った悪魔クラス
- */
+    devil.HP = calculateHP(devil.lv,devil.vit,devil.addHP,devil.baseHP,devil.skill);
+    devil.MP = calculateMP(devil.lv,devil.int,devil.addMP,devil.baseHP,devil.skill);
+
+    setEXPMax(devil);
+
+    // 悪魔情報を取得して表示
+    document.foMain.taOut.value = devil.getSimpleInformation();
+    //}}}
+    };
+
+    // 入力値更新時の処理
+    function doRefresh() {
+      //{{{
+      if ( !isReady ) {
+        return;
+      }
+
+      // パターンのセット
+      setPattern(eval(document.foMain.slPattern.options[document.foMain.slPattern.selectedIndex].value));
+
+      // 悪魔 ID の入力値を取得
+      var devilID    = document.foMain.slDevil.options[document.foMain.slDevil.selectedIndex].value;
+
+      // 悪魔 ID に対応する悪魔オブジェクトの複製を取得
+      var devil      = getDevil(devilID).clone();
+
+
+      // ステータスをセット
+      devil.lv       = document.foMain.slLv.options[document.foMain.slLv.selectedIndex].value;
+      devil.exp      = document.foMain.txExp.value;
+
+      // 能力値・実値
+      devil.str      = document.foMain.slStr.options[document.foMain.slStr.selectedIndex].value;
+      devil.int      = document.foMain.slInt.options[document.foMain.slInt.selectedIndex].value;
+      devil.vit      = document.foMain.slVit.options[document.foMain.slVit.selectedIndex].value;
+      devil.agi      = document.foMain.slAgi.options[document.foMain.slAgi.selectedIndex].value;
+      devil.luc      = document.foMain.slLuc.options[document.foMain.slLuc.selectedIndex].value;
+
+      devil = setStatusBase(devil);
+
+      // スキル
+      devil.skill[0] = document.foMain.slSkill0.options[document.foMain.slSkill0.selectedIndex].value;
+      devil.skill[1] = document.foMain.slSkill1.options[document.foMain.slSkill1.selectedIndex].value;
+      devil.skill[2] = document.foMain.slSkill2.options[document.foMain.slSkill2.selectedIndex].value;
+      devil.skill[3] = document.foMain.slSkill3.options[document.foMain.slSkill3.selectedIndex].value;
+      devil.skill[4] = document.foMain.slSkill4.options[document.foMain.slSkill4.selectedIndex].value;
+      devil.skill[5] = document.foMain.slSkill5.options[document.foMain.slSkill5.selectedIndex].value;
+
+      devil.HP = calculateHP(devil.lv,devil.vit,devil.addHP,devil.baseHP,devil.skill);
+      devil.MP = calculateMP(devil.lv,devil.int,devil.addMP,devil.baseHP,devil.skill);
+
+      setEXPMax(devil);
+
+      // 悪魔情報を取得して表示
+      document.foMain.taOut.value = devil.getSimpleInformation();
+      //}}}
+    }
+
+    /**
+     * 能力値基準値を画面へ設定します。
+     * @param {Devil} devil データの入った悪魔クラス
+     */
 function setStatusBase(devil) {
   // 能力値・基準値
   if ( document.foMain.cbBaseEqReal.checked ) {
@@ -1928,611 +1625,611 @@ function doInput() {//{{{
   if ( !isReady ) {
     return;
   }
-  
-  var password = document.foMain.taIn.value;
-  while ( password.indexOf("\n") != -1 ) {
-    password = password.replace("\n", "");
-  }
-  
-  var msg;
-  // 文字モード
-  if ( document.getElementById("rbCharMode").checked ) {
-    password = password.toUpperCase();
-    msg = analyzeCharPassword(password);
-  }
-  // ビットモード
-  else {
-    msg = analyzeBitPassword(password);
-  }
-  
-  document.foMain.taOut.value = msg;
-}
-//}}}
-// 入力されたパスワードを解析する (文字モード)
-function analyzeCharPassword(password) {//{{{
-  var i;
-  var msg = "";
-  
-  msg += "> 入力されたパスワード :";
-  msg += "\n";
-  msg += "" + password;
-  msg += "\n";
-  
-  // 文字数チェック
-  msg += "> パスワード入力文字数チェック ... ";
-  
-  // 30 文字未満の場合、エラー
-  if ( password.length < 31 ) {
-    msg += "ERROR.";
-    msg += "\n";
-    msg += "入力されたパスワードは無効です。";
-    msg += "\n";
-    msg += "パスワードは 31 文字以上入力してください。";
-    msg += "\n";
-    return msg;
-  }
-  // 32 文字を超える場合、警告
-  else if ( password.length > 32 ) {
-    msg += "WARNING.";
-    msg += "\n";
-    msg += "パスワードが 33 文字以上入力されました。";
-    msg += "\n";
-    msg += "33 文字目以降は切り捨てられます。";
-    msg += "\n";
-    password = password.substr(0, 32);
-  }
-  // 30 文字以上 32 文字以下の場合、正常
-  else {
-    msg += "OK."
-    msg += "\n";
-  }
-  
-  // 文字チェック
-  msg += "> パスワード入力文字チェック ... ";
-  
-  // パスワードをビット列に変換
-  var src = "";
-  for ( i = 0; i < 31; i++ ) {
-    var char = password.charAt(i);
-    var value = letters.indexOf(char);
-    
-    // 不正な文字の検出
-    if ( value == -1 ) {
-      msg += "ERROR.";
-      msg += "\n";
-      msg += "入力されたパスワードは無効です。";
-      msg += "\n";
-      msg += "不正な文字が含まれています。(" + (i + 1) + "文字目：'" + char +"')";
-      msg += "\n";
-      return msg;
-    }
-    
-    src += fillZero(6, eval(value).toString(2));
-  }
-  
-  msg += "OK.";
-  msg += "\n";
-  
-  return (analyzePassword(src, msg));
-}//}}}
 
-// 入力されたパスワードを解析する (ビットモード)
-function analyzeBitPassword(password) {//{{{
-  var i;
-  var msg = "";
-  
-  msg += "> 入力されたビット列 :";
-  msg += "\n";
-  msg += "" + password;
-  msg += "\n";
-  
-  // 文字数チェック
-  msg += "> パスワード入力ビット数チェック ... ";
-  
-  // 184 文字未満の場合、エラー
-  if ( password.length < 184 ) {
-    msg += "ERROR.";
-    msg += "\n";
-    msg += "入力されたパスワードは無効です。";
-    msg += "\n";
-    msg += "ビットモードのパスワードは 184 ビット以上入力してください。";
-    msg += "\n";
-    return msg;
-  }
-  // 192 文字を超える場合、警告
-  else if ( password.length > 192 ) {
-    msg += "WARNING.";
-    msg += "\n";
-    msg += "パスワードが 193 ビット以上入力されました。";
-    msg += "\n";
-    msg += "193 ビット目以降は切り捨てられます。";
-    msg += "\n";
-    password = password.substr(0, 192);
-  }
-  // 30 文字以上 32 文字以下の場合、正常
-  else {
-    msg += "OK.";
-    msg += "\n";
-  }
-  
-  // 文字チェック
-  msg += "> パスワード入力文字チェック ... ";
-  
-  // パスワード入力文字チェック
-  for ( i = 0; i < 184; i++ ) {
-    var char = password.charAt(i);
-    if ( char != "0" && char != "1" ) {
-      msg += "ERROR.";
-      msg += "\n";
-      msg += "入力されたパスワードは無効です。";
-      msg += "\n";
-      msg += "不正な文字が含まれています。(" + (i + 1) + "文字目：'" + char +"')";
-      msg += "\n";
-      return msg;
+    var password = document.foMain.taIn.value;
+    while ( password.indexOf("\n") != -1 ) {
+      password = password.replace("\n", "");
     }
-  }
-  
-  msg += "OK.";
-  msg += "\n";
-  
-  return (analyzePassword(password, msg));
-}//}}}
 
-// 入力されたパスワードを解析する (共通部)
-function analyzePassword(srcOld, msgOld) {//{{{
-  var i;
-  var src = srcOld;
-  var msg = msgOld;
-  
-  msg += "> パスワード解析開始 ... "
-  msg += "\n";
-  
-  // XOR 用のマスク値を取得
-  var mask = parseInt(src.substr(22 * 8, 8), 2);
-  
-  msg += "パターンNo. = " + mask;
-  msg += "\n";
-  
-  // バイト値に変換
-  var srcBytes = new Array();
-  for ( i = 0; i < 24; i++ ) {
-    srcBytes[i] = 0;
-  }
-  for ( i = 0; i < 22; i++ ) {
-    srcBytes[i] = parseInt(src.substr(i * 8, 8), 2);
-    // マスク値と XOR
-    srcBytes[i] ^= mask;
-  }
-  srcBytes[22] = mask;
-  
-  // 未対応パターンならエラー
-  if ( indexMap[mask] == undefined ) {
-    msg += "ERROR.";
-    msg += "\n";
-    msg += "入力されたパスワードパターンは未対応です。";
-    msg += "\n";
-    // デバッグモード時のみデバッグ情報を付加
-    if ( document.foMain.cbDebugMode.checked ) {
-      msg += "入力されたバイト列 : ";
+    var msg;
+    // 文字モード
+    if ( document.getElementById("rbCharMode").checked ) {
+      password = password.toUpperCase();
+      msg = analyzeCharPassword(password);
+    }
+    // ビットモード
+    else {
+      msg = analyzeBitPassword(password);
+    }
+
+    document.foMain.taOut.value = msg;
+    }
+    //}}}
+    // 入力されたパスワードを解析する (文字モード)
+    function analyzeCharPassword(password) {//{{{
+      var i;
+      var msg = "";
+
+      msg += "> 入力されたパスワード :";
       msg += "\n";
-      for ( i = 0; i < 23; i++ ) {
-//        msg += "" + i + " バイト目 : " + fillZero(8, eval(srcBytes[i]).toString(2));
-        msg += fillZero(8, eval(srcBytes[i]).toString(2));
+      msg += "" + password;
+      msg += "\n";
+
+      // 文字数チェック
+      msg += "> パスワード入力文字数チェック ... ";
+
+      // 30 文字未満の場合、エラー
+      if ( password.length < 31 ) {
+        msg += "ERROR.";
+        msg += "\n";
+        msg += "入力されたパスワードは無効です。";
+        msg += "\n";
+        msg += "パスワードは 31 文字以上入力してください。";
+        msg += "\n";
+        return msg;
+      }
+      // 32 文字を超える場合、警告
+      else if ( password.length > 32 ) {
+        msg += "WARNING.";
+        msg += "\n";
+        msg += "パスワードが 33 文字以上入力されました。";
+        msg += "\n";
+        msg += "33 文字目以降は切り捨てられます。";
+        msg += "\n";
+        password = password.substr(0, 32);
+      }
+      // 30 文字以上 32 文字以下の場合、正常
+      else {
+        msg += "OK."
         msg += "\n";
       }
+
+      // 文字チェック
+      msg += "> パスワード入力文字チェック ... ";
+
+      // パスワードをビット列に変換
+      var src = "";
+      for ( i = 0; i < 31; i++ ) {
+        var char = password.charAt(i);
+        var value = letters.indexOf(char);
+
+        // 不正な文字の検出
+        if ( value == -1 ) {
+          msg += "ERROR.";
+          msg += "\n";
+          msg += "入力されたパスワードは無効です。";
+          msg += "\n";
+          msg += "不正な文字が含まれています。(" + (i + 1) + "文字目：'" + char +"')";
+          msg += "\n";
+          return msg;
+        }
+
+        src += fillZero(6, eval(value).toString(2));
+      }
+
+      msg += "OK.";
+      msg += "\n";
+
+      return (analyzePassword(src, msg));
+    }//}}}
+
+    // 入力されたパスワードを解析する (ビットモード)
+    function analyzeBitPassword(password) {//{{{
+      var i;
+      var msg = "";
+
+      msg += "> 入力されたビット列 :";
+      msg += "\n";
+      msg += "" + password;
+      msg += "\n";
+
+      // 文字数チェック
+      msg += "> パスワード入力ビット数チェック ... ";
+
+      // 184 文字未満の場合、エラー
+      if ( password.length < 184 ) {
+        msg += "ERROR.";
+        msg += "\n";
+        msg += "入力されたパスワードは無効です。";
+        msg += "\n";
+        msg += "ビットモードのパスワードは 184 ビット以上入力してください。";
+        msg += "\n";
+        return msg;
+      }
+      // 192 文字を超える場合、警告
+      else if ( password.length > 192 ) {
+        msg += "WARNING.";
+        msg += "\n";
+        msg += "パスワードが 193 ビット以上入力されました。";
+        msg += "\n";
+        msg += "193 ビット目以降は切り捨てられます。";
+        msg += "\n";
+        password = password.substr(0, 192);
+      }
+      // 30 文字以上 32 文字以下の場合、正常
+      else {
+        msg += "OK.";
+        msg += "\n";
+      }
+
+      // 文字チェック
+      msg += "> パスワード入力文字チェック ... ";
+
+      // パスワード入力文字チェック
+      for ( i = 0; i < 184; i++ ) {
+        var char = password.charAt(i);
+        if ( char != "0" && char != "1" ) {
+          msg += "ERROR.";
+          msg += "\n";
+          msg += "入力されたパスワードは無効です。";
+          msg += "\n";
+          msg += "不正な文字が含まれています。(" + (i + 1) + "文字目：'" + char +"')";
+          msg += "\n";
+          return msg;
+        }
+      }
+
+      msg += "OK.";
+      msg += "\n";
+
+      return (analyzePassword(password, msg));
+    }//}}}
+
+    // 入力されたパスワードを解析する (共通部)
+    function analyzePassword(srcOld, msgOld) {//{{{
+      var i;
+      var src = srcOld;
+      var msg = msgOld;
+
+      msg += "> パスワード解析開始 ... "
+      msg += "\n";
+
+      // XOR 用のマスク値を取得
+      var mask = parseInt(src.substr(22 * 8, 8), 2);
+
+      msg += "パターンNo. = " + mask;
+      msg += "\n";
+
+      // バイト値に変換
+      var srcBytes = new Array();
+      for ( i = 0; i < 24; i++ ) {
+        srcBytes[i] = 0;
+      }
+      for ( i = 0; i < 22; i++ ) {
+        srcBytes[i] = parseInt(src.substr(i * 8, 8), 2);
+        // マスク値と XOR
+        srcBytes[i] ^= mask;
+      }
+      srcBytes[22] = mask;
+
+      // 未対応パターンならエラー
+      if ( indexMap[mask] == undefined ) {
+        msg += "ERROR.";
+        msg += "\n";
+        msg += "入力されたパスワードパターンは未対応です。";
+        msg += "\n";
+        // デバッグモード時のみデバッグ情報を付加
+        if ( document.foMain.cbDebugMode.checked ) {
+          msg += "入力されたバイト列 : ";
+          msg += "\n";
+          for ( i = 0; i < 23; i++ ) {
+            //        msg += "" + i + " バイト目 : " + fillZero(8, eval(srcBytes[i]).toString(2));
+            msg += fillZero(8, eval(srcBytes[i]).toString(2));
+            msg += "\n";
+          }
+        }
+        return msg;
+      }
+
+      // パターン No. をセット
+      setPattern(mask);
+
+      // 移送後用の配列を初期化する
+      var dstBytes = new Array();
+      for ( i = 0; i < 24; i++ ) {
+        dstBytes[i] = 0;
+      }
+      // バイト単位で移送
+      for ( i = 0; i < 22; i++ ) {
+        dstBytes[i] = srcBytes[indexMap[currentPatternID][i]];
+      }
+
+      // 移送後バイト配列をビット文字列に変換
+      var dst = "";
+      for ( i = 0; i < 24; i++ ) {
+        dst += fillZero(8, eval(dstBytes[i]).toString(2))
+      }
+
+      // 各ステータス値に分割
+      var skill   = new Array();
+      var devilID = parseInt(dst.substr(  4,  9), 2);
+      var lv      = parseInt(dst.substr( 13,  7), 2);
+      skill[5]    = parseInt(dst.substr( 20,  9), 2);
+      skill[4]    = parseInt(dst.substr( 29,  9), 2);
+      skill[3]    = parseInt(dst.substr( 38,  9), 2);
+      skill[2]    = parseInt(dst.substr( 47,  9), 2);
+      skill[1]    = parseInt(dst.substr( 56,  9), 2);
+      skill[0]    = parseInt(dst.substr( 65,  9), 2);
+      var exp     = parseInt(dst.substr( 74, 32), 2);
+      var intBase = parseInt(dst.substr(106,  7), 2);
+      var lucBase = parseInt(dst.substr(113,  7), 2);
+      var agiBase = parseInt(dst.substr(120,  7), 2);
+      var vitBase = parseInt(dst.substr(127,  7), 2);
+      var strBase = parseInt(dst.substr(134,  7), 2);
+      var int     = parseInt(dst.substr(141,  7), 2);
+      var luc     = parseInt(dst.substr(148,  7), 2);
+      var agi     = parseInt(dst.substr(155,  7), 2);
+      var vit     = parseInt(dst.substr(162,  7), 2);
+      var str     = parseInt(dst.substr(169,  7), 2);
+
+      // 有効範囲チェックをしながらフォームに適用
+      // 悪魔ID (1 ～ 490)
+      msg += "悪魔ID      = " + devilID;
+      if ( 1 <= devilID && devilID <= 490 ) {
+        document.foMain.slDevil.selectedIndex = devilID - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // Lv (1 ～ 99)
+      msg += "Lv          = " + lv;
+      if ( 1 <= lv && lv <= 99 ) {
+        document.foMain.slLv.selectedIndex = lv - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 経験値 (0 ～ 2097151)
+      msg += "経験値      = " + exp;
+      if ( 0 <= exp && exp <= 2097151 ) {
+        document.foMain.txExp.value = exp;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 力 (実値) (1 ～ 99)
+      msg += "力 (実値)   = " + str;
+      if ( 1 <= str && str <= 99 ) {
+        document.foMain.slStr.selectedIndex = str - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 魔 (実値) (1 ～ 99)
+      msg += "魔 (実値)   = " + int;
+      if ( 1 <= int && int <= 99 ) {
+        document.foMain.slInt.selectedIndex = int - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 体 (実値) (1 ～ 99)
+      msg += "体 (実値)   = " + vit;
+      if ( 1 <= vit && vit <= 99 ) {
+        document.foMain.slVit.selectedIndex = vit - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 速 (実値) (1 ～ 99)
+      msg += "速 (実値)   = " + agi;
+      if ( 1 <= agi && agi <= 99 ) {
+        document.foMain.slAgi.selectedIndex = agi - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 運 (実値) (1 ～ 99)
+      msg += "運 (実値)   = " + luc;
+      if ( 1 <= luc && luc <= 99 ) {
+        document.foMain.slLuc.selectedIndex = luc - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 力 (基準値) (1 ～ 99)
+      msg += "力 (基準値) = " + strBase;
+      if ( 1 <= strBase && strBase <= 99 ) {
+        document.foMain.slStrBase.selectedIndex = strBase - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 魔 (基準値) (1 ～ 99)
+      msg += "魔 (基準値) = " + intBase;
+      if ( 1 <= intBase && intBase <= 99 ) {
+        document.foMain.slIntBase.selectedIndex = intBase - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 体 (基準値) (1 ～ 99)
+      msg += "体 (基準値) = " + vitBase;
+      if ( 1 <= vitBase && vitBase <= 99 ) {
+        document.foMain.slVitBase.selectedIndex = vitBase - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 速 (基準値) (1 ～ 99)
+      msg += "速 (基準値) = " + agiBase;
+      if ( 1 <= agiBase && agiBase <= 99 ) {
+        document.foMain.slAgiBase.selectedIndex = agiBase - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // 運 (基準値) (1 ～ 99)
+      msg += "運 (基準値) = " + lucBase;
+      if ( 1 <= lucBase && lucBase <= 99 ) {
+        document.foMain.slLucBase.selectedIndex = lucBase - 1;
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // スキル[1] (0 ～ 419)
+      msg += "スキル[1]   = " + skill[0];
+      if ( 0 <= skill[0] && skill[0] <= 419 ) {
+        document.foMain.slSkill0.selectedIndex = skill[0];
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // スキル[2] (0 ～ 419)
+      msg += "スキル[2]   = " + skill[1];
+      if ( 0 <= skill[1] && skill[1] <= 419 ) {
+        document.foMain.slSkill1.selectedIndex = skill[1];
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // スキル[3] (0 ～ 419)
+      msg += "スキル[3]   = " + skill[2];
+      if ( 0 <= skill[2] && skill[2] <= 419 ) {
+        document.foMain.slSkill2.selectedIndex = skill[2];
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // スキル[4] (0 ～ 419)
+      msg += "スキル[4]   = " + skill[3];
+      if ( 0 <= skill[3] && skill[3] <= 419 ) {
+        document.foMain.slSkill3.selectedIndex = skill[3];
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // スキル[5] (0 ～ 419)
+      msg += "スキル[5]   = " + skill[4];
+      if ( 0 <= skill[4] && skill[4] <= 419 ) {
+        document.foMain.slSkill4.selectedIndex = skill[4];
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      // スキル[6] (0 ～ 419)
+      msg += "スキル[6]   = " + skill[5];
+      if ( 0 <= skill[5] && skill[5] <= 419 ) {
+        document.foMain.slSkill5.selectedIndex = skill[5];
+      }
+      else {
+        msg += " (NG)";
+      }
+      msg += "\n";
+      msg += "> 有効範囲内の値をフォームに反映しました。";
+      msg += "\n";
+
+      return msg;
     }
-    return msg;
-  }
-  
-  // パターン No. をセット
-  setPattern(mask);
-  
-  // 移送後用の配列を初期化する
-  var dstBytes = new Array();
-  for ( i = 0; i < 24; i++ ) {
-    dstBytes[i] = 0;
-  }
-  // バイト単位で移送
-  for ( i = 0; i < 22; i++ ) {
-    dstBytes[i] = srcBytes[indexMap[currentPatternID][i]];
-  }
-  
-  // 移送後バイト配列をビット文字列に変換
-  var dst = "";
-  for ( i = 0; i < 24; i++ ) {
-    dst += fillZero(8, eval(dstBytes[i]).toString(2))
-  }
-  
-  // 各ステータス値に分割
-  var skill   = new Array();
-  var devilID = parseInt(dst.substr(  4,  9), 2);
-  var lv      = parseInt(dst.substr( 13,  7), 2);
-  skill[5]    = parseInt(dst.substr( 20,  9), 2);
-  skill[4]    = parseInt(dst.substr( 29,  9), 2);
-  skill[3]    = parseInt(dst.substr( 38,  9), 2);
-  skill[2]    = parseInt(dst.substr( 47,  9), 2);
-  skill[1]    = parseInt(dst.substr( 56,  9), 2);
-  skill[0]    = parseInt(dst.substr( 65,  9), 2);
-  var exp     = parseInt(dst.substr( 74, 32), 2);
-  var intBase = parseInt(dst.substr(106,  7), 2);
-  var lucBase = parseInt(dst.substr(113,  7), 2);
-  var agiBase = parseInt(dst.substr(120,  7), 2);
-  var vitBase = parseInt(dst.substr(127,  7), 2);
-  var strBase = parseInt(dst.substr(134,  7), 2);
-  var int     = parseInt(dst.substr(141,  7), 2);
-  var luc     = parseInt(dst.substr(148,  7), 2);
-  var agi     = parseInt(dst.substr(155,  7), 2);
-  var vit     = parseInt(dst.substr(162,  7), 2);
-  var str     = parseInt(dst.substr(169,  7), 2);
-  
-  // 有効範囲チェックをしながらフォームに適用
-  // 悪魔ID (1 ～ 490)
-  msg += "悪魔ID      = " + devilID;
-  if ( 1 <= devilID && devilID <= 490 ) {
-    document.foMain.slDevil.selectedIndex = devilID - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // Lv (1 ～ 99)
-  msg += "Lv          = " + lv;
-  if ( 1 <= lv && lv <= 99 ) {
-    document.foMain.slLv.selectedIndex = lv - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 経験値 (0 ～ 2097151)
-  msg += "経験値      = " + exp;
-  if ( 0 <= exp && exp <= 2097151 ) {
-    document.foMain.txExp.value = exp;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 力 (実値) (1 ～ 99)
-  msg += "力 (実値)   = " + str;
-  if ( 1 <= str && str <= 99 ) {
-    document.foMain.slStr.selectedIndex = str - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 魔 (実値) (1 ～ 99)
-  msg += "魔 (実値)   = " + int;
-  if ( 1 <= int && int <= 99 ) {
-    document.foMain.slInt.selectedIndex = int - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 体 (実値) (1 ～ 99)
-  msg += "体 (実値)   = " + vit;
-  if ( 1 <= vit && vit <= 99 ) {
-    document.foMain.slVit.selectedIndex = vit - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 速 (実値) (1 ～ 99)
-  msg += "速 (実値)   = " + agi;
-  if ( 1 <= agi && agi <= 99 ) {
-    document.foMain.slAgi.selectedIndex = agi - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 運 (実値) (1 ～ 99)
-  msg += "運 (実値)   = " + luc;
-  if ( 1 <= luc && luc <= 99 ) {
-    document.foMain.slLuc.selectedIndex = luc - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 力 (基準値) (1 ～ 99)
-  msg += "力 (基準値) = " + strBase;
-  if ( 1 <= strBase && strBase <= 99 ) {
-    document.foMain.slStrBase.selectedIndex = strBase - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 魔 (基準値) (1 ～ 99)
-  msg += "魔 (基準値) = " + intBase;
-  if ( 1 <= intBase && intBase <= 99 ) {
-    document.foMain.slIntBase.selectedIndex = intBase - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 体 (基準値) (1 ～ 99)
-  msg += "体 (基準値) = " + vitBase;
-  if ( 1 <= vitBase && vitBase <= 99 ) {
-    document.foMain.slVitBase.selectedIndex = vitBase - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 速 (基準値) (1 ～ 99)
-  msg += "速 (基準値) = " + agiBase;
-  if ( 1 <= agiBase && agiBase <= 99 ) {
-    document.foMain.slAgiBase.selectedIndex = agiBase - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // 運 (基準値) (1 ～ 99)
-  msg += "運 (基準値) = " + lucBase;
-  if ( 1 <= lucBase && lucBase <= 99 ) {
-    document.foMain.slLucBase.selectedIndex = lucBase - 1;
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // スキル[1] (0 ～ 419)
-  msg += "スキル[1]   = " + skill[0];
-  if ( 0 <= skill[0] && skill[0] <= 419 ) {
-    document.foMain.slSkill0.selectedIndex = skill[0];
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // スキル[2] (0 ～ 419)
-  msg += "スキル[2]   = " + skill[1];
-  if ( 0 <= skill[1] && skill[1] <= 419 ) {
-    document.foMain.slSkill1.selectedIndex = skill[1];
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // スキル[3] (0 ～ 419)
-  msg += "スキル[3]   = " + skill[2];
-  if ( 0 <= skill[2] && skill[2] <= 419 ) {
-    document.foMain.slSkill2.selectedIndex = skill[2];
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // スキル[4] (0 ～ 419)
-  msg += "スキル[4]   = " + skill[3];
-  if ( 0 <= skill[3] && skill[3] <= 419 ) {
-    document.foMain.slSkill3.selectedIndex = skill[3];
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // スキル[5] (0 ～ 419)
-  msg += "スキル[5]   = " + skill[4];
-  if ( 0 <= skill[4] && skill[4] <= 419 ) {
-    document.foMain.slSkill4.selectedIndex = skill[4];
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  // スキル[6] (0 ～ 419)
-  msg += "スキル[6]   = " + skill[5];
-  if ( 0 <= skill[5] && skill[5] <= 419 ) {
-    document.foMain.slSkill5.selectedIndex = skill[5];
-  }
-  else {
-    msg += " (NG)";
-  }
-  msg += "\n";
-  msg += "> 有効範囲内の値をフォームに反映しました。";
-  msg += "\n";
-  
-  return msg;
-}
-//}}}
-// 指定した悪魔のパスワードを生成して返す。
-function generatePassword(devil) {//{{{
-  var i;
-  
-  // 各ステータスを 2 進数文字列に変換し、連結する
-  var src = fillZero( 4, "0")
-          + fillZero( 9, eval(devil.devilID).toString(2))
-          + fillZero( 7, eval(devil.lv).toString(2))
-          + fillZero( 9, eval(devil.skill[5]).toString(2))
-          + fillZero( 9, eval(devil.skill[4]).toString(2))
-          + fillZero( 9, eval(devil.skill[3]).toString(2))
-          + fillZero( 9, eval(devil.skill[2]).toString(2))
-          + fillZero( 9, eval(devil.skill[1]).toString(2))
-          + fillZero( 9, eval(devil.skill[0]).toString(2))
-          + fillZero(32, eval(devil.exp).toString(2))
-          + fillZero( 7, eval(devil.intBase).toString(2))
-          + fillZero( 7, eval(devil.lucBase).toString(2))
-          + fillZero( 7, eval(devil.agiBase).toString(2))
-          + fillZero( 7, eval(devil.vitBase).toString(2))
-          + fillZero( 7, eval(devil.strBase).toString(2))
-          + fillZero( 7, eval(devil.int).toString(2))
-          + fillZero( 7, eval(devil.luc).toString(2))
-          + fillZero( 7, eval(devil.agi).toString(2))
-          + fillZero( 7, eval(devil.vit).toString(2))
-          + fillZero( 7, eval(devil.str).toString(2))
-          + fillZero( 8, eval(currentPatternID).toString(2))
-  ;
-  var checksum = 0;
-  
-  // 1 バイト単位でマスク値と XOR およびチェックサム計算
-  var srcBytes = new Array();
-  for ( i = 0; i < 22; i++ ) {
-    // 8 ビットずつ取得して 10 進数値に変換
-    srcBytes[i] = parseInt(src.substr(i * 8, 8), 2);
-    // XOR
-    srcBytes[i] ^= currentPatternID;
-    // チェックサムに加算
-    checksum += srcBytes[i];
-    checksum %= 256;
-  }
-  checksum += currentPatternID;
-  checksum %= 256;
-  
-  // バイト単位で移送 
-  var dstBytes = new Array();
-  for ( i = 0; i < 22; i++ ) {
-    dstBytes[indexMap[currentPatternID][i]] = srcBytes[i];
-  }
-  
-  // 23 バイト目にマスク値をセット
-  dstBytes[22] = currentPatternID;
-  
-  // 24 バイト目にチェックサムをセット
-  dstBytes[23] = checksum;
-  
-  // バイト列をビット文字列に変換
-  var dst = "";
-  for ( i = 0; i < 24; i++ ) {
-    dst += fillZero(8, eval(dstBytes[i]).toString(2))
-  }
-  
-  // ビット列をパスワードに変換
-  var password = "";
-  for ( i = 0; i < 32; i++ ) {
-    // 6 ビットずつ対応する文字に変換して連結する
-    var charcode = parseInt(dst.substr(i * 6, 6), 2);
-    password += letters.charAt(charcode);
-    // 半分で改行
-    if ( i == 15 ) {
-      password += "\n";
+    //}}}
+    // 指定した悪魔のパスワードを生成して返す。
+    function generatePassword(devil) {//{{{
+      var i;
+
+      // 各ステータスを 2 進数文字列に変換し、連結する
+      var src = fillZero( 4, "0")
+      + fillZero( 9, eval(devil.devilID).toString(2))
+      + fillZero( 7, eval(devil.lv).toString(2))
+      + fillZero( 9, eval(devil.skill[5]).toString(2))
+      + fillZero( 9, eval(devil.skill[4]).toString(2))
+      + fillZero( 9, eval(devil.skill[3]).toString(2))
+      + fillZero( 9, eval(devil.skill[2]).toString(2))
+      + fillZero( 9, eval(devil.skill[1]).toString(2))
+      + fillZero( 9, eval(devil.skill[0]).toString(2))
+      + fillZero(32, eval(devil.exp).toString(2))
+      + fillZero( 7, eval(devil.intBase).toString(2))
+      + fillZero( 7, eval(devil.lucBase).toString(2))
+      + fillZero( 7, eval(devil.agiBase).toString(2))
+      + fillZero( 7, eval(devil.vitBase).toString(2))
+      + fillZero( 7, eval(devil.strBase).toString(2))
+      + fillZero( 7, eval(devil.int).toString(2))
+      + fillZero( 7, eval(devil.luc).toString(2))
+      + fillZero( 7, eval(devil.agi).toString(2))
+      + fillZero( 7, eval(devil.vit).toString(2))
+      + fillZero( 7, eval(devil.str).toString(2))
+      + fillZero( 8, eval(currentPatternID).toString(2))
+      ;
+      var checksum = 0;
+
+      // 1 バイト単位でマスク値と XOR およびチェックサム計算
+      var srcBytes = new Array();
+      for ( i = 0; i < 22; i++ ) {
+        // 8 ビットずつ取得して 10 進数値に変換
+        srcBytes[i] = parseInt(src.substr(i * 8, 8), 2);
+        // XOR
+        srcBytes[i] ^= currentPatternID;
+        // チェックサムに加算
+        checksum += srcBytes[i];
+        checksum %= 256;
+      }
+      checksum += currentPatternID;
+      checksum %= 256;
+
+      // バイト単位で移送 
+      var dstBytes = new Array();
+      for ( i = 0; i < 22; i++ ) {
+        dstBytes[indexMap[currentPatternID][i]] = srcBytes[i];
+      }
+
+      // 23 バイト目にマスク値をセット
+      dstBytes[22] = currentPatternID;
+
+      // 24 バイト目にチェックサムをセット
+      dstBytes[23] = checksum;
+
+      // バイト列をビット文字列に変換
+      var dst = "";
+      for ( i = 0; i < 24; i++ ) {
+        dst += fillZero(8, eval(dstBytes[i]).toString(2))
+      }
+
+      // ビット列をパスワードに変換
+      var password = "";
+      for ( i = 0; i < 32; i++ ) {
+        // 6 ビットずつ対応する文字に変換して連結する
+        var charcode = parseInt(dst.substr(i * 6, 6), 2);
+        password += letters.charAt(charcode);
+        // 半分で改行
+        if ( i == 15 ) {
+          password += "\n";
+        }
+      }
+
+      // 結果文字列
+      var result = password;
+
+      //  // デバッグモード時のみデバッグ情報を付加
+      //  if ( document.foMain.cbDebugMode.checked ) {
+      //    // 8bit 単位に bit 列を分割
+      //    var part8Info = "";
+      //    for ( i in part8Array ) {
+      //      part8Info += part8Array[i] + " " + parseInt(part8Array[i], 2) + "\n";
+      //      if ( i % 3 == 2 ) {
+      //        part8Info += "\n";
+      //      }
+      //    }
+      //    var debugInfo = "【デバッグ情報】";
+      //    debugInfo += "\n";
+      //    debugInfo += "・8bit 単位のビット列 (チェックサム部分を除く)";
+      //    debugInfo += "\n";
+      //    debugInfo += part8Info;
+      //    debugInfo += "\n";
+      ////    debugInfo += "総計 : ";
+      ////    debugInfo += "\n";
+      ////    debugInfo += fillZero(8, eval(checksum).toString(2)) + " " + checksum;
+      ////    debugInfo += "\n";
+      ////    debugInfo += "bitごとの総計 : ";
+      ////    debugInfo += "\n";
+      ////    debugInfo += fillZero(8, eval(bitsumAll).toString(2)) + " " + bitsumAll;
+      ////    debugInfo += "\n";
+      ////    debugInfo += bitsum;
+      //    
+      //    result += "\n\n";
+      //    result += debugInfo;
+      //  }
+
+      return result;
     }
-  }
-  
-  // 結果文字列
-  var result = password;
-  
-//  // デバッグモード時のみデバッグ情報を付加
-//  if ( document.foMain.cbDebugMode.checked ) {
-//    // 8bit 単位に bit 列を分割
-//    var part8Info = "";
-//    for ( i in part8Array ) {
-//      part8Info += part8Array[i] + " " + parseInt(part8Array[i], 2) + "\n";
-//      if ( i % 3 == 2 ) {
-//        part8Info += "\n";
-//      }
-//    }
-//    var debugInfo = "【デバッグ情報】";
-//    debugInfo += "\n";
-//    debugInfo += "・8bit 単位のビット列 (チェックサム部分を除く)";
-//    debugInfo += "\n";
-//    debugInfo += part8Info;
-//    debugInfo += "\n";
-////    debugInfo += "総計 : ";
-////    debugInfo += "\n";
-////    debugInfo += fillZero(8, eval(checksum).toString(2)) + " " + checksum;
-////    debugInfo += "\n";
-////    debugInfo += "bitごとの総計 : ";
-////    debugInfo += "\n";
-////    debugInfo += fillZero(8, eval(bitsumAll).toString(2)) + " " + bitsumAll;
-////    debugInfo += "\n";
-////    debugInfo += bitsum;
-//    
-//    result += "\n\n";
-//    result += debugInfo;
-//  }
-  
-  return result;
-}
-//}}}
-// 指定桁数での前方 0 埋め
-function fillZero(place, value) {//{{{
-  var i;
-  for ( i = value.length; i < place; i++ ) {
-    value = "0" + value;
-    if ( i < 0 ) {
-      return;
+    //}}}
+    // 指定桁数での前方 0 埋め
+    function fillZero(place, value) {//{{{
+      var i;
+      for ( i = value.length; i < place; i++ ) {
+        value = "0" + value;
+        if ( i < 0 ) {
+          return;
+        }
+      }
+
+      return value;
+    }//}}}
+
+    // 指定桁数での後方 0 埋め
+    function fillZeroAfter(place, value) {//{{{
+      var i;
+      for ( i = value.length; i < place; i++ ) {
+        value = value + "0";
+      }
+
+      return value;
+    }//}}}
+
+    // 該当する種族を返す
+    function getGenus(genusID) {//{{{
+      return (genusMap[genusID]);
+    }//}}}
+
+    // 該当するスキルを返す
+    function getSkill(skillID) {//{{{
+      return (skillMap[skillID]);
+    }//}}}
+
+    // 該当する悪魔を返す
+    function getDevil(devilID) {//{{{
+      return (devilMap[devilID]);
+    }//}}}
+
+    // 該当する属性耐性を返す
+    function getAttr(attrID) {//{{{
+      return (attrMap[attrID]);
+    }//}}}
+
+    // -------------------------------------------------------------------------------------------------
+    // 種族クラス
+    // -------------------------------------------------------------------------------------------------
+    function Genus(genusID, name, simpleName) {
+      //{{{
+      // 種族 ID
+      this.genusID = genusID;
+      // 名称
+      this.name = name;
+      // 略称
+      this.simpleName = simpleName;
+      // スタンス
+      // TODO this.stance = stance;
+
+      // この種族の文字列表現を返す。(簡易)
+      this.toString = function() {
+        return this.name;
+      }
+
+      // この種族の文字列表現を返す。(詳細)
+      this.toDetailString = function() {
+        return this.name;
+      }
+      //}}}
     }
-  }
-  
-  return value;
-}//}}}
 
-// 指定桁数での後方 0 埋め
-function fillZeroAfter(place, value) {//{{{
-  var i;
-  for ( i = value.length; i < place; i++ ) {
-    value = value + "0";
-  }
-  
-  return value;
-}//}}}
-
-// 該当する種族を返す
-function getGenus(genusID) {//{{{
-  return (genusMap[genusID]);
-}//}}}
-
-// 該当するスキルを返す
-function getSkill(skillID) {//{{{
-  return (skillMap[skillID]);
-}//}}}
-
-// 該当する悪魔を返す
-function getDevil(devilID) {//{{{
-  return (devilMap[devilID]);
-}//}}}
-
-// 該当する属性耐性を返す
-function getAttr(attrID) {//{{{
-  return (attrMap[attrID]);
-}//}}}
-
-// -------------------------------------------------------------------------------------------------
-// 種族クラス
-// -------------------------------------------------------------------------------------------------
-function Genus(genusID, name, simpleName) {
-  //{{{
-  // 種族 ID
-  this.genusID = genusID;
-  // 名称
-  this.name = name;
-  // 略称
-  this.simpleName = simpleName;
-  // スタンス
-  // TODO this.stance = stance;
-  
-  // この種族の文字列表現を返す。(簡易)
-  this.toString = function() {
-    return this.name;
-  }
-  
-  // この種族の文字列表現を返す。(詳細)
-  this.toDetailString = function() {
-    return this.name;
-  }
-  //}}}
-}
-
-// -----------------------------------------------------------------------------
-// スキルクラス
-// -----------------------------------------------------------------------------
-/*
- * スキルクラス
- * @param {Object} skill
- *  id:           id
- *  name:         名前
- *  cost:         スキル付与コスト
- *  elemental     攻撃属性
- *  attackGroup:  威力算出分類 特殊・物理・魔法
- */
+    // -----------------------------------------------------------------------------
+    // スキルクラス
+    // -----------------------------------------------------------------------------
+    /*
+     * スキルクラス
+     * @param {Object} skill
+     *  id:           id
+     *  name:         名前
+     *  cost:         スキル付与コスト
+     *  elemental     攻撃属性
+     *  attackGroup:  威力算出分類 特殊・物理・魔法
+     */
 function Skill(skill) {
   //{{{
   // スキル ID
@@ -2543,7 +2240,7 @@ function Skill(skill) {
   this.cost = skill.cost;
   this.element = skill.element;
   this.attackGroup = skill.attackGroup;
-  
+
   this.toStringCost =function () {
     return "cost:"+this.cost;
   }
@@ -2551,12 +2248,15 @@ function Skill(skill) {
   this.toString = function() {
     return this.name;
   }
-  
+
   this.info = function () {
-    return ""+ this.skillID + " : " + this.name + " "+
-      this.attackGroup.name + "計算 " + skill.element.name + "属性";
+    return ""+ this.skillID + " : " +
+      this.name + " " +
+      this.attackGroup.name + " " +
+      skill.element.name + "属性" +
+      ' cost:'+ this.cost;
   }
-  
+
   // この種族の文字列表現を返す。(詳細)
   this.toDetailString = function() {
     return this.skillID + ":" + this.name;
@@ -2610,10 +2310,10 @@ function Devil(devil) {
   this.vitDefault = this.vit = devil.vitDefault;
   this.agiDefault = this.agi = devil.agiDefault;
   this.lucDefault = this.luc = devil.lucDefault;
-  
+
   this.devilCost = parseInt(devil.devilCost);
   this.maxSkillCost = 0;
-  
+
   // 能力値・基準値 (力・魔・体・速・運)
   this.strBase = 1;
   this.intBase = 1;
@@ -2642,31 +2342,31 @@ function Devil(devil) {
       // 初期所持スキルはコスト0として扱われるため、最大コスト算出より除外する
       if (!this.isDefaultSkill(skillData.skillID)) {
         this.maxSkillCost < skillData.cost 
-        ? this.maxSkillCost = skillData.cost
-        : this.maxSkillCost;
+          ? this.maxSkillCost = skillData.cost
+          : this.maxSkillCost;
       }
     };
     return this.maxSkillCost;//}}}
   }
-  
+
   /**
    * 最大経験値を算出します。
    */
   this.calculateEXPMax = function(){
     var expBaseScale,defference = this.lv - this.original.lv;//{{{
-    
-    if (defference < 0) {
-      expBaseScale = expBaseScaleFactor[0];
-    } else if(defference == 0){
-      expBaseScale = expBaseScaleFactor[1];
-    } else if(defference >= 1 && defference < 9){
-      expBaseScale = expBaseScaleFactor[defference+1];
-    } else if(defference >= 9 ){
-      expBaseScale = expBaseScaleFactor[expBaseScaleFactor.length-1];
-    }
-    
-    return this.expMax = Math.floor(expTable[this.lv] * expBaseScale -1);//}}}
- }
+
+  if (defference < 0) {
+    expBaseScale = expBaseScaleFactor[0];
+  } else if(defference == 0){
+    expBaseScale = expBaseScaleFactor[1];
+  } else if(defference >= 1 && defference < 9){
+    expBaseScale = expBaseScaleFactor[defference+1];
+  } else if(defference >= 9 ){
+    expBaseScale = expBaseScaleFactor[expBaseScaleFactor.length-1];
+  }
+
+  return this.expMax = Math.floor(expTable[this.lv] * expBaseScale -1);//}}}
+  }
 
   /**
    * 悪魔が元々持っているスキルか判別します。
@@ -2682,14 +2382,14 @@ function Devil(devil) {
     }
     return false;//}}}
   };
-  
+
   /**
    * 召喚に必要なコストを算出します。
    * ステータス・スキルが正しく設定されている必要があります。
    */
   this.calculateCost = function () {
     //{{{
-   
+
     this.calculateMaxSkillCost();
     var statusCost = 
       parseInt(this.str) +
@@ -2697,117 +2397,117 @@ function Devil(devil) {
       parseInt(this.vit) +
       parseInt(this.int) +
       parseInt(this.luc);
-    
+
     var baseCost = Math.floor(Math.pow(statusCost,3) 
-                              * this.devilCost % Math.pow(2,32) /1000);
+        * this.devilCost % Math.pow(2,32) /1000);
     return this.totalCost = Math.floor(
-      (this.maxSkillCost + baseCost + 1300)*3/4
-    );
+        (this.maxSkillCost + baseCost + 1300)*3/4
+        );
   }//}}}
-  
+
   // この悪魔の複製を返す。
-  this.clone = function() {
+  Devil.prototype.clone = function() {
     //{{{
     var clone = new Devil(this);
-    
+
     clone.attr    = this.attr.slice(0);
     clone.skill   = this.skill.slice(0);
 
     clone.original = this;
-    
+
     return clone;
   }//}}}
-  
-  // この悪魔の文字列表現を返す。(簡易)
-  this.toString = function() {
-    //{{{
-    var enemyExclusive = this.playerUses ? "" : "（？）"
-    return "" + this.devilID + 
-      ":[" + getGenus(this.genusID).toString() + "]" +
-      this.name + enemyExclusive;
-  }//}}}
-  
-  // この悪魔の文字列表現を返す。(詳細)
-  this.toDetailString = function() {
-    //{{{
-    return this.toString();
-  }//}}}
-  
-  // この悪魔の情報を返す。(簡易)
-  this.getSimpleInformation = function() {
-    //{{{
-    var msg = "";
-    
-    msg += "【" + this.toString() + "】";
-    msg += "\n";
-    
-    msg += " COST:" + addComma(this.calculateCost());
-    msg += " 100%時:" + addComma(this.calculateCost()/2);
-    msg += " 最大スキル:" + addComma(this.maxSkillCost);
-    msg += "\n";
-    
-    msg += "■ステータス";
-    msg += "\n";
-    
-    msg += "Lv:" + this.lv;
-    msg += " 経験値:" + this.exp;
-    msg += "\n";
-    
-    msg += "HP:" + this.HP +" MP:" + this.MP;
-    msg += "\n";
-    
-    msg += "力:"  + this.str + "(" + this.strBase + ")";
-    msg += " 魔:" + this.int + "(" + this.intBase + ")";
-    msg += " 体:" + this.vit + "(" + this.vitBase + ")";
-    msg += " 速:" + this.agi + "(" + this.agiBase + ")";
-    msg += " 運:" + this.luc + "(" + this.lucBase + ")";
-    msg += "\n";
-    
-    msg += "■属性 : "
-    msg += "\n";
-    msg += "物銃火氷電風破呪"
-    msg += "\n";
-    msg += getAttr(this.attr[0]);
-    msg += getAttr(this.attr[1]);
-    msg += getAttr(this.attr[2]);
-    msg += getAttr(this.attr[3]);
-    msg += getAttr(this.attr[4]);
-    msg += getAttr(this.attr[5]);
-    msg += getAttr(this.attr[6]);
-    msg += getAttr(this.attr[7]);
-    msg += "\n";
-    
-    msg += "■スキル : "
-    msg += "\n";
-    msg += "[1]:"  + getSkill(this.skill[0]);
-    msg += " [2]:" + getSkill(this.skill[1]);
-    msg += " [3]:" + getSkill(this.skill[2]);
-    msg += "\n";
-    msg += "[4]:"  + getSkill(this.skill[3]);
-    msg += " [5]:" + getSkill(this.skill[4]);
-    msg += " [6]:" + getSkill(this.skill[5]);
-    msg += "\n";
-    
-    msg += "■パスワード : "
-    msg += "\n";
-    msg += generatePassword(this);
-    
-    return msg;
-  }//}}}
-  
-  // この悪魔の情報を返す。(詳細)
-  this.getDetailInformation = function() {
-    return this.getSimpleInformation();//{{{
-  }
-  //}}}
-  //}}}
+
+        // この悪魔の文字列表現を返す。(簡易)
+        this.toString = function() {
+          //{{{
+          var enemyExclusive = this.playerUses ? "" : "（？）"
+          return "" + this.devilID + 
+            ":[" + getGenus(this.genusID).toString() + "]" +
+            this.name + enemyExclusive;
+        }//}}}
+
+        // この悪魔の文字列表現を返す。(詳細)
+        this.toDetailString = function() {
+          //{{{
+          return this.toString();
+        }//}}}
+
+        // この悪魔の情報を返す。(簡易)
+        this.getSimpleInformation = function() {
+          //{{{
+          var msg = "";
+
+          msg += "【" + this.toString() + "】";
+          msg += "\n";
+
+          msg += " COST:" + addComma(this.calculateCost());
+          msg += " 100%時:" + addComma(Math.floor(this.calculateCost()/2));
+          msg += " 最大スキル:" + addComma(this.maxSkillCost);
+          msg += "\n";
+
+          msg += "■ステータス";
+          msg += "\n";
+
+          msg += "Lv:" + this.lv;
+          msg += " 経験値:" + this.exp;
+          msg += "\n";
+
+          msg += "HP:" + this.HP +" MP:" + this.MP;
+          msg += "\n";
+
+          msg += "力:"  + this.str + "(" + this.strBase + ")";
+          msg += " 魔:" + this.int + "(" + this.intBase + ")";
+          msg += " 体:" + this.vit + "(" + this.vitBase + ")";
+          msg += " 速:" + this.agi + "(" + this.agiBase + ")";
+          msg += " 運:" + this.luc + "(" + this.lucBase + ")";
+          msg += "\n";
+
+          msg += "■属性 : "
+          msg += "\n";
+          msg += "物銃火氷電風破呪"
+          msg += "\n";
+          msg += getAttr(this.attr[0]);
+          msg += getAttr(this.attr[1]);
+          msg += getAttr(this.attr[2]);
+          msg += getAttr(this.attr[3]);
+          msg += getAttr(this.attr[4]);
+          msg += getAttr(this.attr[5]);
+          msg += getAttr(this.attr[6]);
+          msg += getAttr(this.attr[7]);
+          msg += "\n";
+
+          msg += "■スキル : "
+          msg += "\n";
+          msg += "[1]:"  + getSkill(this.skill[0]);
+          msg += " [2]:" + getSkill(this.skill[1]);
+          msg += " [3]:" + getSkill(this.skill[2]);
+          msg += "\n";
+          msg += "[4]:"  + getSkill(this.skill[3]);
+          msg += " [5]:" + getSkill(this.skill[4]);
+          msg += " [6]:" + getSkill(this.skill[5]);
+          msg += "\n";
+
+          msg += "■パスワード : "
+          msg += "\n";
+          msg += generatePassword(this);
+
+          return msg;
+        }//}}}
+
+        // この悪魔の情報を返す。(詳細)
+        this.getDetailInformation = function() {
+          return this.getSimpleInformation();//{{{
+        }
+        //}}}
+        //}}}
 }
 function addComma(str)
 {  
-var num = new String(str).replace(/,/g, '');
-while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1,$2')));
+  var num = new String(str).replace(/,/g, '');
+  while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1,$2')));
   if(num == undefined){return str;  }
-return num;
+  return num;
 }  
 // -------------------------------------------------------------------------------------------------
 // パターンクラス
@@ -2817,7 +2517,7 @@ function Pattern(charList, indexArray, xorbit) {
   this.b2cMap = charList.split(",");
   this.c2bMap = null;
   this.xorbit = xorbit;
-  
+
   this.init = function() {
     this.c2bMap = new Array();
     var i;
@@ -2827,3 +2527,15 @@ function Pattern(charList, indexArray, xorbit) {
   };
 }
 //}}}
+$('document').ready(function(){
+  init();
+  $('div.left-indent select').change(function(){doRefresh()});
+  $('#cbBaseEqReal').change(function(){doRefresh()});
+  $('#exp').change(function(){doRefresh()});
+  $('#password-pattern').change(function(){doRefresh()});
+  $('#skill-element').change(function(){
+    var value = $(this).val();
+    console.log(value);
+  });
+  $('#set-default').click(function(){doSetDefault()});
+});
