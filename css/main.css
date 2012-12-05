@@ -122,6 +122,15 @@ select ,option,input,textarea{
 #debug-mode-label{
   margin-left:0;
 }
+option.attack-group-2{
+  background-color:#E0FDE6;
+}
+option.attack-group-1{
+  background-color:#f8e0fd;
+}
+option.highlight{
+  background-color:#fdfce0;
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */

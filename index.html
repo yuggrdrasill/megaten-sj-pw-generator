@@ -69,7 +69,7 @@
     　□Lv (1～99)<br>
 
     <div class="left-indent">
-      　<select name="slLv" id="lv"></select><br>
+      　<select name="slLv" id="lv" class="status"></select><br>
     </div>
 
 
@@ -81,21 +81,21 @@
              size="12" min="0" max="2097151"><br>
     </div>
 
-    <div id="status">
+    <div id="status-effective">
       　□能力値・実値 (1～99)<br>
 
       <div class="left-indent" title="ラベルをダブルクリックすると99になります。
               すでに99の場合は1になります。">
         <label for="slStr">力</label>
-        <select id="slStr" name="slStr"></select>
+        <select id="slStr" name="slStr" class="status"></select>
         <label for="slInt">魔</label>
-        <select id="slInt" name="slInt"></select>
+        <select id="slInt" name="slInt" class="status"></select>
         <label for="slVit">体</label>
-        <select id="slVit" name="slVit"></select>
+        <select id="slVit" name="slVit" class="status"></select>
         <label for="slAgi">速</label>
-        <select id="slAgi" name="slAgi"></select>
+        <select id="slAgi" name="slAgi" class="status"></select>
         <label for="slLuc">運</label>
-        <select id="slLuc" name="slLuc"></select><br>
+        <select id="slLuc" name="slLuc" class="status"></select><br>
       </div>
     </div>
 
@@ -106,19 +106,19 @@
               すでに99の場合は1になります。">
         <label for="slStrBase"
             >力</label>
-        <select id="slStrBase" name="slStrBase"></select>
+        <select id="slStrBase" name="slStrBase" class="status"></select>
         <label for="slIntBase"
             >魔</label>
-        <select id="slIntBase" name="slIntBase"></select>
+        <select id="slIntBase" name="slIntBase" class="status"></select>
         <label for="slVitBase"
             >体</label>
-        <select id="slVitBase" name="slVitBase"></select>
+        <select id="slVitBase" name="slVitBase" class="status"></select>
         <label for="slAgiBase"
             >速</label>
-        <select id="slAgiBase" name="slAgiBase"></select>
+        <select id="slAgiBase" name="slAgiBase" class="status"></select>
         <label for="slLucBase"
             >運</label>
-        <select id="slLucBase" name="slLucBase"></select>
+        <select id="slLucBase" name="slLucBase" class="status"></select>
 
         <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal">
         <label for="cbBaseEqReal">実値と同じ値を使う</label>
@@ -129,30 +129,32 @@
       　□スキル (0～419)<br>
 
       <div class="left-indent">
+        <select id="skills-master" class="hidden" name="skillsMaster"></select>
         <label for="slSkill0">[1]</label>
         <select id="slSkill0" name="slSkill0" class="skills"></select>
-        <input id="hide-skill0" name="hideSkill0" type="hidden"/>
         <label for="slSkill1">[2]</label>
         <select id="slSkill1" name="slSkill1" class="skills"></select>
-        <input id="hide-skill1" name="hideSkill1" type="hidden"/>
         <label for="slSkill2">[3]</label>
         <select id="slSkill2" name="slSkill2" class="skills"></select><br>
-        <input id="hide-skill2" name="hideSkill2" type="hidden"/>
         <label for="slSkill3">[4]</label>
         <select id="slSkill3" name="slSkill3" class="skills"></select>
-        <input id="hide-skill3" name="hideSkill3" type="hidden"/>
         <label for="slSkill4">[5]</label>
         <select id="slSkill4" name="slSkill4" class="skills"></select>
-        <input id="hide-skill4" name="hideSkill4" type="hidden"/>
         <label for="slSkill5">[6]</label>
         <select id="slSkill5" name="slSkill5" class="skills"></select><br>
+        
+        <input id="hide-skill0" name="hideSkill0" type="hidden"/>
+        <input id="hide-skill1" name="hideSkill1" type="hidden"/>
+        <input id="hide-skill2" name="hideSkill2" type="hidden"/>
+        <input id="hide-skill3" name="hideSkill3" type="hidden"/>
+        <input id="hide-skill4" name="hideSkill4" type="hidden"/>
         <input id="hide-skill5" name="hideSkill5" type="hidden"/>
       </div>
       <div id="elemental">
-        <label for="skill-element">
-          スキルをフィルタリングする
+        <label for="skill-filter">
+          スキルを色づけする
         </label>
-        <select id="skill-element" name="element">
+        <select id="skill-filter" name="element">
         </select>
       </div>
     </div>
@@ -269,6 +271,7 @@
 </div>
 <script type="text/javascript" src="js/plugins.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="js/jquery.fastLiveFilter.js"></script>
 <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
 <script type="text/javascript">
 
