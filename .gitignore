@@ -1,2 +1,5 @@
 .idea/
 pub/
+web-server.cmd
+web-server.js
+node_modules/

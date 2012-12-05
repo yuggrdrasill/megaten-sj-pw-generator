@@ -501,22 +501,6 @@ for (var i in skillJSON) {
 }
 ;
 
-var elementClass = [];
-for (var i in elementJSON) {
-  elementClass[i] = [];
-}
-;
-
-// 攻撃属性ごとにスキルを分類する
-for (var j = 0 , len = skillMap.length; j < len; j++) {
-  var skill = skillMap[j];
-  if (skill) {
-    elementClass[skill.element.id].push(skill);
-  }
-}
-var cachedOptionsClassifySkill = [];
-
-
 var devilJSON = {
   //{{{
   "1":{    "attr":[3, 3, 6, 2, 1, 1, 4, 3], "id":1, "genusID":1, "name":"セラフ", "devilCost":38, "baseHP":110, "HP":25, "baseMP":110, "MP":13, "skillDefault":[40, 43, 107, 0, 0, 0], "lvDefault":89, "strDefault":52, "intDefault":64, "vitDefault":57, "agiDefault":55, "lucDefault":59, "playerUses":true },
@@ -1280,7 +1264,6 @@ function changeEnemyExclusive() {
 function createDevilOption(devil) {
   var result = '<option class="genus-'+ devil.genusID +'" ' +
     'value="' + devil.devilID + '">' + devil.toDetailString() + '</option>';
-  console.debug(result);
   return result;
 }
 

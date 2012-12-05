@@ -1,0 +1,22 @@
+{
+  "name": "Arcadia search",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "grunt-contrib-compress": ">= 0.3",
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/angular-seed"
+  },
+  "author": "yuggr",
+  "license": "MIT"
+}
