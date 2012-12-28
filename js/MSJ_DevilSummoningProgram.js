@@ -1566,11 +1566,11 @@ function setStatusBase(devil) {
   // 能力値・基準値
   if ($('#cbBaseEqReal').checked()) {
     // 「□実値と同じ値を使う」チェックボックスがチェックされている場合
-    devil.strBase = devil.str;
-    devil.intBase = devil.int;
-    devil.vitBase = devil.vit;
-    devil.agiBase = devil.agi;
-    devil.lucBase = devil.luc;
+    $('#slStrBase').val(devil.strBase = devil.str);
+    $('#slIntBase').val(devil.intBase = devil.int);
+    $('#slVitBase').val(devil.vitBase = devil.vit);
+    $('#slAgiBase').val(devil.agiBase = devil.agi);
+    $('#slLucBase').val(devil.lucBase = devil.luc);
   }
   else {
     // 「■実値と同じ値を使う」チェックボックスがチェックされていない場合
@@ -2625,6 +2625,8 @@ $(function () {
   $('#enemy-exclusive').change(function () {
     changeEnemyExclusive();
     $('#stance-filter').trigger('change');
+    $('.status').trigger('change');
+    $('.status-slider').trigger('change');
   });
 
   $('#set-default').click(function () {
@@ -2642,39 +2644,13 @@ $(function () {
     skillFiltering()
   });
 
-  $('label[for="slStr"]').on("dblclick", function () {
-    toggleStatusMaxMin($('#slStr'));
-  });
-  $('label[for="slInt"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slInt'));
-  });
-  $('label[for="slVit"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slVit'));
-  });
-  $('label[for="slAgi"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slAgi'));
-  });
-  $('label[for="slLuc"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slLuc'));
-  });
-  $('label[for="slStrBase"]').on("dblclick", function () {
-    toggleStatusMaxMin($('#slStrBase'));
-  });
-  $('label[for="slIntBase"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slIntBase'));
-  });
-  $('label[for="slVitBase"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slVitBase'));
-  });
-  $('label[for="slAgiBase"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slAgiBase'));
-  });
-  $('label[for="slLucBase"]').on('dblclick', function () {
-    toggleStatusMaxMin($('#slLucBase'));
-  });
-
-
-  // $( "#slStr" ).change(function() {
-  //     slider.slider( "value", this.selectedIndex + 1 );
-  // });
+  var statusNames = [
+    "slStr","slInt","slVit",'slAgi','slLuc',
+    'slStrBase','slIntBase','slVitBase','slAgiBase','slLucBase'
+    ];
+  for (var i = 0; i < statusNames.length; i++) {
+    $('label[for="'+ statusNames[i] +'"]').on("dblclick", function () {
+      toggleStatusMaxMin($('#'+$(this).attr("for")));
+    });
+  };
 });
