@@ -106,7 +106,7 @@ function isAttackGroupMagic(skill) {
   return skill.attackGroup.id == 1 ? false : true;
 }
 
-var skillJSON = ({ /// {{{ 
+var skillJSON = ({ /// {{{
   0:{id:0, name:"－", cost:0, element:elementJSON[0], attackGroup:attackGroup[2]},
   1:{id:1, name:"アギ", cost:112, element:elementJSON[3], attackGroup:attackGroup[2]},
   2:{id:2, name:"アギラオ", cost:347, element:elementJSON[3], attackGroup:attackGroup[2]},
@@ -1259,7 +1259,7 @@ function changeEnemyExclusive() {
 }
 
 /**
- * 
+ *
  */
 function createDevilOption(devil) {
   var result = '<option class="genus-'+ devil.genusID +'" ' +
@@ -1313,7 +1313,7 @@ function createSkills() {
     var elm = '<option value="'+ skill.skillID +'" '+
       'title ="' + skill.info() +'" '+
       'class = "'+
-      ' element-' + skill.element.id + 
+      ' element-' + skill.element.id +
       ' attack-group-' + skill.attackGroup.id +
       '"'+
       '>' +skill.toDetailString();
@@ -1538,11 +1538,11 @@ function setStatusBase(devil) {
 function setEXPMax(devil) {
   devil.calculateEXPMax();
   $('#exp').attr('max' , devil.expMax);
-  
+
   //label
   $('#exp-max-label').empty();
   $('#exp-max-label').append(devil.expMax);
-  
+
   var result = 0;
   var inputEXP = parseInt($('#exp').val());
   if (inputEXP > parseInt(devil.expMax)) {
@@ -2017,7 +2017,7 @@ function generatePassword(devil) {//{{{
   checksum += currentPatternID;
   checksum %= 256;
 
-  // バイト単位で移送 
+  // バイト単位で移送
   var dstBytes = new Array();
   for (i = 0; i < 22; i++) {
     dstBytes[indexMap[currentPatternID][i]] = srcBytes[i];
@@ -2075,7 +2075,7 @@ function generatePassword(devil) {//{{{
   ////    debugInfo += fillZero(8, eval(bitsumAll).toString(2)) + " " + bitsumAll;
   ////    debugInfo += "\n";
   ////    debugInfo += bitsum;
-  //    
+  //
   //    result += "\n\n";
   //    result += debugInfo;
   //  }
@@ -2201,7 +2201,7 @@ function Skill(skill) {
 /*
  * 悪魔クラス
  * @param {Object} devil 悪魔データのオブジェクトです。
- * 
+ *
  * 引数内プロパティ
  *        {Integer}  id
  *        {Integer}  genusID 種族ID
@@ -2476,7 +2476,33 @@ var skillFiltering = function () {
 // event binds
 $(function () {
   init();
-  $('div.left-indent select').change(function () {
+  // var select = $( "#slStr" );
+  // var slider = $( "<div id='"+"'slider'></div>" ).insertAfter( select ).slider({
+  //     min: 1,
+  //     max: 99,
+  //     range: "min",
+  //     value: select[ 0 ].selectedIndex + 1,
+  //     slide: function( event, ui ) {
+  //         select.val(ui.value);
+  //         doRefresh();
+  //     }
+  // });
+  $('.status').each(function (index,val) {
+      var select = $(val);
+      var id = $(val).attr('id');
+      var slider = $( "<div id='"+ id +"-slider' class='status-slider'></div>" ).insertAfter( select ).slider({
+          min: 1,
+          max: 99,
+          range: "min",
+          value: select[ 0 ].selectedIndex + 1,
+          slide: function( event, ui ) {
+              select.val(ui.value);
+              doRefresh();
+          }
+      });
+  })
+
+  $('div.left-indent select').on('change' ,function () {
     doRefresh();
   });
   $('#cbBaseEqReal').change(function () {
@@ -2536,4 +2562,8 @@ $(function () {
     toggleStatusMaxMin($('#slLucBase'));
   });
 
+
+  // $( "#slStr" ).change(function() {
+  //     slider.slider( "value", this.selectedIndex + 1 );
+  // });
 });

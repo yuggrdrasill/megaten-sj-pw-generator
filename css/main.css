@@ -122,14 +122,19 @@ select ,option,input,textarea{
 #debug-mode-label{
   margin-left:0;
 }
-option.attack-group-2{
+.attack-group-2{
   background-color:#E0FDE6;
 }
-option.attack-group-1{
+.attack-group-1{
   background-color:#f8e0fd;
 }
-option.highlight{
+.highlight{
   background-color:#fdfce0;
+}
+.status-slider{
+  display: inline-block;
+  width: 50%;
+  margin-left: 20px;
 }
 /* ==========================================================================
    Helper classes

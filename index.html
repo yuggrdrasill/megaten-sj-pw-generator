@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 </head>
 <body onload="">
 <div id="wrapper">
@@ -81,48 +82,63 @@
              size="12" min="0" max="2097151"><br>
     </div>
 
-    <div id="status-effective">
-      　□能力値・実値 (1～99)<br>
-
+    <fieldset id="status-effective">
+      <legend>□能力値・実値 (1～99)</legend>
       <div class="left-indent" title="ラベルをダブルクリックすると99になります。
               すでに99の場合は1になります。">
-        <label for="slStr">力</label>
-        <select id="slStr" name="slStr" class="status"></select>
-        <label for="slInt">魔</label>
-        <select id="slInt" name="slInt" class="status"></select>
-        <label for="slVit">体</label>
-        <select id="slVit" name="slVit" class="status"></select>
-        <label for="slAgi">速</label>
-        <select id="slAgi" name="slAgi" class="status"></select>
-        <label for="slLuc">運</label>
-        <select id="slLuc" name="slLuc" class="status"></select><br>
+        <div>
+          <label for="slStr">力</label>
+          <select id="slStr" name="slStr" class="status"></select>
+        </div>
+        <div>
+          <label for="slInt">魔</label>
+          <select id="slInt" name="slInt" class="status"></select>
+        </div>
+        <div>
+          <label for="slVit">体</label>
+          <select id="slVit" name="slVit" class="status"></select>
+        </div>
+        <div>
+          <label for="slAgi">速</label>
+          <select id="slAgi" name="slAgi" class="status"></select>
+        </div>
+        <div>
+          <label for="slLuc">運</label>
+          <select id="slLuc" name="slLuc" class="status"></select><br>
+        </div>
       </div>
-    </div>
+    </fieldset>
 
     <div id="status-base">
-      　□能力値・基準値 (1～99)<br>
-
+      <fieldset>
+        <legend>□能力値・基準値 (1～99)</legend>
       <div class="left-indent" title="ラベルをダブルクリックすると99になります。
               すでに99の場合は1になります。">
-        <label for="slStrBase"
-            >力</label>
-        <select id="slStrBase" name="slStrBase" class="status"></select>
-        <label for="slIntBase"
-            >魔</label>
-        <select id="slIntBase" name="slIntBase" class="status"></select>
-        <label for="slVitBase"
-            >体</label>
-        <select id="slVitBase" name="slVitBase" class="status"></select>
-        <label for="slAgiBase"
-            >速</label>
-        <select id="slAgiBase" name="slAgiBase" class="status"></select>
-        <label for="slLucBase"
-            >運</label>
-        <select id="slLucBase" name="slLucBase" class="status"></select>
+        <div>
+          <label for="slStrBase">力</label>
+          <select id="slStrBase" name="slStrBase" class="status"></select>
+        </div>
+        <div>
+          <label for="slIntBase">魔</label>
+          <select id="slIntBase" name="slIntBase" class="status"></select>
+        </div>
+        <div>
+          <label for="slVitBase">体</label>
+          <select id="slVitBase" name="slVitBase" class="status"></select>
+        </div>
+        <div>
+          <label for="slAgiBase">速</label>
+          <select id="slAgiBase" name="slAgiBase" class="status"></select>
+        </div>
+        <div>
+          <label for="slLucBase">運</label>
+          <select id="slLucBase" name="slLucBase" class="status"></select>
+        </div>
 
         <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal">
         <label for="cbBaseEqReal">実値と同じ値を使う</label>
       </div>
+      </fieldset>
     </div>
 
     <div id="skills">
@@ -142,7 +158,7 @@
         <select id="slSkill4" name="slSkill4" class="skills"></select>
         <label for="slSkill5">[6]</label>
         <select id="slSkill5" name="slSkill5" class="skills"></select><br>
-        
+
         <input id="hide-skill0" name="hideSkill0" type="hidden"/>
         <input id="hide-skill1" name="hideSkill1" type="hidden"/>
         <input id="hide-skill2" name="hideSkill2" type="hidden"/>
@@ -272,6 +288,7 @@
 <script type="text/javascript" src="js/plugins.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>!window.jQuery && document.write('<script src="./js/jquery.min.js"><\/script>')</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
 <script type="text/javascript">
 
