@@ -2487,7 +2487,8 @@ $(function () {
   //         doRefresh();
   //     }
   // });
-  $('.status').each(function (index,val) {
+  var statusElm = $('.status');
+  statusElm.each(function (index,val) {
       var select = $(val);
       var id = $(val).attr('id');
       var slider = $( "<div id='"+ id +"-slider' class='status-slider'></div>" ).insertAfter( select ).slider({
@@ -2500,6 +2501,12 @@ $(function () {
               doRefresh();
           }
       });
+      select.on('change',function () {
+        var id = $(this).attr('id');
+        var slider = $('#' +id+'-slider');
+        var val = $(this).val();
+        slider.slider({'value':val});
+      })
   })
 
   $('div.left-indent select').on('change' ,function () {
