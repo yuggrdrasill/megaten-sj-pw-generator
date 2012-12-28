@@ -20,6 +20,27 @@
         <a href="http://www20.atwiki.jp/strange_journey/">まとめサイトに戻る</a>
         ]
         <hr>
+
+        <div id="data-info-button" title="クリックすると出力したステータスとパスワードを見ることが出来ます"
+           data-toggle="modal"
+           role="button"
+           data-target="#data-info">
+         <i class="icon-check"></i>
+        </div>
+
+        <!-- Modal -->
+        <div id="data-info" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="data-info-title" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="data-info-title"></h3>
+          </div>
+          <div class="modal-body" id="data-info-body">
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          </div>
+        </div>
+
         <div id="explanation">
           <h1>真・女神転生 ストレンジ ジャーニー 悪魔召喚プログラム</h1>
           パスワード予想ツールです。 <strong>※このツールは作者に無許可で個人的に改造しました。
@@ -67,7 +88,6 @@
             ※ また、ステータス基準値を実値よりも高く設定し、レベルアップにより基準値が 128 を超えた場合、オーバーフローにより 0 に戻るようです。
           </div>
         </div>
-
         <form id="password-generator" name="foMain" class="form-horizontal" onsubmit="return false;">
 
           <div id="data-input">
@@ -143,6 +163,9 @@
                       <label for="slLuc" class="status-label">運</label>
                       <select id="slLuc" name="slLuc" class="status"></select>
                     </div>
+                  </div>
+                  <div class="info-cost">
+                    現在の召喚コスト: <span id="info-nowcost">0</span>
                   </div>
               </fieldset>
 
@@ -331,7 +354,9 @@
           <hr>
           <dl>
             <dt>MOD LAST UPDATE : 2012/12/28 ver1.1/02 mod2012-12-28</dt>
-            <dd>スキルフィルタリングを実装した。chrome/firefoxのみ、ie8動作不可。</dd>
+            <dd>画面を大幅に変更した。スライダー追加。</dd>
+            <hr>
+            <dd>スキルフィルタリングを実装した。firefoxのみ、chromeは中途半端、ie8動作不可。</dd>
             <dd>ステータス値をスライダーで選択できるようにした。</dd>
             <dd>jQueryを使ってソースを整理した。</dd>
             <dd>スキルハイライトを追加した。</dd>

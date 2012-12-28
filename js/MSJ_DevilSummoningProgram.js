@@ -1570,8 +1570,19 @@ function doRefresh() {
   setEXPMax(devil);
 
   // 悪魔情報を取得して表示
-  outputMessage(devil.getSimpleInformation().replace(/\n/g,"<br>\n"));
+  var message = devil.getSimpleInformation().replace(/\n/g,"<br>\n");
+  outputMessage(message);
+
+  var cost = addComma(devil.totalCost)  + ' / ' +  addComma(Math.floor(devil.totalCost / 2));
+  $('#info-nowcost').html(cost);
+
+  setModalDialog(devil.toString(),message);
   //}}}
+}
+
+function setModalDialog (title,message) {
+  $('#data-info-title').html(title);
+  $('#data-info-body').html(message);
 }
 
 /**
@@ -2632,66 +2643,41 @@ function createSliders(){
   })
 }
 
-
-// event binds
-$(function () {
-  init();
-  // var select = $( "#slStr" );
-  // var slider = $( "<div id='"+"'slider'></div>" ).insertAfter( select ).slider({
-  //     min: 1,
-  //     max: 99,
-  //     range: "min",
-  //     value: select[ 0 ].selectedIndex + 1,
-  //     slide: function( event, ui ) {
-  //         select.val(ui.value);
-  //         doRefresh();
-  //     }
-  // });
-
-  View.setTooltip(
-    ".status-label",
-    "ラベルをダブルクリックすると99になります。\n"+
-      "すでに99の場合は1になります。"
-  );
-
-  createSliders();
-
+function hookStatusChange () {
   $('select').on('change' ,function () {
     doRefresh();
   });
-  $('#cbBaseEqReal').change(function () {
+  $('#cbBaseEqReal').on('change',(function () {
     View.toggleStatusBaseSelectDisabled();
     $('.status').trigger('change');
     $('.status-slider').trigger('change');
     doRefresh();
-  });
-  $('#exp').change(function () {
+  }));
+  $('#exp').on('change',(function () {
     doRefresh();
-  });
-  $('#password-pattern').change(function () {
+  }));
+  $('#password-pattern').on('change',(function () {
     doRefresh();
-  });
+  }));
+}
 
-  $('#enemy-exclusive').change(function () {
+function hookChangeEnemyExclusive () {
+  $('#enemy-exclusive').on('change',(function () {
     changeEnemyExclusive();
     $('#stance-filter').trigger('change');
-  });
+  }));
+}
 
-  $('#set-default').click(function () {
-    doSetDefault()
-  });
-
-  $('#password-parse').click(function () {
-    doInput();
-  });
-
+function hookFilters () {
   $('#stance-filter').on('change',function () {
     stanceFiltering();
   })
   $('#skill-filter').on('change',function(){
     skillFiltering()
   });
+}
 
+function hookToggleStatusMaxMin () {
   var statusNames = [
     "slStr","slInt","slVit",'slAgi','slLuc',
     'slStrBase','slIntBase','slVitBase','slAgiBase','slLucBase'
@@ -2701,4 +2687,35 @@ $(function () {
       toggleStatusMaxMin($('#'+$(this).attr("for")));
     });
   };
+}
+
+function hookSetDefault () {
+  $('#set-default').on('click',(function () {
+    doSetDefault()
+  }));
+}
+
+function hookPasswordParse () {
+  $('#password-parse').click(function () {
+    doInput();
+  });
+}
+
+// event binds
+$(function () {
+  init();
+
+  View.setTooltip(
+    ".status-label",
+    "ラベルをダブルクリックすると99になります。\n"+
+      "すでに99の場合は1になります。"
+  );
+
+  createSliders();
+  hookStatusChange();
+  hookChangeEnemyExclusive();
+  hookFilters();
+  hookSetDefault();
+  hookPasswordParse();
+  hookToggleStatusMaxMin();
 });

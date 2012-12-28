@@ -153,11 +153,6 @@ select ,option,input,textarea{
 label{
   display: inline-block;
 }
-
-.data-info{
-  position: fixed;
-}
-
 .inline-block{
   display:inline-block;
 }
@@ -168,6 +163,19 @@ legend{
 fieldset{
   margin-top: 1em;
 }
+
+#data-info-button{
+  position: fixed;
+  left: 95%;
+  top: 8px;
+  background-color: #fafffa;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+
 .attr-weakpoint{}
 .attr-regists{}
 .attr-null{}
