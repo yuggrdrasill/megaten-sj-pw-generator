@@ -1,214 +1,276 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>真・女神転生 ストレンジ ジャーニー 悪魔召喚プログラム</title>
-  <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/black-tie/jquery-ui.css" />
-</head>
-<body onload="">
-<div id="wrapper">
-[<a href="http://www20.atwiki.jp/strange_journey/">まとめサイトに戻る</a>]
-<hr>
-<div id="explanation">
+  <head>
+    <meta charset="utf-8">
+    <title>真・女神転生 ストレンジ ジャーニー 悪魔召喚プログラム</title>
+    <meta name="viewport" content="width=device-width">
+    <!-- <link rel="stylesheet" href="css/normalize.css">
+    -->
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
 
-  <h1>真・女神転生 ストレンジ ジャーニー 悪魔召喚プログラム</h1>
-  パスワード予想ツールです。
-  <strong>※このツールは作者に無許可で個人的に改造しました。
-    改変部分については原作者に関係がありません。</strong><br>
-  まだ若干未実装部分が残されています。<br>
-  持ち帰り用 zip ファイルはこちら →
-  <a href="//yugg.s101.xrea.com/strange_journey/pub/msj_dsp_mod.zip">MOD版(このファイル）)</a>
-  本家：[<a href="http://www20.atwiki.jp/strange_journey/pub/comp/MSJ_DSP.zip">持ち帰り用zip</a>]<br>
-  <br bg="bg.png">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootswatch/2.1.1/cyborg/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/black-tie/jquery-ui.css" />
+    <!-- <link rel="stylesheet" href="css/GGS.css">--></head>
+  <body>
+    <div id="wrapper">
+      <div class="container">
+        [
+        <a href="http://www20.atwiki.jp/strange_journey/">まとめサイトに戻る</a>
+        ]
+        <hr>
+        <div id="explanation">
+          <h1>真・女神転生 ストレンジ ジャーニー 悪魔召喚プログラム</h1>
+          パスワード予想ツールです。 <strong>※このツールは作者に無許可で個人的に改造しました。
+            改変部分については原作者に関係がありません。</strong>
+          <br>
+          まだ若干未実装部分が残されています。
+          <br>
+          持ち帰り用 zip ファイルはこちら →
+          <a href="//yugg.s101.xrea.com/strange_journey/pub/msj_dsp_mod.zip">MOD版(このファイル）)</a>
+          本家：[
+          <a href="http://www20.atwiki.jp/strange_journey/pub/comp/MSJ_DSP.zip">持ち帰り用zip</a>
+          ]
+          <br>
+          <br bg="bg.png">
 
-  <div class="warning">
-    ※ このツールを利用することにより、ゲームバランスが著しく崩壊する可能性があります。<br>
-    ※ 通常のプレイをしたい方には利用しないことをおすすめします。<br>
-    ※ また、下記の通りバグを誘発する可能性があることも踏まえ、利用は自己責任でお願いします。<br>
-  </div>
-  ■諸注意<br>
+          <div class="warning">
+            ※ このツールを利用することにより、ゲームバランスが著しく崩壊する可能性があります。
+            <br>
+            ※ 通常のプレイをしたい方には利用しないことをおすすめします。
+            <br>
+            ※ また、下記の通りバグを誘発する可能性があることも踏まえ、利用は自己責任でお願いします。
+            <br></div>
+          ■諸注意
+          <br>
 
-  <div class="warning">
-    ※「ダミー」や悪魔 ID 後半のもの(リスト内で末尾に(？)が付いているもの)は、敵専用で本来召還できない悪魔なので召還の際は注意。<br>
-    ※ (全書に載ってしまう → 全書から消せない。他のバグも誘発するかも？)<br>
-    ※「敵専用っぽい悪魔」は大抵説明欄が【ＮＯ　ＤＡＴＡ】となっている模様。<br>
-    ※ これらの本来登録できない悪魔を登録した状態で周回プレイすると全書がバグることがあるようです。(未確認)<br>
-    ※ (本来登録できない悪魔を登録後周回し、登録済の普通の悪魔を召還すると、指定した悪魔と違う悪魔が召還され、スキル等もバグっている、らしい)<br>
-    ※ (そのデータを消しても、そのセーブスロットの全書はバグったまま、など？)<br>
-    ※ 上記のバグは確認できた事象ではありませんが、リスクを負いたくない場合は敵専用悪魔やスキルは使用しない方が無難です。<br>
-    ※ スキル欄を飛ばして入力する(1が未入力で2を入力、等)と、スキル表示がバグった悪魔になります。<br>
-    ※ (所持はしているが、スキル欄上は表示されないまたは別名表示される(隣の悪魔の同スロットのスキル名が残る))<br>
-    ※ また、ステータス基準値を実値よりも高く設定し、レベルアップにより基準値が 128 を超えた場合、オーバーフローにより 0 に戻るようです。
-  </div>
-</div>
-
-<form id="password-generator" name="foMain" onsubmit="return false;">
-
-  <div id="data-input">
-
-    <fieldset id="status-patern">
-      <legend>パターン</legend>
-    　<select name="slPattern" id="password-pattern"></select>
-      <label for="enemy-exclusive"
-             title="エラーになるスキルや敵専用のモノを表示します">
-        敵専用スキル・仲間に出来ない敵を表示する</label>
-      <input id="enemy-exclusive" name="enemyExclusive" type="checkbox">
-  </fieldset>
-
-    <fieldset id="devils">
-      <legend>□悪魔 ID (0～490)</legend>
-      <div class="left-indent">
-      　<select id="devilID" name="slDevil"></select>
-        <select name="stanceFilter" id="stance-filter" class="filter"></select>
-      　<select id="devils-clone" name="devilsClone" hidden="hidden"></select>
-        <button id="set-default" name="setDefault"
-          title="悪魔が本来持っているステータスとスキルを設定します。">
-          既定ステータスをセットする
-        </button>
-      </div>
-    </fieldset>
-
-    <fieldset id="status-lv">
-      <legend>□Lv (1～99)</legend>
-      <div class="left-indent">
-        　<select name="slLv" id="lv" class="status"></select><br>
-      </div>
-    </fieldset>
-
-    <fieldset id="status-exp">
-      <legend>□経験値 (0～<span id="exp-max-label">2097151</span>)
-       (※ NEXT が 0 以下になるような値は不可)</legend>
-      <div class="left-indent">
-        <input type="number"
-               id="exp" name="txExp" value="0"
-               size="12" min="0" max="2097151"><br>
-      </div>
-    </fieldset>
-
-    <fieldset id="status-effective">
-      <legend>□能力値・実値 (1～99)</legend>
-      <div class="left-indent"
-          title="ラベルをダブルクリックすると99になります。              すでに99の場合は1になります。">
-        <div>
-          <label for="slStr">力</label>
-          <select id="slStr" name="slStr" class="status"></select>
-        </div>
-        <div>
-          <label for="slInt">魔</label>
-          <select id="slInt" name="slInt" class="status"></select>
-        </div>
-        <div>
-          <label for="slVit">体</label>
-          <select id="slVit" name="slVit" class="status"></select>
-        </div>
-        <div>
-          <label for="slAgi">速</label>
-          <select id="slAgi" name="slAgi" class="status"></select>
-        </div>
-        <div>
-          <label for="slLuc">運</label>
-          <select id="slLuc" name="slLuc" class="status"></select><br>
-        </div>
-      </div>
-    </fieldset>
-
-    <div id="status-base">
-      <fieldset>
-        <legend>□能力値・基準値 (1～99)</legend>
-      <div class="left-indent"
-      title="ラベルをダブルクリックすると99になります。
-              すでに99の場合は1になります。">
-        <div>
-          <label for="slStrBase">力</label>
-          <select id="slStrBase" name="slStrBase" class="status"></select>
-        </div>
-        <div>
-          <label for="slIntBase">魔</label>
-          <select id="slIntBase" name="slIntBase" class="status"></select>
-        </div>
-        <div>
-          <label for="slVitBase">体</label>
-          <select id="slVitBase" name="slVitBase" class="status"></select>
-        </div>
-        <div>
-          <label for="slAgiBase">速</label>
-          <select id="slAgiBase" name="slAgiBase" class="status"></select>
-        </div>
-        <div>
-          <label for="slLucBase">運</label>
-          <select id="slLucBase" name="slLucBase" class="status"></select>
+          <div class="warning">
+            ※「ダミー」や悪魔 ID 後半のもの(リスト内で末尾に(？)が付いているもの)は、敵専用で本来召還できない悪魔なので召還の際は注意。
+            <br>
+            ※ (全書に載ってしまう → 全書から消せない。他のバグも誘発するかも？)
+            <br>
+            ※「敵専用っぽい悪魔」は大抵説明欄が【ＮＯ　ＤＡＴＡ】となっている模様。
+            <br>
+            ※ これらの本来登録できない悪魔を登録した状態で周回プレイすると全書がバグることがあるようです。(未確認)
+            <br>
+            ※ (本来登録できない悪魔を登録後周回し、登録済の普通の悪魔を召還すると、指定した悪魔と違う悪魔が召還され、スキル等もバグっている、らしい)
+            <br>
+            ※ (そのデータを消しても、そのセーブスロットの全書はバグったまま、など？)
+            <br>
+            ※ 上記のバグは確認できた事象ではありませんが、リスクを負いたくない場合は敵専用悪魔やスキルは使用しない方が無難です。
+            <br>
+            ※ スキル欄を飛ばして入力する(1が未入力で2を入力、等)と、スキル表示がバグった悪魔になります。
+            <br>
+            ※ (所持はしているが、スキル欄上は表示されないまたは別名表示される(隣の悪魔の同スロットのスキル名が残る))
+            <br>
+            ※ また、ステータス基準値を実値よりも高く設定し、レベルアップにより基準値が 128 を超えた場合、オーバーフローにより 0 に戻るようです。
+          </div>
         </div>
 
-        <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal">
-        <label for="cbBaseEqReal">実値と同じ値を使う</label>
-      </div>
-      </fieldset>
-    </div>
+        <form id="password-generator" name="foMain" class="form-horizontal" onsubmit="return false;">
 
-    <div id="skills">
-      　□スキル (0～419)<br>
+          <div id="data-input">
 
-      <div class="left-indent">
-        <select id="skills-master" class="hidden" name="skillsMaster"></select>
-        <label for="slSkill0">[1]</label>
-        <select id="slSkill0" name="slSkill0" class="skills"></select>
-        <label for="slSkill1">[2]</label>
-        <select id="slSkill1" name="slSkill1" class="skills"></select>
-        <label for="slSkill2">[3]</label>
-        <select id="slSkill2" name="slSkill2" class="skills"></select><br>
-        <label for="slSkill3">[4]</label>
-        <select id="slSkill3" name="slSkill3" class="skills"></select>
-        <label for="slSkill4">[5]</label>
-        <select id="slSkill4" name="slSkill4" class="skills"></select>
-        <label for="slSkill5">[6]</label>
-        <select id="slSkill5" name="slSkill5" class="skills"></select><br>
+            <fieldset id="status-patern">
+              <legend>パターン</legend>
+              <select name="slPattern" id="password-pattern"></select>
+              <label for="enemy-exclusive"
+                title="エラーになるスキルや敵専用のモノを表示します">敵専用スキル・仲間に出来ない敵を表示する</label>
+              <input id="enemy-exclusive" name="enemyExclusive" type="checkbox"></fieldset>
 
-        <input id="hide-skill0" name="hideSkill0" type="hidden"/>
-        <input id="hide-skill1" name="hideSkill1" type="hidden"/>
-        <input id="hide-skill2" name="hideSkill2" type="hidden"/>
-        <input id="hide-skill3" name="hideSkill3" type="hidden"/>
-        <input id="hide-skill4" name="hideSkill4" type="hidden"/>
-        <input id="hide-skill5" name="hideSkill5" type="hidden"/>
-      </div>
-      <div id="elemental">
-        <label for="skill-filter">
-          スキルフィルタリング
-        </label>
-        <select id="skill-filter" name="element">
-        </select>
-      </div>
-    </div>
-    <div id="password-input">
-      　☆パスワード入力欄
-      　<input type="radio" name="rbInputMode" id="rbCharMode" value="0" checked>
-      <label for="rbCharMode">文字モード</label>
-      　<input type="radio" name="rbInputMode" id="rbBitMode"
-              value="1"><label for="rbBitMode">ビットモード</label>
-      <br>
-      　<textarea id="password-input-area" name="taIn" cols="80" rows="2"></textarea>
-      　<input type="button" name="btIn" id="password-parse" value="入力"><br>
-      <br>
-    </div>
+            <fieldset id="devils">
+              <legend>□悪魔 ID (0～490)</legend>
+              <div class="left-indent">
+                <select id="devilID" name="slDevil"></select>
+                <select name="stanceFilter" id="stance-filter" class="filter"></select>
+                <select id="devils-clone" name="devilsClone" class="hidden"></select>
+                <button id="set-default" name="setDefault"
+                  title="悪魔が本来持っているステータスとスキルを設定します。">既定ステータスをセットする</button>
+              </div>
+            </fieldset>
 
-    <div id="data-output">
+            <fieldset id="status-lv">
+              <legend>□Lv (1～99)</legend>
+              <div class="left-indent">
+                <select name="slLv" id="lv" class="status"></select>
+                <br></div>
+            </fieldset>
 
-      ■出力
-      　<input type="checkbox" name="cbDebugMode" id="debug-mode"
-        >
-      <label for="debug-mode" id="debug-mode-label">デバッグモード</label><br>
+            <fieldset id="status-exp">
+              <legend>
+                □経験値 (0～
+                <span id="exp-max-label">2097151</span>
+                )
+                (※ NEXT が 0 以下になるような値は不可)
+              </legend>
+              <div class="left-indent">
+                <input type="number"
+                id="exp" name="txExp" value="0"
+                size="12" min="0" max="2097151">
+                <br></div>
+            </fieldset>
 
-      <div id="output-area" >
-      </div>
-<!--       　<textarea id="output-area" name="taOut" cols="100" rows="15"></textarea><br>
- -->    </div>
+            <div class="row-fluid">
+              <fieldset id="status-effective" class="span6">
+                <legend>□能力値・実値 (1～99)</legend>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slStr" class="status-label">力</label>
+                      <select id="slStr" name="slStr" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slInt" class="status-label">魔</label>
+                      <select id="slInt" name="slInt" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slVit" class="status-label">体</label>
+                      <select id="slVit" name="slVit" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                      <label for="slAgi" class="status-label">速</label>
+                      <select id="slAgi" name="slAgi" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                      <label for="slLuc" class="status-label">運</label>
+                      <select id="slLuc" name="slLuc" class="status"></select>
+                    </div>
+                  </div>
+              </fieldset>
 
-</form>
+              <fieldset id="status-base" class="span6">
+                <legend class="inline-block">□能力値・基準値 (1～99)</legend>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slStrBase" class="status-label">力</label>
+                      <select id="slStrBase" name="slStrBase" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                      <label for="slIntBase" class="status-label">魔</label>
+                      <select id="slIntBase" name="slIntBase" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slVitBase" class="status-label">体</label>
+                      <select id="slVitBase" name="slVitBase" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slAgiBase" class="status-label">速</label>
+                      <select id="slAgiBase" name="slAgiBase" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slLucBase" class="status-label">運</label>
+                      <select id="slLucBase" name="slLucBase" class="status"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                     <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal">
+                      <label class="checkbox inline"for="cbBaseEqReal">実値と連動させる</label>
+                    </div>
+                  </div>
+              </fieldset>
+            </div>
 
-<hr>
-<pre>
+            <fieldset id="skills">
+              <legend>□スキル (0～419)</legend>
+              <div class="row-fluid">
+                <div class="span6">
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slSkill0">[1]</label>
+                      <select id="slSkill0" name="slSkill0" class="skills"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slSkill1">[2]</label>
+                      <select id="slSkill1" name="slSkill1" class="skills"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slSkill2">[3]</label>
+                      <select id="slSkill2" name="slSkill2" class="skills"></select>
+                    </div>
+                  </div>
+                </div>
+                <div class="span6">
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slSkill3">[4]</label>
+                      <select id="slSkill3" name="slSkill3" class="skills"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slSkill4">[5]</label>
+                      <select id="slSkill4" name="slSkill4" class="skills"></select>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="status-controls">
+                    <label for="slSkill5">[6]</label>
+                      <select id="slSkill5" name="slSkill5" class="skills"></select>
+                    </div>
+                  </div>
+                </div>
+                <input id="hide-skill0" name="hideSkill0" type="hidden"/>
+                <input id="hide-skill1" name="hideSkill1" type="hidden"/>
+                <input id="hide-skill2" name="hideSkill2" type="hidden"/>
+                <input id="hide-skill3" name="hideSkill3" type="hidden"/>
+                <input id="hide-skill4" name="hideSkill4" type="hidden"/>
+                <input id="hide-skill5" name="hideSkill5" type="hidden"/>
+              </div>
+              <div id="elemental">
+                <label for="skill-filter">スキルフィルタリング</label>
+                <select id="skill-filter" name="element"></select>
+              </div>
+            </fieldset>
+
+            <fieldset id="password-input">
+              <legend class="inline-block">☆パスワード入力欄</legend>
+
+              <input type="radio" name="rbInputMode" id="rbCharMode" value="0" checked>
+              <label for="rbCharMode">文字モード</label>
+              <input type="radio" name="rbInputMode" id="rbBitMode"
+              value="1">
+              <label for="rbBitMode">ビットモード</label>
+              <br>
+              <textarea id="password-input-area" name="taIn" cols="80" rows="2"></textarea>
+              <input type="button" name="btIn" id="password-parse" value="入力">
+              <br>
+              <br>
+            </fieldset>
+
+            <fieldset id="data-output">
+              <legend class="inline-block">■出力</legend>
+              <input type="checkbox" name="cbDebugMode" id="debug-mode"
+              >
+              <label for="debug-mode" id="debug-mode-label">デバッグモード</label>
+              <br>
+
+              <div id="output-area" ></div>
+            </fieldset>
+
+          </form>
+
+          <hr>
+          <pre>
 ■説明書
 　・入力したステータスに対応したパスワードを出力します。
 　・能力値・基準値の「実値と同じ値を使う」にチェックを入れると、常に実値と同じ値になります。
@@ -263,63 +325,64 @@
 　[未]  9. HP, MP の算出方法の解析、実装。
 　[残] 10. 他パターンの移送パターン調査。
 </pre>
-<hr>
-<dl>
-  <dt>
-    MOD LAST UPDATE : 2012/12/28 ver1.1/02 mod2012-12-28
-  </dt>
-  <dd>スキルフィルタリングを実装した。chrome/firefoxのみ、ie8動作不可。</dd>
-  <dd>ステータス値をスライダーで選択できるようにした。</dd>
-  <dd>jQueryを使ってソースを整理した。</dd>
-  <dd>スキルハイライトを追加した。</dd>
-  <dd>ステータスの値をスライダーで選択できるようにした。</dd>
-  <dd>
-    コスト・HP・MP算出を追加した。
-    <a
-        href="http://kohada.2ch.net/test/read.cgi/handygover/1256614693/336">【DS】
-      真・女神転生 STRANGE JOURNEY パス改変スレ2 レスNo.336 </a>
-    のxlsファイルからの移植。<br>
-  </dd>
-  <dd>既定データ設定ボタンを追加した</dd>
-  <dd>最大経験値表示、入力制限を追加した</dd>
-  <dd>初期状態で敵専用のものを隠し、チェックボックスで見えるようにした。</dd>
-  <dd>色のコントラスト比を下げた。</dd>
-  <dt>
-    LAST UPDATE : 2009/11/30 ver1.1/02
-  </dt>
-  <dd>
-    [<a href="http://www20.atwiki.jp/strange_journey/pages/26.html">更新履歴</a>]<br>
-  </dd>
-</dl>
-<hr>
-<p id="footer">
-  ■免責事項<br>
-  当サイトの利用により発生した損失・損害については、当サイトは一切の責任を負いません。<br>
-  <br>
-  (C) 2009 ATLUS CO., LTD. ALL RIGHTS RESERVED.
-</p>
-</div>
-<script type="text/javascript" src="js/plugins.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script>!window.jQuery && document.write('<script src="./js/jquery.min.js"><\/script>')</script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
-<script type="text/javascript">
+          <hr>
+          <dl>
+            <dt>MOD LAST UPDATE : 2012/12/28 ver1.1/02 mod2012-12-28</dt>
+            <dd>スキルフィルタリングを実装した。chrome/firefoxのみ、ie8動作不可。</dd>
+            <dd>ステータス値をスライダーで選択できるようにした。</dd>
+            <dd>jQueryを使ってソースを整理した。</dd>
+            <dd>スキルハイライトを追加した。</dd>
+            <dd>ステータスの値をスライダーで選択できるようにした。</dd>
+            <dd>
+            コスト・HP・MP算出を追加した。
+            <a
+              href="http://kohada.2ch.net/test/read.cgi/handygover/1256614693/336">
+              【DS】真・女神転生 STRANGE JOURNEY パス改変スレ2 レスNo.336
+            </a>
+            のxlsファイルからの移植。
+            <br></dd>
+            <dd>既定データ設定ボタンを追加した</dd>
+            <dd>最大経験値表示、入力制限を追加した</dd>
+            <dd>初期状態で敵専用のものを隠し、チェックボックスで見えるようにした。</dd>
+            <dd>色のコントラスト比を下げた。</dd>
+            <dt>LAST UPDATE : 2009/11/30 ver1.1/02</dt>
+            <dd>
+            [
+            <a href="http://www20.atwiki.jp/strange_journey/pages/26.html">更新履歴</a>
+            ]
+            <br></dd>
+          </dl>
+          <hr>
+          <p id="footer">
+            ■免責事項
+            <br>
+            当サイトの利用により発生した損失・損害については、当サイトは一切の責任を負いません。
+            <br>
+            <br>(C) 2009 ATLUS CO., LTD. ALL RIGHTS RESERVED.</p>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/plugins.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script>!window.jQuery && document.write('<script src="./js/jquery.min.js"><\/script>')</script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
+      <script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-36468856-1']);
-  _gaq.push(['_trackPageview']);
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36468856-1']);
+        _gaq.push(['_trackPageview']);
 
-  (function () {
-    var ga = document.createElement('script');
-    ga.type = 'text/javascript';
-    ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(ga, s);
-  })();
+        (function () {
+         var ga = document.createElement('script');
+         ga.type = 'text/javascript';
+         ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0];
+         s.parentNode.insertBefore(ga, s);
+         })();
 
 </script>
 
-</body>
-</html>
+     </body>
+   </html>

@@ -1403,6 +1403,7 @@ function toggleStatusMaxMin(select) {
   var MAX = 99;
   var MIN = 1;
   select.val() == MAX ? select.val(MIN) : select.val(MAX);
+  select.trigger('change');
 }//}}}
 /**
  * 活泉・魔脈スキルによるHP・MPの増加分%を返します。
@@ -2555,6 +2556,16 @@ function cloneDevilList () {
   $('#devils-clone').append($('#devilID option').clone());
 }
 
+
+var View = (function () {
+  var _setTooltip = function (selector,message) {
+    $(selector).attr('title',message);
+  }
+  return {
+    setTooltip:_setTooltip
+  }
+}());
+
 // event binds
 $(function () {
   init();
@@ -2569,6 +2580,13 @@ $(function () {
   //         doRefresh();
   //     }
   // });
+
+  View.setTooltip(
+    ".status-label",
+    "ラベルをダブルクリックすると99になります。\n"+
+      "すでに99の場合は1になります。"
+  );
+
   var statusElm = $('.status');
   statusElm.each(function (index,val) {
       var select = $(val);
@@ -2591,7 +2609,7 @@ $(function () {
       })
   })
 
-  $('div.left-indent select').on('change' ,function () {
+  $('select').on('change' ,function () {
     doRefresh();
   });
   $('#cbBaseEqReal').change(function () {

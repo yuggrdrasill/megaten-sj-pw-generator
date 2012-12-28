@@ -147,7 +147,27 @@ select ,option,input,textarea{
   font-size:90%;
   height: 23em;
 }
+.status{
+  width:5em;
+}
+label{
+  display: inline-block;
+}
 
+.data-info{
+  position: fixed;
+}
+
+.inline-block{
+  display:inline-block;
+}
+legend{
+  font-size: 1.2em;
+  margin-bottom: .2em;
+}
+fieldset{
+  margin-top: 1em;
+}
 .attr-weakpoint{}
 .attr-regists{}
 .attr-null{}
