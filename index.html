@@ -49,43 +49,49 @@
 
   <div id="data-input">
 
-    ■入力
-    　【 パターン
-    　<select name="slPattern" id="password-pattern"></select> 】
-    <label for="enemy-exclusive"
-           title="エラーになるスキルや敵専用のモノを表示します">
-      敵専用スキル・仲間に出来ない敵を表示する</label>
-    <input id="enemy-exclusive" name="enemyExclusive" type="checkbox"
-           >
-    <br><br>
+    <fieldset id="status-patern">
+      <legend>パターン</legend>
+    　<select name="slPattern" id="password-pattern"></select>
+      <label for="enemy-exclusive"
+             title="エラーになるスキルや敵専用のモノを表示します">
+        敵専用スキル・仲間に出来ない敵を表示する</label>
+      <input id="enemy-exclusive" name="enemyExclusive" type="checkbox">
+  </fieldset>
 
-    　□悪魔 ID (0～490)
-    <div class="left-indent">
+    <fieldset id="devils">
+      <legend>□悪魔 ID (0～490)</legend>
+      <div class="left-indent">
       　<select id="devilID" name="slDevil"></select>
-      <input id="set-default" name="setDefault" type="button"
-             title="悪魔が本来持っているステータスとスキルを設定します。"
-             value="既定ステータスをセットする">
-    </div>
+        <select name="stanceFilter" id="stance-filter" class="filter"></select>
+      　<select id="devils-clone" name="devilsClone" hidden="hidden"></select>
+        <button id="set-default" name="setDefault"
+          title="悪魔が本来持っているステータスとスキルを設定します。">
+          既定ステータスをセットする
+        </button>
+      </div>
+    </fieldset>
 
-    　□Lv (1～99)<br>
+    <fieldset id="status-lv">
+      <legend>□Lv (1～99)</legend>
+      <div class="left-indent">
+        　<select name="slLv" id="lv" class="status"></select><br>
+      </div>
+    </fieldset>
 
-    <div class="left-indent">
-      　<select name="slLv" id="lv" class="status"></select><br>
-    </div>
-
-
-    　□経験値 (0～<span id="exp-max-label">2097151</span>) (※ NEXT が 0 以下になるような値は不可)<br>
-
-    <div class="left-indent">
-      <input type="number"
-             id="exp" name="txExp" value="0"
-             size="12" min="0" max="2097151"><br>
-    </div>
+    <fieldset id="status-exp">
+      <legend>□経験値 (0～<span id="exp-max-label">2097151</span>)
+       (※ NEXT が 0 以下になるような値は不可)</legend>
+      <div class="left-indent">
+        <input type="number"
+               id="exp" name="txExp" value="0"
+               size="12" min="0" max="2097151"><br>
+      </div>
+    </fieldset>
 
     <fieldset id="status-effective">
       <legend>□能力値・実値 (1～99)</legend>
-      <div class="left-indent" title="ラベルをダブルクリックすると99になります。
-              すでに99の場合は1になります。">
+      <div class="left-indent"
+          title="ラベルをダブルクリックすると99になります。              すでに99の場合は1になります。">
         <div>
           <label for="slStr">力</label>
           <select id="slStr" name="slStr" class="status"></select>
@@ -112,7 +118,8 @@
     <div id="status-base">
       <fieldset>
         <legend>□能力値・基準値 (1～99)</legend>
-      <div class="left-indent" title="ラベルをダブルクリックすると99になります。
+      <div class="left-indent"
+      title="ラベルをダブルクリックすると99になります。
               すでに99の場合は1になります。">
         <div>
           <label for="slStrBase">力</label>
@@ -193,8 +200,10 @@
         >
       <label for="debug-mode" id="debug-mode-label">デバッグモード</label><br>
 
-      　<textarea id="output-area" name="taOut" cols="100" rows="15"></textarea><br>
-    </div>
+      <div id="output-area" >
+      </div>
+<!--       　<textarea id="output-area" name="taOut" cols="100" rows="15"></textarea><br>
+ -->    </div>
 
 </form>
 

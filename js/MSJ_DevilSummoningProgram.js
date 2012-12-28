@@ -35,61 +35,81 @@ attrMap[4] = "無";
 attrMap[5] = "反";
 attrMap[6] = "吸";//}}}
 
+var stance = [];
+stance[0] = "law";
+stance[1] = "neutral";
+stance[2] = "chaos";
+
+var alignment = [];
+alignment[0] = "light";
+alignment[1] = "neutral";
+alignment[2] = "dark";
+
 // 種族
 var genusMap = new Array();
-genusMap["0"] = new Genus(0, "-", "-");//{{{ 種族
-genusMap["1"] = new Genus(1, "大天使", "大天");
-genusMap["2"] = new Genus(2, "女神", "女神");
-genusMap["3"] = new Genus(3, "霊鳥", "霊鳥");
-genusMap["4"] = new Genus(4, "神樹", "神樹");
-genusMap["5"] = new Genus(5, "天使", "天使");
-genusMap["6"] = new Genus(6, "妖鳥", "妖鳥");
-genusMap["7"] = new Genus(7, "妖魔", "妖魔");
-genusMap["8"] = new Genus(8, "天女", "天女");
-genusMap["9"] = new Genus(9, "邪神", "邪神");
-genusMap["10"] = new Genus(10, "凶鳥", "凶鳥");
-genusMap["11"] = new Genus(11, "妖樹", "妖樹");
-genusMap["12"] = new Genus(12, "魔神", "魔神");
-genusMap["13"] = new Genus(13, "神獣", "神獣");
-genusMap["14"] = new Genus(14, "聖獣", "聖獣");
-genusMap["15"] = new Genus(15, "幻魔", "幻魔");
-genusMap["16"] = new Genus(16, "妖精", "妖精");
-genusMap["17"] = new Genus(17, "魔獣", "魔獣");
-genusMap["18"] = new Genus(18, "地霊", "地霊");
-genusMap["19"] = new Genus(19, "龍王", "龍王");
-genusMap["20"] = new Genus(20, "死神", "死神");
-genusMap["21"] = new Genus(21, "妖獣", "妖獣");
-genusMap["22"] = new Genus(22, "邪鬼", "邪鬼");
-genusMap["23"] = new Genus(23, "妖虫", "妖虫");
-genusMap["24"] = new Genus(24, "破壊神", "破壊");
-genusMap["25"] = new Genus(25, "地母神", "地母");
-genusMap["26"] = new Genus(26, "龍神", "龍神");
-genusMap["27"] = new Genus(27, "鬼神", "鬼神");
-genusMap["28"] = new Genus(28, "堕天使", "堕天");
-genusMap["29"] = new Genus(29, "妖鬼", "妖鬼");
-genusMap["30"] = new Genus(30, "鬼女", "鬼女");
-genusMap["31"] = new Genus(31, "夜魔", "夜魔");
-genusMap["32"] = new Genus(32, "魔王", "魔王");
-genusMap["33"] = new Genus(33, "邪龍", "邪龍");
-genusMap["34"] = new Genus(34, "悪霊", "悪霊");
-genusMap["35"] = new Genus(35, "外道", "外道");
-genusMap["36"] = new Genus(36, "幽鬼", "幽鬼");
-genusMap["38"] = new Genus(38, "精霊", "精霊");
-genusMap["39"] = new Genus(39, "魔人", "魔人");
-genusMap["40"] = new Genus(40, "秘神", "秘神");
-genusMap["41"] = new Genus(41, "珍獣", "珍獣");
-genusMap["42"] = new Genus(42, "狂神", "狂神");
-genusMap["43"] = new Genus(43, "人間", "人間");
-genusMap["44"] = new Genus(44, "御魂", "御魂");
-genusMap["45"] = new Genus(45, "超人", "超人");
-genusMap["48"] = new Genus(48, "威霊", "威霊");
-genusMap["49"] = new Genus(49, "大霊母", "大霊");
-genusMap["50"] = new Genus(50, "虚大霊", "虚大");
-genusMap["51"] = new Genus(51, "覚醒人", "覚醒");
-genusMap["52"] = new Genus(52, "大地人", "大地");
-genusMap["53"] = new Genus(53, "審判者", "審判");
-genusMap["54"] = new Genus(54, "聖柱", "聖柱");
-genusMap["55"] = new Genus(55, "偽人", "偽人");//}}}
+genusMap["0"] = new Genus({id:0,name:"-",stance:"none",alignment:"none"});//{{{ 種族
+genusMap["1"] = new Genus({id:1,name:"大天使",stance:stance[0],alignment:alignment[0]});
+genusMap["2"] = new Genus({id:2,name:"女神",stance:stance[0],alignment:alignment[0]});
+genusMap["3"] = new Genus({id:3,name:"霊鳥",stance:stance[0],alignment:alignment[0]});
+genusMap["4"] = new Genus({id:4,name:"神樹",stance:stance[0],alignment:alignment[0]});
+
+genusMap["5"] = new Genus({id:5,name:"天使",stance:stance[0],alignment:alignment[1]});
+genusMap["6"] = new Genus({id:6,name:"妖鳥",stance:stance[0],alignment:alignment[1]});
+genusMap["7"] = new Genus({id:7,name:"妖魔",stance:stance[0],alignment:alignment[1]});
+genusMap["8"] = new Genus({id:8,name:"天女",stance:stance[0],alignment:alignment[1]});
+
+genusMap["9"]  = new Genus({id:9,name:"邪神",stance:stance[0],alignment:alignment[2]});
+genusMap["11"] = new Genus({id:11,name:"妖樹",stance:stance[0],alignment:alignment[2]});
+genusMap["10"] = new Genus({id:10,name:"凶鳥",stance:stance[0],alignment:alignment[2]});
+
+genusMap["12"] = new Genus({id:12,name:"魔神",stance:stance[1],alignment:alignment[0]});
+genusMap["13"] = new Genus({id:13,name:"神獣",stance:stance[1],alignment:alignment[0]});
+genusMap["14"] = new Genus({id:14,name:"聖獣",stance:stance[1],alignment:alignment[0]});
+genusMap["15"] = new Genus({id:15,name:"幻魔",stance:stance[1],alignment:alignment[0]});
+
+genusMap["16"] = new Genus({id:16,name:"妖精",stance:stance[1],alignment:alignment[1]});
+genusMap["17"] = new Genus({id:17,name:"魔獣",stance:stance[1],alignment:alignment[1]});
+genusMap["18"] = new Genus({id:18,name:"地霊",stance:stance[1],alignment:alignment[1]});
+genusMap["19"] = new Genus({id:19,name:"龍王",stance:stance[1],alignment:alignment[1]});
+
+genusMap["20"] = new Genus({id:20,name:"死神",stance:stance[1],alignment:alignment[2]});
+genusMap["21"] = new Genus({id:21,name:"妖獣",stance:stance[1],alignment:alignment[2]});
+genusMap["22"] = new Genus({id:22,name:"邪鬼",stance:stance[1],alignment:alignment[2]});
+genusMap["23"] = new Genus({id:23,name:"妖虫",stance:stance[1],alignment:alignment[2]});
+
+genusMap["24"] = new Genus({id:24,name:"破壊神",stance:stance[2],alignment:alignment[0]});
+genusMap["25"] = new Genus({id:25,name:"地母神",stance:stance[2],alignment:alignment[0]});
+genusMap["26"] = new Genus({id:26,name:"龍神",stance:stance[2],alignment:alignment[0]});
+genusMap["27"] = new Genus({id:27,name:"鬼神",stance:stance[2],alignment:alignment[0]});
+
+genusMap["28"] = new Genus({id:28,name:"堕天使",stance:stance[2],alignment:alignment[1]});
+genusMap["29"] = new Genus({id:29,name:"妖鬼",stance:stance[2],alignment:alignment[1]});
+genusMap["30"] = new Genus({id:30,name:"鬼女",stance:stance[2],alignment:alignment[1]});
+genusMap["31"] = new Genus({id:31,name:"夜魔",stance:stance[2],alignment:alignment[1]});
+
+genusMap["32"] = new Genus({id:32,name:"魔王",stance:stance[2],alignment:alignment[2]});
+genusMap["33"] = new Genus({id:33,name:"邪龍",stance:stance[2],alignment:alignment[2]});
+genusMap["34"] = new Genus({id:34,name:"悪霊",stance:stance[2],alignment:alignment[2]});
+genusMap["35"] = new Genus({id:35,name:"外道",stance:stance[2],alignment:alignment[2]});
+
+genusMap["36"] =  new Genus({id:36,name:"幽鬼",stance:stance[2],alignment:alignment[1]});
+
+genusMap["38"] = new Genus({id:38,name:"精霊",stance:stance[1],alignment:alignment[0]});
+genusMap["39"] = new Genus({id:39,name:"魔人",stance:stance[1],alignment:alignment[2]});
+genusMap["40"] = new Genus({id:40,name:"秘神",stance:stance[1],alignment:alignment[0]});
+genusMap["41"] = new Genus({id:41,name:"珍獣",stance:stance[1],alignment:alignment[1]});
+genusMap["42"] = new Genus({id:42,name:"狂神",stance:stance[1],alignment:alignment[2]});
+genusMap["43"] = new Genus({id:43,name:"人間",stance:"none",alignment:"none"});
+genusMap["44"] = new Genus({id:44,name:"御魂",stance:stance[1],alignment:alignment[0]});
+genusMap["45"] = new Genus({id:45,name:"超人",stance:"none",alignment:"none"});
+genusMap["48"] = new Genus({id:48,name:"威霊",stance:stance[2],alignment:alignment[0]});
+genusMap["49"] = new Genus({id:49,name:"大霊母",stance:"none",alignment:"none"});
+genusMap["50"] = new Genus({id:50,name:"虚大霊",stance:"none",alignment:"none"});
+genusMap["51"] = new Genus({id:51,name:"覚醒人",stance:"none",alignment:"none"});
+genusMap["52"] = new Genus({id:52,name:"大地人",stance:"none",alignment:"none"});
+genusMap["53"] = new Genus({id:53,name:"審判者",stance:"none",alignment:"none"});
+genusMap["54"] = new Genus({id:54,name:"聖柱",stance:"none",alignment:"none"});
+genusMap["55"] = new Genus({id:55,name:"偽人",stance:stance[0],alignment:alignment[0]});//}}}
 
 var elementJSON = ({ // {{{ 攻撃属性データ
   0:{ id:0, name:"特殊" },
@@ -1216,14 +1236,16 @@ var expBaseScaleFactor = [
 // 準備 OK フラグ
 var isReady = false;
 
-
+function outputMessage(message){
+  $('#output-area').html(message);
+}
 // -------------------------------------------------------------------------------------------------
 // 処理
 // -------------------------------------------------------------------------------------------------
 // 初期化処理
 function init() {
   //{{{
-  $('#output-area').val("初期化中 ...");
+  outputMessage("初期化中 ...");
 
   // パターン初期化
   for (var i in indexMap) {
@@ -1239,28 +1261,39 @@ function init() {
     $('.status').append('<option value="'+i+'">'+i+'</option>');
   }
 
-  createSkillFilterList();
+  createSkillFilterSelectBox();
+  createAlignmentFilterSelectBox();
 
   // 経験値フィールド初期化
-  $('#exp').val(0);
+  $('#exp').val(0).trigger('change');
 
   createSkills();
 
   // 悪魔リスト初期化
   createDevils();
+  // 作成したモノを保存
+  cloneDevilList();
 
-  $('#output-area').val("初期化完了。");
+  outputMessage("初期化完了。");
   isReady = true;
 }//}}}
 
 /**
  * スキルフィルタリスト生成
  */
-function createSkillFilterList() {
+function createSkillFilterSelectBox() {
   $('#skill-filter').append("<option value='none'>フィルタリング無し</option>");
   for (var i in elementJSON) {
     var option = '<option value="element-'+ elementJSON[i].id+'">'+ elementJSON[i].name +'</option>';
     $('#skill-filter').append(option);
+  };
+}
+
+function createAlignmentFilterSelectBox(){
+  $('#stance-filter').append("<option value='none'>スタンスフィルタ無し</option>");
+  for (var i = 0 ,len = stance.length - 1; i <= len ; i++) {
+    var option = '<option value="stance-'+ stance[i] +'">'+ stance[i] +'</option>';
+    $('#stance-filter').append(option);
   };
 }
 
@@ -1271,13 +1304,19 @@ function createSkillFilterList() {
 function changeEnemyExclusive() {
   createDevils();
   createSkills();
+  // 作成したモノを保存
+  cloneDevilList();
 }
 
 /**
- *
+ * 悪魔のオプションボックスを生成します。
  */
 function createDevilOption(devil) {
-  var result = '<option class="genus-'+ devil.genusID +'" ' +
+  var result =
+    '<option class="genus-'+ devil.genus.id +
+       ' stance-' + devil.genus.stance +
+       ' alignment-' + devil.genus.alignment +
+       ' " ' +
     'value="' + devil.devilID + '">' + devil.toDetailString() + '</option>';
   return result;
 }
@@ -1301,6 +1340,7 @@ function createDevils() {
       $('#devilID').append(createDevilOption(devil));
     }
   }
+
   //}}}
 }
 
@@ -1464,13 +1504,7 @@ function doSetDefault() {
   $('#slSkill5').val(devil.skill[5]);
   $('.skills').trigger('change');
 
-  devil.HP = calculateHP(devil.lv, devil.vit, devil.addHP, devil.baseHP, devil.skill);
-  devil.MP = calculateMP(devil.lv, devil.int, devil.addMP, devil.baseHP, devil.skill);
-
-  setEXPMax(devil);
-
-  // 悪魔情報を取得して表示
-  $('#output-area').val(devil.getSimpleInformation());
+  doRefresh()
   //}}}
 };
 
@@ -1519,7 +1553,7 @@ function doRefresh() {
   setEXPMax(devil);
 
   // 悪魔情報を取得して表示
-    $('#output-area').val(devil.getSimpleInformation());
+  outputMessage(devil.getSimpleInformation().replace(/\n/g,"<br>\n"));
   //}}}
 }
 
@@ -1557,8 +1591,7 @@ function setEXPMax(devil) {
   $('#exp').attr('max' , devil.expMax);
 
   //label
-  $('#exp-max-label').empty();
-  $('#exp-max-label').append(devil.expMax);
+  $('#exp-max-label').empty().append(devil.expMax);
 
   var result = 0;
   var inputEXP = parseInt($('#exp').val());
@@ -2146,16 +2179,16 @@ function getAttr(attrID) {//{{{
 // -------------------------------------------------------------------------------------------------
 // 種族クラス
 // -------------------------------------------------------------------------------------------------
-function Genus(genusID, name, simpleName) {
+function Genus(json) {
   //{{{
   // 種族 ID
-  this.genusID = genusID;
+  this.id = json.id;
   // 名称
-  this.name = name;
-  // 略称
-  this.simpleName = simpleName;
+  this.name = json.name;
   // スタンス
-  // TODO this.stance = stance;
+  this.stance = json.stance;
+  // Light neutral Dark
+  this.alignment = json.alignment;
 
   // この種族の文字列表現を返す。(簡易)
   this.toString = function () {
@@ -2164,7 +2197,7 @@ function Genus(genusID, name, simpleName) {
 
   // この種族の文字列表現を返す。(詳細)
   this.toDetailString = function () {
-    return this.name;
+    return this.name+"("+ this.alignment +"/"+ this.stance + ")";
   }
   //}}}
 }
@@ -2243,6 +2276,7 @@ function Devil(devil) {
   this.devilID = devil.id || devil.devilID;
   // 種族 ID
   this.genusID = devil.genusID;
+  this.genus = getGenus(devil.genusID);
   // 名称
   this.name = devil.name;
   // Lv
@@ -2375,7 +2409,7 @@ function Devil(devil) {
     //{{{
     var enemyExclusive = this.playerUses ? "" : "（？）"
     return "" + this.devilID +
-      ":[" + getGenus(this.genusID).toString() + "]" +
+      ":[" + this.genus.toString() + "]" +
       this.name + enemyExclusive;
   }//}}}
 
@@ -2507,6 +2541,20 @@ var skillFiltering = function () {
   }
 };
 
+function stanceFiltering () {
+  var elm = $('#stance-filter');
+  var filterName = '.' + elm.val();
+  if(filterName === ".none"){
+    $('#devilID').empty().append($('#devils-clone option').clone());
+  } else {
+    $('#devilID').empty().append($('#devils-clone').clone().find(filterName));
+  }
+}
+
+function cloneDevilList () {
+  $('#devils-clone').append($('#devilID option').clone());
+}
+
 // event binds
 $(function () {
   init();
@@ -2558,6 +2606,7 @@ $(function () {
 
   $('#enemy-exclusive').change(function () {
     changeEnemyExclusive();
+    $('#stance-filter').trigger('change');
   });
 
   $('#set-default').click(function () {
@@ -2568,6 +2617,9 @@ $(function () {
     doInput();
   });
 
+  $('#stance-filter').on('change',function () {
+    stanceFiltering();
+  })
   $('#skill-filter').on('change',function(){
     skillFiltering()
   });

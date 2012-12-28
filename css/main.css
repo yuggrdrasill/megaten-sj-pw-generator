@@ -84,6 +84,8 @@ textarea {
 body{
   color: #eeeeee;
   background-color: #2c2c2c;
+  box-sizing:border-box;
+  moz-box-sizing:border-box;
 }
 .warning{
   color:#fe5e59;
@@ -136,6 +138,22 @@ select ,option,input,textarea{
   width: 50%;
   margin-left: 20px;
 }
+
+#output-area{
+  background-color:#f0f0f0;
+  color:#222;
+  border-radius: 4px;
+  padding:1em;
+  font-size:90%;
+  height: 23em;
+}
+
+.attr-weakpoint{}
+.attr-regists{}
+.attr-null{}
+.attr-drain{}
+.attr-reflect{}
+
 /* ==========================================================================
    Helper classes
    ========================================================================== */
