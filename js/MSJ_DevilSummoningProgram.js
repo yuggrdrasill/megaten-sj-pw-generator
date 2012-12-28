@@ -7,6 +7,21 @@ jQuery.fn.checked = function(){
   return jQuery(this).attr('checked');
 }
 
+
+var _ua = (function(){
+return {
+ltIE6:typeof window.addEventListener == "undefined" && typeof document.documentElement.style.maxHeight == "undefined",
+ltIE7:typeof window.addEventListener == "undefined" && typeof document.querySelectorAll == "undefined",
+ltIE8:typeof window.addEventListener == "undefined" && typeof document.getElementsByClassName == "undefined",
+IE:document.uniqueID,
+Firefox:window.sidebar,
+Opera:window.opera,
+Webkit:!document.uniqueID && !window.opera && !window.sidebar && window.localStorage && typeof window.orientation == "undefined",
+Mobile:typeof window.orientation != "undefined"
+}
+})();
+
+
 // -------------------------------------------------------------------------------------------------
 // データ
 // -------------------------------------------------------------------------------------------------
@@ -1435,6 +1450,7 @@ function doSetDefault() {
   $('#slVit').val(devil.vit);
   $('#slAgi').val(devil.agi);
   $('#slLuc').val(devil.luc);
+  $('.status').trigger('change');
 
   // 能力値・基準値
   devil = setStatusBase(devil);
@@ -1446,6 +1462,7 @@ function doSetDefault() {
   $('#slSkill3').val(devil.skill[3]);
   $('#slSkill4').val(devil.skill[4]);
   $('#slSkill5').val(devil.skill[5]);
+  $('.skills').trigger('change');
 
   devil.HP = calculateHP(devil.lv, devil.vit, devil.addHP, devil.baseHP, devil.skill);
   devil.MP = calculateMP(devil.lv, devil.int, devil.addMP, devil.baseHP, devil.skill);
@@ -2466,10 +2483,20 @@ function Pattern(charList, indexArray, xorbit) {
 
 var skillFiltering = function () {
   var filter = $("#skill-filter").val();
-  var selecter = "select.skills option";
-  $(selecter).removeClass('highlight');
+  var selecter = ".skills option";
+  var target = $(selecter);
+  target.removeClass('highlight');
+  if(_ua.Firefox){
+    target.removeClass('hidden');
+  }
   if (filter != "none") {
-    $(selecter).filter("."+filter).addClass('highlight');
+    var filtered = target.filter("."+filter);
+    if(_ua.Firefox){
+      target.addClass('hidden');
+      filtered.removeClass('hidden');
+    }else{
+      filtered.addClass('highlight');
+    }
   }
 };
 
