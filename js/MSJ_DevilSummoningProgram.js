@@ -3,9 +3,25 @@
 // (c) http://www20.atwiki.jp/strange_journey/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 'use strict';
-jQuery.fn.checked = function(){
-  return jQuery(this).attr('checked');
-}
+
+// フォームの要素を無効化したり有効化したりする機能追加
+jQuery.fn.extend({
+  checked:function(){
+    return jQuery(this).attr('checked');
+  },
+  disabled:function(value){
+    // 引数がないとき、disabledのときtrueを返す
+    if(value===undefined) return $(this).attr("disabled")!==undefined;
+
+    if(value){
+      // 引数がtrueのとき、無効化する
+      $(this).attr("disabled","disabled");
+    } else {
+      // 引数がfalseのとき、有効化する
+      $(this).removeAttr("disabled");
+    }
+  }
+});
 
 
 var _ua = (function(){
@@ -1491,10 +1507,11 @@ function doSetDefault() {
   $('#slVit').val(devil.vit);
   $('#slAgi').val(devil.agi);
   $('#slLuc').val(devil.luc);
-  $('.status').trigger('change');
 
   // 能力値・基準値
   devil = setStatusBase(devil);
+
+  $('.status').trigger('change');
 
   // スキル
   $('#slSkill0').val(devil.skill[0]);
@@ -1536,7 +1553,6 @@ function doRefresh() {
   devil.vit = $('#slVit').val();
   devil.agi = $('#slAgi').val();
   devil.luc = $('#slLuc').val();
-
 
   devil = setStatusBase(devil);
 
@@ -2560,11 +2576,62 @@ function cloneDevilList () {
 var View = (function () {
   var _setTooltip = function (selector,message) {
     $(selector).attr('title',message);
-  }
+  };
+
+  var _toggleStatusBaseSelectDisabled = function(){
+    var status = $('.status-base');
+    if($('#cbBaseEqReal').checked()){
+      // 連動チェックされたので無効化
+      status.each(function (index,value) {
+        $(value).disabled(true);
+        var id = $(value).attr('id');
+        // スライダーも一緒に無効化
+        $('#'+id + '-slider' ).slider( "option", "disabled", true );
+      });
+    } else {
+      //有効化
+      status.each(function (index,value) {
+        $(value).disabled(false);
+        var id = $(value).attr('id');
+        $('#'+id + '-slider' ).slider( "option", "disabled", false );
+      });
+
+    }
+  };
+
   return {
-    setTooltip:_setTooltip
+    setTooltip:_setTooltip,
+    toggleStatusBaseSelectDisabled:_toggleStatusBaseSelectDisabled
   }
 }());
+
+function createSliders(){
+  // スライダー作成
+  var statusElm = $('.status');
+  statusElm.each(function (index,val) {
+      var select = $(val);
+      var id = $(val).attr('id');
+      var slider = $( "<div id='"+ id +"-slider' class='status-slider'></div>" ).insertAfter( select ).slider({
+          min: 1,
+          max: 99,
+          range: "min",
+          value: select[ 0 ].selectedIndex + 1,
+          slide: function( event, ui ) {
+              select.val(ui.value);
+              doRefresh();
+          }
+      });
+
+      //スライダーと値を連動させる
+      select.on('change',function () {
+        var id = $(this).attr('id');
+        var slider = $('#' +id+'-slider');
+        var val = $(this).val();
+        slider.slider({'value':val});
+      })
+  })
+}
+
 
 // event binds
 $(function () {
@@ -2587,32 +2654,15 @@ $(function () {
       "すでに99の場合は1になります。"
   );
 
-  var statusElm = $('.status');
-  statusElm.each(function (index,val) {
-      var select = $(val);
-      var id = $(val).attr('id');
-      var slider = $( "<div id='"+ id +"-slider' class='status-slider'></div>" ).insertAfter( select ).slider({
-          min: 1,
-          max: 99,
-          range: "min",
-          value: select[ 0 ].selectedIndex + 1,
-          slide: function( event, ui ) {
-              select.val(ui.value);
-              doRefresh();
-          }
-      });
-      select.on('change',function () {
-        var id = $(this).attr('id');
-        var slider = $('#' +id+'-slider');
-        var val = $(this).val();
-        slider.slider({'value':val});
-      })
-  })
+  createSliders();
 
   $('select').on('change' ,function () {
     doRefresh();
   });
   $('#cbBaseEqReal').change(function () {
+    View.toggleStatusBaseSelectDisabled();
+    $('.status').trigger('change');
+    $('.status-slider').trigger('change');
     doRefresh();
   });
   $('#exp').change(function () {
@@ -2625,8 +2675,6 @@ $(function () {
   $('#enemy-exclusive').change(function () {
     changeEnemyExclusive();
     $('#stance-filter').trigger('change');
-    $('.status').trigger('change');
-    $('.status-slider').trigger('change');
   });
 
   $('#set-default').click(function () {
