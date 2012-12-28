@@ -174,7 +174,7 @@ var skillJSON = ({ /// {{{
   49:{id:49, name:"吸魔", cost:1666, element:elementJSON[9], attackGroup:attackGroup[2]},
   50:{id:50, name:"エナジードレイン", cost:21943, element:elementJSON[9], attackGroup:attackGroup[2]},
   51:{id:51, name:"運命の角笛", cost:1666, element:elementJSON[0], attackGroup:attackGroup[2]},
-  52:{id:52, name:"永眠への誘い", cost:10972, element:elementJSON[9], attackGroup:attackGroup[2]},
+  52:{id:52, name:"永眠への誘い", cost:10972, element:elementJSON[8], attackGroup:attackGroup[2]},
   53:{id:53, name:"ムド", cost:155, element:elementJSON[8], attackGroup:attackGroup[2]},
   54:{id:54, name:"ムドオン", cost:347, element:elementJSON[8], attackGroup:attackGroup[2]},
   55:{id:55, name:"マハムド", cost:952, element:elementJSON[8], attackGroup:attackGroup[2]},
@@ -2482,20 +2482,27 @@ function Pattern(charList, indexArray, xorbit) {
 //}}}
 
 var skillFiltering = function () {
-  var filter = $("#skill-filter").val();
+  var filterName = $("#skill-filter").val();
+  var filterClass = "."+filterName;
   var selecter = ".skills option";
-  var target = $(selecter);
-  target.removeClass('highlight');
-  if(_ua.Firefox){
-    target.removeClass('hidden');
-  }
-  if (filter != "none") {
-    var filtered = target.filter("."+filter);
+  var options = $(selecter);
+  var target = $(selecter).filter(filterClass);
+  var other = $(selecter).not(filterClass);
+
+  options.removeClass('highlight');
+  options.show();
+  options.css({
+    visibility: 'visible'
+  });
+
+  if (filterName != "none") {
     if(_ua.Firefox){
-      target.addClass('hidden');
-      filtered.removeClass('hidden');
-    }else{
-      filtered.addClass('highlight');
+      other.hide();
+    } else {
+      other.css({
+        visibility: 'hidden'
+      });
+      target.addClass('highlight');
     }
   }
 };

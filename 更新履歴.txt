@@ -2,6 +2,7 @@
 
 ** MOD LAST UPDATE : 2012/12/28 ver1.1/02 mod2012-12-28
 ステータスの値をスライダーで選択できるようにした。
+スキルフィルタリングを実装した。chrome/firefoxのみ、ie8動作不可。
 
 ** MOD LAST UPDATE : 2012/12/05 ver1.1/02 mod2012-12-05
 jQueryを使ってソースを整理した。
