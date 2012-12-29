@@ -186,7 +186,10 @@ fieldset{
   text-align: center;
   vertical-align: middle;
 }
-
+#exp{
+  background-color: #fcfcfc;
+  color:#222;
+}
 .attr-weakpoint{
   background-color: #C00;
   color: #eee;

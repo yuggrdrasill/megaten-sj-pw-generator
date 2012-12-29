@@ -202,74 +202,8 @@ function toggleStatusMaxMin(select) {
   select.trigger('change');
 }
 //}}}
-/**
- * 活泉・魔脈スキルによるHP・MPの増加分%を返します。
- */
-function getHPMPupPercent(skillID) {
-  //{{{
-  switch (parseInt(skillID)) {
-    case 414:
-      return {"target":"hp", "percent":0.1};
-    case 417:
-      return {"target":"mp", "percent":0.1};
-    case 415:
-      return {"target":"hp", "percent":0.2};
-    case 418:
-      return {"target":"mp", "percent":0.2};
-    case 416:
-      return {"target":"hp", "percent":0.3};
-    case 419:
-      return {"target":"mp", "percent":0.3};
-  }
-  return {"target":"none", "percent":0};
-}
-//}}}
 
-/**
- *
- */
-function calcHPMPPercent(skillList) {
-  //{{{
-  var result = {"totalHPPercent":1, "totalMPPercent":1};
 
-  for (var i = 0, len = skillList.length; i < len; i++) {
-    var upPercent = getHPMPupPercent(skillList[i]);
-    switch (upPercent.target) {
-      case "hp":
-        result.totalHPPercent = result.totalHPPercent + upPercent.percent;
-        break;
-      case "mp":
-        result.totalMPPercent = result.totalMPPercent + upPercent.percent;
-        break;
-    }
-  }
-  ;
-  return result;
-}
-//}}}
-/*
- *
- */
-function calculateHP(lv, vit, addNum, upHPPercent, skillList) {
-  //{{{
-  var resultHP = Math.floor(lv * 6 + vit * 3 * upHPPercent / 100 + addNum);
-  resultHP = Math.floor(resultHP * calcHPMPPercent(skillList).totalHPPercent);
-  if (resultHP > 999) {
-    resultHP = 999;
-  }
-  return resultHP;
-}
-//}}}
-function calculateMP(lv, int, addNum, upMPPercent, skillList) {
-  //{{{
-  var resultMP = Math.floor(lv * 3 + int * 2 * upMPPercent / 100 + addNum);
-  resultMP = Math.floor(resultMP * calcHPMPPercent(skillList).totalMPPercent);
-  if (resultMP > 999) {
-    resultMP = 999;
-  }
-  return resultMP;
-}
-//}}}
 
 /**
  * 悪魔の既定ステータスを画面へセットします。
@@ -301,12 +235,6 @@ function doSetDefault() {
   for (var i = 0; i < devil.skill.length; i++) {
     $('#slSkill'+i).val(devil.skill[i]);
   };
-  // $('#slSkill0').val(devil.skill[0]);
-  // $('#slSkill1').val(devil.skill[1]);
-  // $('#slSkill2').val(devil.skill[2]);
-  // $('#slSkill3').val(devil.skill[3]);
-  // $('#slSkill4').val(devil.skill[4]);
-  // $('#slSkill5').val(devil.skill[5]);
   $('.skills').trigger('change');
 
   doRefresh()
@@ -329,8 +257,34 @@ function doRefresh() {
   // 悪魔 ID に対応する悪魔オブジェクトの複製を取得
   var devil = getDevil(devilID).clone();
 
+  devil = setStatus(devil);
+  devil = setSkills(devil);
+  devil.calculateAll();
 
-  // ステータスをセット
+  setEXPMax(devil);
+
+  // 悪魔情報を取得して表示
+  var messegeJSON = createMessageObject(devil);
+  var message = templates.output.render(messegeJSON);
+  outputMessage(message);
+
+  // コスト画面出力
+  var cost = addComma(devil.totalCost)  + ' / ' +  addComma(Math.floor(devil.totalCost / 2));
+  $('#info-nowcost').html(cost);
+
+  setModalDialog(devil.toString(),message);
+  //}}}
+}
+
+function setSkills(devil){
+  // スキル
+  for (var i = 0; i < devil.skill.length; i++) {
+    devil.skill[i] = $('#slSkill'+i).val();
+  };
+  return devil;
+}
+
+function setStatus (devil) {
   devil.lv = $('#lv').val();
   devil.exp = $('#exp').val();
 
@@ -343,39 +297,10 @@ function doRefresh() {
 
   devil = setStatusBase(devil);
 
-  // スキル
-  for (var i = 0; i < devil.skill.length; i++) {
-    devil.skill[i] = $('#slSkill'+i).val();
-  };
-  // devil.skill[0] = $('#slSkill0').val();
-  // devil.skill[1] = $('#slSkill1').val();
-  // devil.skill[2] = $('#slSkill2').val();
-  // devil.skill[3] = $('#slSkill3').val();
-  // devil.skill[4] = $('#slSkill4').val();
-  // devil.skill[5] = $('#slSkill5').val();
-
-  devil.HP = calculateHP(devil.lv, devil.vit, devil.addHP, devil.baseHP, devil.skill);
-  devil.MP = calculateMP(devil.lv, devil.int, devil.addMP, devil.baseHP, devil.skill);
-
-  setEXPMax(devil);
-
-  // 悪魔情報を取得して表示
-
-  var message = devil.getSimpleInformation().replace(/\n/g,"<br>\n");
-  var messegeJSON = createMessageObject(devil);
-  var message = templates.output.render(messegeJSON);
-  // var message = outputTemplate.render(messegeJSON);
-  outputMessage(message);
-
-  var cost = addComma(devil.totalCost)  + ' / ' +  addComma(Math.floor(devil.totalCost / 2));
-  $('#info-nowcost').html(cost);
-
-  setModalDialog(devil.toString(),message);
-  //}}}
+  return devil;
 }
 
 function createMessageObject(devil){
-  devil.calculateAll();
   var result = devil;
   result.skillFull = [];
   for (var i = 0; i < result.skill.length; i++) {
@@ -421,23 +346,25 @@ function setStatusBase(devil) {
  * @param {Devil} devil データの入った悪魔クラス
  */
 function setEXPMax(devil) {
-  devil.calculateEXPMax();
-  $('#exp').attr('max' , devil.expMax);
+  var elm = $('#exp');
+  elm.attr('max' , devil.expMax);
 
   //label
-  $('#exp-max-label').empty().append(devil.expMax);
+  $('#exp-max-label').html(devil.expMax);
 
+  // オーバーフローは補正する
   var result = 0;
-  var inputEXP = parseInt($('#exp').val());
+  var inputEXP = parseInt(elm.val());
   if (inputEXP > parseInt(devil.expMax)) {
     result = devil.expMax;
-    $('#exp').val(result);
+    elm.val(result);
   }
   if (inputEXP < 0) {
     result = 0;
-    $('#exp').val(result);
+    elm.val(result);
   }
 }
+
 // パスワード入力ボタン押下時の処理
 function doInput() {
 //{{{
@@ -1102,19 +1029,29 @@ var View = (function () {
   }
 }());
 
-function createSliders(){
+/**
+ * 指定したエレメントセレクタに対応するスライダーを生成します。
+ * @param  String selector jQuery Selector
+ * @return null
+ */
+function createSliders(options){
+  var selector = options.selector;
+  var min = options.min;
+  var max = options.max;
+
   // ステータススライダー作成
-  $('.status').each(function (index,val) {
+  $(selector).each(function (index,val) {
       var select = $(val);
       var id = $(val).attr('id');
       var slider = $( "<div id='"+ id +"-slider' class='status-slider'></div>" ).insertAfter( select ).slider({
-          min: 1,
-          max: 99,
+          min: min,
+          max: max,
           range: "min",
           value: select[ 0 ].selectedIndex + 1,
           slide: function( event, ui ) {
               select.val(ui.value);
-              doRefresh();
+              select.trigger('change');
+              // doRefresh();
           }
       });
 
@@ -1126,10 +1063,6 @@ function createSliders(){
         slider.slider({'value':val});
       })
   });
-
-  //expSlider
-  $('#txExp').each(function (index,value) {
-  })
 }
 
 function hookStatusChange () {
@@ -1144,7 +1077,13 @@ function hookStatusChange () {
   }));
   $('#exp').on('change',(function () {
     doRefresh();
+    var elm = $(this);
+    var id = elm.attr('id');
+    var maxEXP = elm.attr("max");
+    $('#' + id+'-slider').slider( "option", { max: maxEXP } );
   }));
+  $('#exp').trigger('change');
+
   $('#password-pattern').on('change',(function () {
     doRefresh();
   }));
@@ -1195,6 +1134,7 @@ function hookPasswordParse () {
   });
 }
 
+//////////////////////////////////////////////////////////////////////////////
 // event binds
 $(function () {
   init();
@@ -1205,11 +1145,13 @@ $(function () {
       "すでに99の場合は1になります。"
   );
 
-  createSliders();
+  createSliders({selector:'.status',min:1,max:99});
+  createSliders({selector:'#exp',min:1,max:11});
   hookStatusChange();
   hookChangeEnemyExclusive();
   hookFilters();
   hookSetDefault();
   hookPasswordParse();
   hookToggleStatusMaxMin();
+
 });

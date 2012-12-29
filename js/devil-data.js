@@ -72,14 +72,23 @@ function Devil(devil) {
 
   this.expMax = 2097151;
 
+  /**
+   * 計算しなければならないステータスを全て計算します。
+   * @return Devil this
+   */
   this.calculateAll = function  () {
     this.calculateCost();
+    this.calculateHP();
+    this.calculateMP();
+    this.calculateEXPMax();
     this.halfCost = Math.floor(this.totalCost/2);
+    return this;
   }
 
   /**
    * 最大コスト算出します。
    * this.skillが正しく設定されている必要があります。
+   * @return Integer 最大スキルコスト
    */
   this.calculateMaxSkillCost = function () {
     this.maxSkillCost = 0;//{{{
@@ -115,6 +124,86 @@ function Devil(devil) {
 
     return this.expMax = Math.floor(expTable[this.lv] * expBaseScale - 1);//}}}
   }
+
+
+  /**
+   * 活泉・魔脈スキルによるHP・MPの増加分%を返します。
+   */
+  function getHPMPupPercent(skillID) {
+    //{{{
+    switch (parseInt(skillID)) {
+      case 414:
+        return {"target":"hp", "percent":0.1};
+      case 417:
+        return {"target":"mp", "percent":0.1};
+      case 415:
+        return {"target":"hp", "percent":0.2};
+      case 418:
+        return {"target":"mp", "percent":0.2};
+      case 416:
+        return {"target":"hp", "percent":0.3};
+      case 419:
+        return {"target":"mp", "percent":0.3};
+    }
+    return {"target":"none", "percent":0};
+  }
+  //}}}
+
+  /**
+   * HPMPの増量係数を算出します。
+   */
+  function calcHPMPPercent(skillList) {
+    //{{{
+    var result = {"totalHPPercent":1, "totalMPPercent":1};
+
+    for (var i = 0, len = skillList.length; i < len; i++) {
+      var upPercent = getHPMPupPercent(skillList[i]);
+      switch (upPercent.target) {
+        case "hp":
+          result.totalHPPercent = result.totalHPPercent + upPercent.percent;
+          break;
+        case "mp":
+          result.totalMPPercent = result.totalMPPercent + upPercent.percent;
+          break;
+      }
+    }
+    ;
+    return result;
+  }
+  //}}}
+
+  /*
+   *
+   */
+  this.calculateHP = function(lv, vit, addNum, upHPPercent, skillList) {
+    //{{{
+    var resultHP = Math.floor(
+      this.lv * 6 + this.vit * 3 * devil.baseHP / 100 + devil.addHP
+    );
+    resultHP = Math.floor(
+      resultHP * calcHPMPPercent(this.skill).totalHPPercent
+    );
+
+    if (resultHP > 999) {
+      resultHP = 999;
+    }
+    return this.HP = resultHP;
+  }
+  //}}}
+  this.calculateMP = function () {
+    //{{{
+    var resultMP = Math.floor(
+      this.lv * 3 + this.int * 2 * devil.baseMP / 100 + devil.addMP
+    );
+    resultMP = Math.floor(
+      resultMP * calcHPMPPercent(this.skill).totalMPPercent
+    );
+    if (resultMP > 999) {
+      resultMP = 999;
+    }
+    return this.MP = resultMP;
+  }
+  //}}}
 
   /**
    * 悪魔が元々持っているスキルか判別します。
