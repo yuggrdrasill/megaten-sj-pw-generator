@@ -42,9 +42,9 @@
       <div id="devil-status-skill-wrapper" class="span6">
         <h3>スキル</h3>
         <ol id="devil-status-skill">
-          {{#skill}}
+          {{#skillFull}}
           <li>{{name}}</li>
-          {{/skill}}
+          {{/skillFull}}
         </ul>
       </div>
       <div id="devil-password" class="span6">

@@ -4,39 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 'use strict';
 
-// フォームの要素を無効化したり有効化したりする機能追加
-jQuery.fn.extend({
-  checked:function(){
-    return jQuery(this).attr('checked');
-  },
-  disabled:function(value){
-    // 引数がないとき、disabledのときtrueを返す
-    if(value===undefined) return $(this).attr("disabled")!==undefined;
-
-    if(value){
-      // 引数がtrueのとき、無効化する
-      $(this).attr("disabled","disabled");
-    } else {
-      // 引数がfalseのとき、有効化する
-      $(this).removeAttr("disabled");
-    }
-  }
-});
-
-
-var _ua = (function(){
-return {
-  ltIE6:typeof window.addEventListener == "undefined" && typeof document.documentElement.style.maxHeight == "undefined",
-  ltIE7:typeof window.addEventListener == "undefined" && typeof document.querySelectorAll == "undefined",
-  ltIE8:typeof window.addEventListener == "undefined" && typeof document.getElementsByClassName == "undefined",
-  IE:document.uniqueID,
-  Firefox:window.sidebar,
-  Opera:window.opera,
-  Webkit:!document.uniqueID && !window.opera && !window.sidebar && window.localStorage && typeof window.orientation == "undefined",
-  Mobile:typeof window.orientation != "undefined"
-}
-})();
-
 
 // -------------------------------------------------------------------------------------------------
 // データ
@@ -331,12 +298,15 @@ function doSetDefault() {
   $('.status').trigger('change');
 
   // スキル
-  $('#slSkill0').val(devil.skill[0]);
-  $('#slSkill1').val(devil.skill[1]);
-  $('#slSkill2').val(devil.skill[2]);
-  $('#slSkill3').val(devil.skill[3]);
-  $('#slSkill4').val(devil.skill[4]);
-  $('#slSkill5').val(devil.skill[5]);
+  for (var i = 0; i < devil.skill.length; i++) {
+    $('#slSkill'+i).val(devil.skill[i]);
+  };
+  // $('#slSkill0').val(devil.skill[0]);
+  // $('#slSkill1').val(devil.skill[1]);
+  // $('#slSkill2').val(devil.skill[2]);
+  // $('#slSkill3').val(devil.skill[3]);
+  // $('#slSkill4').val(devil.skill[4]);
+  // $('#slSkill5').val(devil.skill[5]);
   $('.skills').trigger('change');
 
   doRefresh()
@@ -374,12 +344,15 @@ function doRefresh() {
   devil = setStatusBase(devil);
 
   // スキル
-  devil.skill[0] = $('#slSkill0').val();
-  devil.skill[1] = $('#slSkill1').val();
-  devil.skill[2] = $('#slSkill2').val();
-  devil.skill[3] = $('#slSkill3').val();
-  devil.skill[4] = $('#slSkill4').val();
-  devil.skill[5] = $('#slSkill5').val();
+  for (var i = 0; i < devil.skill.length; i++) {
+    devil.skill[i] = $('#slSkill'+i).val();
+  };
+  // devil.skill[0] = $('#slSkill0').val();
+  // devil.skill[1] = $('#slSkill1').val();
+  // devil.skill[2] = $('#slSkill2').val();
+  // devil.skill[3] = $('#slSkill3').val();
+  // devil.skill[4] = $('#slSkill4').val();
+  // devil.skill[5] = $('#slSkill5').val();
 
   devil.HP = calculateHP(devil.lv, devil.vit, devil.addHP, devil.baseHP, devil.skill);
   devil.MP = calculateMP(devil.lv, devil.int, devil.addMP, devil.baseHP, devil.skill);
@@ -403,14 +376,11 @@ function doRefresh() {
 
 function createMessageObject(devil){
   devil.calculateAll();
-  var result = devil.clone();
-
-  result.skill[0] = getSkill(result.skill[0]);
-  result.skill[1] = getSkill(result.skill[1]);
-  result.skill[2] = getSkill(result.skill[2]);
-  result.skill[3] = getSkill(result.skill[3]);
-  result.skill[4] = getSkill(result.skill[4]);
-  result.skill[5] = getSkill(result.skill[5]);
+  var result = devil;
+  result.skillFull = [];
+  for (var i = 0; i < result.skill.length; i++) {
+    result.skillFull[i] = getSkill(result.skill[i]);
+  };
   result.password = generatePassword(result).replace(/\n/g,'<br>');
 
   return result;
@@ -491,9 +461,7 @@ function doInput() {
     msg = analyzeBitPassword(password);
   }
 
-  $('#message-dialog-area').html(msg.replace(/\n/g,"<br>"));
-  $('#message-dialog-area').trigger('change');
-  $('select').trigger('change');
+  $('#message-dialog-area').html(msg.replace(/\n/g,"<br>")).trigger('change');
 }
 
 //}}}
@@ -732,7 +700,7 @@ function analyzePassword(srcOld, msgOld) {
   // Lv (1 ～ 99)
   msg += "Lv          = " + lv;
   if (1 <= lv && lv <= 99) {
-    $('#slLv').val(lv).trigger('change');;
+    $('#lv').val(lv).trigger('change');;
   }
   else {
     msg += " (NG)";
@@ -741,7 +709,7 @@ function analyzePassword(srcOld, msgOld) {
   // 経験値 (0 ～ 2097151)
   msg += "経験値      = " + exp;
   if (0 <= exp && exp <= 2097151) {
-    $('#txExp').val(exp).trigger('change');;
+    $('#exp').val(exp).trigger('change');;
   }
   else {
     msg += " (NG)";
@@ -1135,7 +1103,7 @@ var View = (function () {
 }());
 
 function createSliders(){
-  // スライダー作成
+  // ステータススライダー作成
   $('.status').each(function (index,val) {
       var select = $(val);
       var id = $(val).attr('id');
@@ -1159,6 +1127,7 @@ function createSliders(){
       })
   });
 
+  //expSlider
   $('#txExp').each(function (index,value) {
   })
 }
@@ -1179,6 +1148,8 @@ function hookStatusChange () {
   $('#password-pattern').on('change',(function () {
     doRefresh();
   }));
+
+  // パスワード入力時変化時、自動でポップアップするように
   $('#message-dialog-area').on('change',(function () {
     $('#message-dialog').modal();
   }));
