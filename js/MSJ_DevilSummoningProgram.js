@@ -3,21 +3,10 @@
 // (c) http://www20.atwiki.jp/strange_journey/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 'use strict';
-
-
 // -------------------------------------------------------------------------------------------------
 // データ
 // -------------------------------------------------------------------------------------------------
-/**
- * 威力算出が魔力かどうか判定します。
- */
-
-function isMagicAttackGroup(skill) {
-  return skill.attackGroup.id == 1 ? false : true;
-}
-
-//}}}
-var charMap = "し,ん,い,く,み,Ｂ,や,る,Ｙ,け,ひ,Ｋ,Ｆ,と,Ｈ,む,Ａ,ち,に,Ｚ,き,Ｗ,よ,Ｌ,を,の,た,れ,Ｎ,え,Ｓ,ふ,わ,Ｊ,そ,り,す,Ｃ,め,Ｐ,へ,Ｑ,Ｇ,Ｒ,Ｄ,こ,Ｍ,Ｔ,ま,つ,せ,か,は,Ｅ,Ｕ,て,さ,な,あ,も,ゆ,お,う,ろ".split(",");
+// var charMap = "し,ん,い,く,み,Ｂ,や,る,Ｙ,け,ひ,Ｋ,Ｆ,と,Ｈ,む,Ａ,ち,に,Ｚ,き,Ｗ,よ,Ｌ,を,の,た,れ,Ｎ,え,Ｓ,ふ,わ,Ｊ,そ,り,す,Ｃ,め,Ｐ,へ,Ｑ,Ｇ,Ｒ,Ｄ,こ,Ｍ,Ｔ,ま,つ,せ,か,は,Ｅ,Ｕ,て,さ,な,あ,も,ゆ,お,う,ろ".split(",");
 
 var letters = "しんいくみＢやるＹけひＫＦとＨむＡちにＺきＷよＬをのたれＮえＳふわＪそりすＣめＰへＱＧＲＤこＭＴまつせかはＥＵてさなあもゆおうろ";
 
@@ -30,15 +19,12 @@ function setPattern(patternID) {
 // 準備 OK フラグ
 var isReady = false;
 
-function outputMessage(message) {
-  $('#output-area').html(message);
-}
 // -------------------------------------------------------------------------------------------------
 // 処理
 // -------------------------------------------------------------------------------------------------
-// 初期化処理
-
-
+/**
+ * 初期化処理を行います。
+ */
 function init() {
   //{{{
   outputMessage("初期化中 ...");
@@ -58,7 +44,7 @@ function init() {
   }
 
   createSkillFilterSelectBox();
-  createAlignmentFilterSelectBox();
+  createStanceFilterSelectBox();
 
   // 経験値フィールド初期化
   $('#exp').val(0).trigger('change');
@@ -74,10 +60,21 @@ function init() {
   isReady = true;
 }
 //}}}
-/**
- * スキルフィルタリスト生成
- */
 
+function outputMessage(message) {
+  $('#output-area').html(message);
+}
+
+/**
+ * 威力算出が魔力かどうか判定します。
+ */
+function isMagicAttackGroup(skill) {
+  return skill.attackGroup.id == 1 ? false : true;
+}
+
+/**
+ * スキルフィルタ用optionを生成します。
+ */
 function createSkillFilterSelectBox() {
   $('#skill-filter').append("<option value='none'>フィルタリング無し</option>");
   for(var i in elementJSON) {
@@ -86,7 +83,10 @@ function createSkillFilterSelectBox() {
   };
 }
 
-function createAlignmentFilterSelectBox() {
+/**
+ * スタンスフィルタ用optionを生成します。
+ */
+  function createStanceFilterSelectBox() {
   $('#stance-filter').append("<option value='none'>スタンスフィルタ無し</option>");
   for(var i = 0, len = stance.length - 1; i <= len; i++) {
     var option = '<option value="stance-' + stance[i] + '">' + stance[i] + '</option>';
@@ -98,7 +98,6 @@ function createAlignmentFilterSelectBox() {
  * 敵専用チェックボックスを変更した際に呼ぶ関数です。
  * 悪魔リストとスキルリストに敵専用のモノを追加や除去します。
  */
-
 function changeEnemyExclusive() {
   createDevils();
   createSkills();
@@ -107,9 +106,8 @@ function changeEnemyExclusive() {
 }
 
 /**
- * 悪魔のオプションボックスを生成します。
+ * 悪魔のoptionを生成します。
  */
-
 function createDevilOption(devil) {
   var result = '<option class="genus-' + devil.genus.id + ' stance-' + devil.genus.stance + ' alignment-' + devil.genus.alignment + ' " ' + 'value="' + devil.devilID + '">' + devil.toDetailString() + '</option>';
   return result;
@@ -120,7 +118,6 @@ function createDevilOption(devil) {
  * 敵専用チェックボックスがチェックされている場合、
  * 敵専用のモノを追加します。
  */
-
 function createDevils() {
   //{{{
   // リストを空にしてから追加しないと重複してしまう
@@ -139,20 +136,18 @@ function createDevils() {
   //}}}
 }
 
-/** * スキルドロップダウンを生成します。
+/**
+ * スキルドロップダウンを生成します。
  * 敵専用チェックボックスがチェックされている場合、
  * 敵専用のモノを追加します。
  */
-
 function createSkills() {
   /**
    * デモニカもどき専用スキルか判定します。
    */
   var isSkillDemonikaModoki = function(skillID) {
-      return skillID == 228 //{{{
-      ||
+      return skillID == 228 ||
       skillID == 231 || skillID == 240 || skillID == 241 || skillID == 243
-      //}}}
     }
 
     /**
@@ -169,8 +164,7 @@ function createSkills() {
       return skill.cost != -1 || isSkillDemonikaModoki(skill.skillID) || $('#enemy-exclusive').checked()
     }
 
-    //***********  処理開始
-    $('.skills').empty();
+  $('.skills').empty();
 
   // 追加する
   for(var i in skillMap) {
@@ -181,24 +175,25 @@ function createSkills() {
     }
   }
 }
+
 /**
  *
  */
-
+/**
+ * ステータスへ1か99を設定します。
+ * @param  jQuery select 1か99を設定したいelementのjQueryオブジェクト
+ */
 function toggleStatusMaxMin(select) {
-  //{{{
   var MAX = 99;
   var MIN = 1;
   select.val() == MAX ? select.val(MIN) : select.val(MAX);
   select.trigger('change');
 }
-//}}}
 
 
 /**
- * 悪魔の既定ステータスを画面へセットします。
+* 悪魔の既定ステータスを画面へセットします。
  */
-
 function doSetDefault() {
   // 悪魔 ID の入力値を取得//{{{
   var devilID = $('#devil-id').val();
@@ -232,9 +227,10 @@ function doSetDefault() {
   //}}}
 };
 
-// 入力値更新時の処理
-
-
+/**
+ * 入力値更新時の処理です。
+ * 画面を一括で更新します。
+ */
 function doRefresh() {
   //{{{
   if(!isReady) {
@@ -269,6 +265,10 @@ function doRefresh() {
   //}}}
 }
 
+/**
+ * 画面から悪魔データにスキルを設定します。
+ * @param Devil devil 悪魔データ
+ */
 function setSkills(devil) {
   // スキル
   for(var i = 0; i < devil.skill.length; i++) {
@@ -277,6 +277,10 @@ function setSkills(devil) {
   return devil;
 }
 
+/**
+ * 画面から悪魔データにステータスを設定します。
+ * @param Devil devil 悪魔データ
+ */
 function setStatus(devil) {
   devil.lv = $('#lv').val();
   devil.exp = $('#exp').val();
@@ -293,6 +297,11 @@ function setStatus(devil) {
   return devil;
 }
 
+/**
+ * 結果表示させるためのテンプレート用オブジェクトを生成します。
+ * @param  Devil devil 表示させるデータ
+ * @return Devil       結果表示用オブジェクト
+ */
 function createMessageObject(devil) {
   var result = devil;
   result.skillFull = [];
@@ -304,6 +313,11 @@ function createMessageObject(devil) {
   return result;
 }
 
+/**
+ * 結果表示用のダイアログへメッセージを設定します。
+ * @param  String title   ダイアログタイトル
+ * @param  String message メッセージ
+ */
 function setModalDialog(title, message) {
   $('#data-info-title').html(title);
   $('#data-info-body').html(message);
@@ -313,7 +327,6 @@ function setModalDialog(title, message) {
  * 能力値基準値を画面へ設定します。
  * @param {Devil} devil データの入った悪魔クラス
  */
-
 function setStatusBase(devil) {
   // 能力値・基準値
   if($('#cbBaseEqReal').checked()) {
@@ -336,9 +349,8 @@ function setStatusBase(devil) {
 
 /**
  * 最大経験値を画面に設定します。
- * @param {Devil} devil データの入った悪魔クラス
+ * @param Devil devil データの入った悪魔クラス
  */
-
 function setEXPMax(devil) {
   var elm = $('#exp');
   elm.attr('max', devil.expMax);
@@ -360,8 +372,6 @@ function setEXPMax(devil) {
 }
 
 // パスワード入力ボタン押下時の処理
-
-
 function doInput() {
   //{{{
   if(!isReady) {
@@ -386,11 +396,13 @@ function doInput() {
 
   $('#message-dialog-area').html(msg.replace(/\n/g, "<br>")).trigger('change');
 }
-
 //}}}
-// 入力されたパスワードを解析する (文字モード)
 
-
+/**
+ * 入力されたパスワードを解析する (文字モード)
+ * @param  String password 入力されたパスワード
+ * @return String          解析結果メッセージ
+ */
 function analyzeCharPassword(password) {
   //{{{
   var i;
@@ -458,10 +470,12 @@ function analyzeCharPassword(password) {
 
   return(analyzePassword(src, msg));
 }
-//}}}
-// 入力されたパスワードを解析する (ビットモード)
 
-
+/**
+ * 入力されたパスワードを解析する (ビットモード)
+ * @param  String password 入力されたパスワード
+ * @return String          解析結果メッセージ
+ */
 function analyzeBitPassword(password) {
   //{{{
   var i;
@@ -524,9 +538,14 @@ function analyzeBitPassword(password) {
   return(analyzePassword(password, msg));
 }
 //}}}
-// 入力されたパスワードを解析する (共通部)
 
 
+/**
+ * 入力されたパスワードを解析する (共通部)
+ * @param  String srcOld ソース
+ * @param  String msgOld メッセージ
+ * @return String        解析結果メッセージ
+ */
 function analyzePassword(srcOld, msgOld) {
   //{{{
   var i;
@@ -773,9 +792,12 @@ function analyzePassword(srcOld, msgOld) {
   return msg;
 }
 //}}}
-// 指定した悪魔のパスワードを生成して返す。
 
-
+/**
+ * 指定した悪魔のパスワードを生成して返す。
+ * @param  Devil devil パスワードを生成したい悪魔データ
+ * @return String      生成されたパスワード
+ */
 function generatePassword(devil) {
   //{{{
   var i;
@@ -863,9 +885,13 @@ function generatePassword(devil) {
   return result;
 }
 //}}}
-// 指定桁数での前方 0 埋め
 
-
+/**
+ * 指定桁数での前方 0 埋め
+ * @param  Integer place 埋める桁数
+ * @param  Integer value 埋める値
+ * @return Integer
+ */
 function fillZero(place, value) {
   //{{{
   var i;
@@ -879,9 +905,13 @@ function fillZero(place, value) {
   return value;
 }
 //}}}
-// 指定桁数での後方 0 埋め
 
-
+/**
+ * 指定桁数での後方 0 埋め
+ * @param  Integer place 埋める桁数
+ * @param  Integer value 埋める値
+ * @return Integer
+ */
 function fillZeroAfter(place, value) {
   //{{{
   var i;
@@ -893,6 +923,10 @@ function fillZeroAfter(place, value) {
 }
 //}}}
 
+/**
+ * 指定された文字列に3桁ごとにカンマを加えます。
+ * @param String str カンマを付けたい文字列
+ */
 function addComma(str) {
   var num = new String(str).replace(/,/g, '');
   while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1,$2')));
@@ -904,8 +938,6 @@ function addComma(str) {
 // -------------------------------------------------------------------------------------------------
 // パターンクラス
 // -------------------------------------------------------------------------------------------------
-
-
 function Pattern(charList, indexArray, xorbit) {
   this.indexArray = indexArray; //{{{
   this.b2cMap = charList.split(",");
@@ -947,6 +979,9 @@ var skillFiltering = function() {
     }
   };
 
+/**
+ * 画面から取得したスタンスで悪魔のフィルタリングを行います。
+ */
 function stanceFiltering() {
   var elm = $('#stance-filter');
   var filterName = '.' + elm.val();
@@ -957,10 +992,13 @@ function stanceFiltering() {
   }
 }
 
+/**
+ * 悪魔リストを複製します。
+ * フィルタ元のマスター用です。
+ */
 function cloneDevilList() {
   $('#devils-clone').append($('#devil-id option').clone());
 }
-
 
 var View = (function() {
   var _setTooltip = function(selector, message) {
@@ -999,7 +1037,6 @@ var View = (function() {
  * @param  String selector jQuery Selector
  * @return null
  */
-
 function createSliders(options) {
   var selector = options.selector;
   var min = options.min;
@@ -1017,7 +1054,6 @@ function createSliders(options) {
       slide: function(event, ui) {
         select.val(ui.value);
         select.trigger('change');
-        // doRefresh();
       }
     });
 
@@ -1113,7 +1149,9 @@ function hookPasswordParse() {
 $(function() {
   init();
 
-  View.setTooltip(".status-label", "ラベルをダブルクリックすると99になります。\n" + "すでに99の場合は1になります。");
+  View.setTooltip(".status-label",
+    "ラベルをダブルクリックすると99になります。\n" +
+     "すでに99の場合は1になります。");
 
   createSliders({
     selector: '.status',
