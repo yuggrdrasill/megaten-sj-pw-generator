@@ -1037,12 +1037,18 @@ function hookStatusChange() {
   $('select').on('change', function() {
     doRefresh();
   });
+  $('#devil-id').on('change',(function  () {
+    if($('#allway-set-defualt').checked()){
+      doSetDefault();
+    }
+  }))
   $('#cbBaseEqReal').on('change', (function() {
     View.toggleStatusBaseSelectDisabled();
     $('.status').trigger('change');
     $('.status-slider').trigger('change');
     doRefresh();
   }));
+
   $('#exp').on('change', (function() {
     doRefresh();
     var elm = $(this);
