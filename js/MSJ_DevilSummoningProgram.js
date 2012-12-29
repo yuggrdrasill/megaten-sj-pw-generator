@@ -951,9 +951,9 @@ function stanceFiltering() {
   var elm = $('#stance-filter');
   var filterName = '.' + elm.val();
   if(filterName === ".none") {
-    $('#devil-id').empty().append($('#devils-clone option').clone());
+    $('#devil-id').empty().append($('#devils-clone option').clone()).trigger('change');
   } else {
-    $('#devil-id').empty().append($('#devils-clone').clone().find(filterName));
+    $('#devil-id').empty().append($('#devils-clone').clone().find(filterName)).trigger('change');
   }
 }
 
@@ -1130,5 +1130,5 @@ $(function() {
   hookSetDefault();
   hookPasswordParse();
   hookToggleStatusMaxMin();
-
+  doSetDefault();
 });
