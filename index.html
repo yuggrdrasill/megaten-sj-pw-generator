@@ -102,7 +102,7 @@
             <fieldset id="devils">
               <legend>□悪魔 ID (0～490)</legend>
               <div class="left-indent">
-                <select id="devilID" name="slDevil"></select>
+                <select id="devil-id" name="slDevil"></select>
                 <select name="stanceFilter" id="stance-filter" class="filter"></select>
                 <select id="devils-clone" name="devilsClone" class="hidden"></select>
                 <button id="set-default" name="setDefault"
@@ -278,7 +278,7 @@
               value="1">
               <label for="rbBitMode">ビットモード</label>
               <br>
-              <textarea id="password-input-area" name="taIn" cols="80" rows="2"></textarea>
+              <textarea id="password-input-area" name="taIn" maxlength="34" cols="16" rows="2"></textarea>
               <input type="button" name="btIn" id="password-parse" value="入力">
               <br>
               <br>
@@ -291,6 +291,24 @@
               <label for="debug-mode" id="debug-mode-label">デバッグモード</label>
               <br>
 
+              <!-- Modal -->
+              <button
+                data-toggle="modal"
+                role="button"
+                data-target="#message-dialog"
+                id="message-dialog-button"></button>
+              <div id="message-dialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="message-dialog-title" aria-hidden="true">
+<!--                 <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h3 id="message-dialog-title"></h3>
+                </div>
+ -->                <div class="modal-body" id="message-dialog-area">
+                </div>
+                <div class="modal-footer">
+                  <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+              </div>
+              <div id="message-area" class=""></div>
               <div id="output-area"></div>
             </fieldset>
 
@@ -400,7 +418,15 @@
     <script>!window.jQuery(document).modal && document.write('<script src="./js/bootstrap.min.js"><\/script>')</script>
     <script src="http://twitter.github.com/hogan.js/builds/2.0.0/hogan-2.0.0.js"></script>
 
+    <script type="text/javascript" src="js/skill-data.js"></script>
+    <script type="text/javascript" src="js/genus.js"></script>
+    <script type="text/javascript" src="js/devil-data.js"></script>
+    <script type="text/javascript" src="js/indexmap.js"></script>
+    <script type="text/javascript" src="js/exptable.js"></script>
+    <script type="text/javascript" src="templates/templates.js"></script>
+
     <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
+
     <script type="text/javascript">
 
         var _gaq = _gaq || [];

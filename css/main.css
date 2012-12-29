@@ -172,7 +172,9 @@ legend{
 fieldset{
   margin-top: 1em;
 }
-
+#password-input-area{
+  width:20em;
+}
 #data-info-button{
   position: fixed;
   left: 95%;
