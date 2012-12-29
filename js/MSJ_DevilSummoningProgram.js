@@ -43,13 +43,13 @@ Mobile:typeof window.orientation != "undefined"
 // -------------------------------------------------------------------------------------------------
 // 属性
 var attrMap = new Array();
-attrMap[0] = "？";//{{{
-attrMap[1] = "－";
-attrMap[2] = "弱";
-attrMap[3] = "耐";
-attrMap[4] = "無";
-attrMap[5] = "反";
-attrMap[6] = "吸";//}}}
+attrMap[0] = {'id':0,'key':'enigma','name': "？"}
+attrMap[1] = {'id':1,'key':'none','name': "－"}
+attrMap[2] = {'id':2,'key':'weakpoint','name': "弱"}
+attrMap[3] = {'id':3,'key':'regists','name': "耐"}
+attrMap[4] = {'id':4,'key':'null','name': "無"}
+attrMap[5] = {'id':5,'key':'reflect','name': "反"}
+attrMap[6] = {'id':6,'key':'drain','name': "吸"}
 
 var stance = [];
 stance[0] = "law";
@@ -1434,6 +1434,61 @@ var expBaseScaleFactor = [
   1 , 1.2 , 1.44 , 1.72 , 1.94 , 2.18 , 2.46 , 2.78 , 3.14 , 3.54 , 4
 ];
 
+var outputTemplateString = '<div id="devil-status-output" class="row-fluid">' +
+'    <div class="span12">' +
+'    <div class="span3">' +
+'    <h2 id="devil-name">{{genus.name}}　{{name}}</h2>' +
+'    <div id="devil-cost">' +
+'      COST:{{totalCost}} 100%時:{{halfCost}} <br> 最大スキルCOST:{{maxSkillCost}}' +
+'    </div>' +
+'    </div>' +
+'    <div id="devil-status-wrapper" class="span5">' +
+'      <h3>ステータス</h3>' +
+'      <div id="devil-level">' +
+'        Lv:{{lv}} 経験値:{{exp}}' +
+'      </div>' +
+'      <span id="devil-status-hp">HP:{{HP}}</span>' +
+'      <span id="devil-status-mp">MP:{{MP}}</span>' +
+'      <div id="devil-status">' +
+'        力:{{str}}({{strBase}}) 魔:{{int}}({{intBase}}) 体:{{vit}}({{vitBase}}) 速:{{agi}}({{agiBase}}) 運:{{luc}}({{lucBase}})' +
+'      </div>' +
+'    </div>' +
+'    <div id="devil-status-attr-wapper" class="span3">' +
+'      <h3>属性</h3>' +
+'      <table id="devil-status-attr">' +
+'        <tr>' +
+'          <th>物</th>' +
+'          <th>銃</th>' +
+'          <th>火</th>' +
+'          <th>氷</th>' +
+'          <th>電</th>' +
+'          <th>風</th>' +
+'          <th>破</th>' +
+'          <th>呪</th>' +
+'        </tr>' +
+'        <tr>' +
+'        {{#attr}} ' +
+'          <td class="attr-{{key}}">{{name}}</td>' +
+'        {{/attr}} ' +
+'        </tr>' +
+'      </table>' +
+'    </div>' +
+'    <div class="span12">' +
+'    <div id="devil-status-skill-wrapper" class="span6">' +
+'      <h3>スキル</h3>' +
+'      <ol id="devil-status-skill">' +
+'        {{#skill}}'+
+'        <li>{{name}}</li>' +
+'        {{/skill}}'+
+'      </ul>' +
+'    </div>' +
+'    <div id="devil-password" class="span6">' +
+'      <h3>パスワード</h3>' +
+'      {{{password}}}' +
+'    </div>' +
+'    </div>' +
+'  </div>';
+var outputTemplate = Hogan.compile(outputTemplateString);
 // 準備 OK フラグ
 var isReady = false;
 
@@ -1755,7 +1810,12 @@ function doRefresh() {
   setEXPMax(devil);
 
   // 悪魔情報を取得して表示
+
+
+
   var message = devil.getSimpleInformation().replace(/\n/g,"<br>\n");
+  var messegeJSON = createMessageObject(devil);
+  var message = outputTemplate.render(messegeJSON)
   outputMessage(message);
 
   var cost = addComma(devil.totalCost)  + ' / ' +  addComma(Math.floor(devil.totalCost / 2));
@@ -1763,6 +1823,21 @@ function doRefresh() {
 
   setModalDialog(devil.toString(),message);
   //}}}
+}
+
+function createMessageObject(devil){
+  devil.calculateAll();
+  var result = devil.clone();
+
+  result.skill[0] = getSkill(result.skill[0]);
+  result.skill[1] = getSkill(result.skill[1]);
+  result.skill[2] = getSkill(result.skill[2]);
+  result.skill[3] = getSkill(result.skill[3]);
+  result.skill[4] = getSkill(result.skill[4]);
+  result.skill[5] = getSkill(result.skill[5]);
+  result.password = generatePassword(result).replace(/\n/g,'<br>');
+
+  return result;
 }
 
 function setModalDialog (title,message) {
@@ -2519,15 +2594,26 @@ function Devil(devil) {
   this.agiBase = 1;
   this.lucBase = 1;
   // 属性(物・銃・火・氷・電・風・破・呪)
-  this.attr = devil.attr;
+  this.attr = [];
+  for (var i = 0; i < devil.attr.length; i++) {
+    this.attr[i] = getAttr(devil.attr[i]);
+  };
   // スキル(1～6)
   this.skillDefault = this.skill = devil.skillDefault;
   // オリジナルデータへの参照
   this.original = this;
   this.playerUses = devil.playerUses;
-  this.totalCost = 0;
+  this.totalCost = devil.totalCost ? devil.totalCost : 0 ;
+  this.halfCost = devil.halfCost ? devil.halfCost : 0 ;
+  this.maxSkillCost = devil.maxSkillCost ? devil.maxSkillCost : 0 ;
+  this.password = devil.password ? devil.password : undefined ;
 
   this.expMax = 2097151;
+
+  this.calculateAll = function  () {
+    this.calculateCost();
+    this.halfCost = Math.floor(this.totalCost/2);
+  }
 
   /**
    * 最大コスト算出します。
@@ -2602,7 +2688,8 @@ function Devil(devil) {
     return this.totalCost = Math.floor(
       (this.maxSkillCost + baseCost + 1300) * 3 / 4
     );
-  }//}}}
+  }
+  //}}}
 
   // この悪魔の複製を返す。
   Devil.prototype.clone = function () {
@@ -2615,7 +2702,8 @@ function Devil(devil) {
     clone.original = this;
 
     return clone;
-  }//}}}
+  }
+  //}}}
 
   // この悪魔の文字列表現を返す。(簡易)
   this.toString = function () {
@@ -2624,13 +2712,15 @@ function Devil(devil) {
     return "" + this.devilID +
       ":[" + this.genus.toString() + "]" +
       this.name + enemyExclusive;
-  }//}}}
+  }
+  //}}}
 
   // この悪魔の文字列表現を返す。(詳細)
   this.toDetailString = function () {
     //{{{
     return this.toString();
-  }//}}}
+  }
+  //}}}
 
   // この悪魔の情報を返す。(簡易)
   this.getSimpleInformation = function () {
@@ -2639,9 +2729,9 @@ function Devil(devil) {
 
     msg += "【" + this.toString() + "】";
     msg += "\n";
-
-    msg += " COST:" + addComma(this.calculateCost());
-    msg += " 100%時:" + addComma(Math.floor(this.calculateCost() / 2));
+    this.calculateCost();
+    msg += " COST:" + addComma(this.totalCost);
+    msg += " 100%時:" + addComma(Math.floor(this.totalCost / 2));
     msg += " 最大スキル:" + addComma(this.maxSkillCost);
     msg += "\n";
 
@@ -2666,14 +2756,14 @@ function Devil(devil) {
     msg += "\n";
     msg += "物銃火氷電風破呪"
     msg += "\n";
-    msg += getAttr(this.attr[0]);
-    msg += getAttr(this.attr[1]);
-    msg += getAttr(this.attr[2]);
-    msg += getAttr(this.attr[3]);
-    msg += getAttr(this.attr[4]);
-    msg += getAttr(this.attr[5]);
-    msg += getAttr(this.attr[6]);
-    msg += getAttr(this.attr[7]);
+    msg += this.attr[0].name;
+    msg += this.attr[1].name;
+    msg += this.attr[2].name;
+    msg += this.attr[3].name;
+    msg += this.attr[4].name;
+    msg += this.attr[5].name;
+    msg += this.attr[6].name;
+    msg += this.attr[7].name;
     msg += "\n";
 
     msg += "■スキル : "
@@ -2692,7 +2782,8 @@ function Devil(devil) {
     msg += generatePassword(this);
 
     return msg;
-  }//}}}
+  }
+  //}}}
 
   // この悪魔の情報を返す。(詳細)
   this.getDetailInformation = function () {

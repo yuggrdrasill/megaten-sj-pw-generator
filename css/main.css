@@ -140,12 +140,21 @@ select ,option,input,textarea{
 }
 
 #output-area{
-  background-color:#f0f0f0;
-  color:#222;
   border-radius: 4px;
   padding:1em;
   font-size:90%;
-  height: 23em;
+  box-shadow:1px 2px 4px rgba(200, 200, 200, 0.5);
+}
+
+#output-area h2{
+  font-size: 1.5em;
+}
+#output-area h3{
+  font-size: 1.3em;
+}
+#output-area ol > li{
+  display:inline-block;
+  width:30%;
 }
 .status{
   width:5em;
@@ -176,11 +185,26 @@ fieldset{
   vertical-align: middle;
 }
 
-.attr-weakpoint{}
-.attr-regists{}
-.attr-null{}
-.attr-drain{}
-.attr-reflect{}
+.attr-weakpoint{
+  background-color: #C00;
+  color: #eee;
+}
+.attr-regists{
+  background-color: #5C8A00;
+  color:#eee;
+}
+.attr-null{
+  background-color: #666;
+  color:#eee;
+}
+.attr-reflect{
+  background-color: #CC6D00;
+  color:#eee;
+}
+.attr-drain{
+  background-color: #007399;
+  color:#eee;
+}
 
 /* ==========================================================================
    Helper classes
