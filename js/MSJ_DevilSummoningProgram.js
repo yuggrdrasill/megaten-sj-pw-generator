@@ -1103,6 +1103,7 @@ function hookSetDefault() {
 
 function hookPasswordParse() {
   $('#password-parse').click(function() {
+    $('#stance-filter').val('none').trigger('change');
     doInput();
   });
 }
