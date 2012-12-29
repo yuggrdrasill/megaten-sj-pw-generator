@@ -8,16 +8,15 @@
 // -------------------------------------------------------------------------------------------------
 // データ
 // -------------------------------------------------------------------------------------------------
-
 /**
  * 威力算出が魔力かどうか判定します。
  */
+
 function isMagicAttackGroup(skill) {
   return skill.attackGroup.id == 1 ? false : true;
 }
 
 //}}}
-
 var charMap = "し,ん,い,く,み,Ｂ,や,る,Ｙ,け,ひ,Ｋ,Ｆ,と,Ｈ,む,Ａ,ち,に,Ｚ,き,Ｗ,よ,Ｌ,を,の,た,れ,Ｎ,え,Ｓ,ふ,わ,Ｊ,そ,り,す,Ｃ,め,Ｐ,へ,Ｑ,Ｇ,Ｒ,Ｄ,こ,Ｍ,Ｔ,ま,つ,せ,か,は,Ｅ,Ｕ,て,さ,な,あ,も,ゆ,お,う,ろ".split(",");
 
 var letters = "しんいくみＢやるＹけひＫＦとＨむＡちにＺきＷよＬをのたれＮえＳふわＪそりすＣめＰへＱＧＲＤこＭＴまつせかはＥＵてさなあもゆおうろ";
@@ -31,29 +30,31 @@ function setPattern(patternID) {
 // 準備 OK フラグ
 var isReady = false;
 
-function outputMessage(message){
+function outputMessage(message) {
   $('#output-area').html(message);
 }
 // -------------------------------------------------------------------------------------------------
 // 処理
 // -------------------------------------------------------------------------------------------------
 // 初期化処理
+
+
 function init() {
   //{{{
   outputMessage("初期化中 ...");
 
   // パターン初期化
-  for (var i in indexMap) {
-    if (indexMap[i] != undefined) {
-      $('#password-pattern').append('<option value="'+i+'">'+i+'</option>');
+  for(var i in indexMap) {
+    if(indexMap[i] != undefined) {
+      $('#password-pattern').append('<option value="' + i + '">' + i + '</option>');
     }
   }
   $('#password-pattern').val(170);
   setPattern(170);
 
   // 能力値リスト初期化
-  for (i = 1; i < 100; i++) {
-    $('.status').append('<option value="'+i+'">'+i+'</option>');
+  for(i = 1; i < 100; i++) {
+    $('.status').append('<option value="' + i + '">' + i + '</option>');
   }
 
   createSkillFilterSelectBox();
@@ -73,22 +74,22 @@ function init() {
   isReady = true;
 }
 //}}}
-
 /**
  * スキルフィルタリスト生成
  */
+
 function createSkillFilterSelectBox() {
   $('#skill-filter').append("<option value='none'>フィルタリング無し</option>");
-  for (var i in elementJSON) {
-    var option = '<option value="element-'+ elementJSON[i].id+'">'+ elementJSON[i].name +'</option>';
+  for(var i in elementJSON) {
+    var option = '<option value="element-' + elementJSON[i].id + '">' + elementJSON[i].name + '</option>';
     $('#skill-filter').append(option);
   };
 }
 
-function createAlignmentFilterSelectBox(){
+function createAlignmentFilterSelectBox() {
   $('#stance-filter').append("<option value='none'>スタンスフィルタ無し</option>");
-  for (var i = 0 ,len = stance.length - 1; i <= len ; i++) {
-    var option = '<option value="stance-'+ stance[i] +'">'+ stance[i] +'</option>';
+  for(var i = 0, len = stance.length - 1; i <= len; i++) {
+    var option = '<option value="stance-' + stance[i] + '">' + stance[i] + '</option>';
     $('#stance-filter').append(option);
   };
 }
@@ -97,6 +98,7 @@ function createAlignmentFilterSelectBox(){
  * 敵専用チェックボックスを変更した際に呼ぶ関数です。
  * 悪魔リストとスキルリストに敵専用のモノを追加や除去します。
  */
+
 function changeEnemyExclusive() {
   createDevils();
   createSkills();
@@ -107,13 +109,9 @@ function changeEnemyExclusive() {
 /**
  * 悪魔のオプションボックスを生成します。
  */
+
 function createDevilOption(devil) {
-  var result =
-    '<option class="genus-'+ devil.genus.id +
-       ' stance-' + devil.genus.stance +
-       ' alignment-' + devil.genus.alignment +
-       ' " ' +
-    'value="' + devil.devilID + '">' + devil.toDetailString() + '</option>';
+  var result = '<option class="genus-' + devil.genus.id + ' stance-' + devil.genus.stance + ' alignment-' + devil.genus.alignment + ' " ' + 'value="' + devil.devilID + '">' + devil.toDetailString() + '</option>';
   return result;
 }
 
@@ -122,16 +120,17 @@ function createDevilOption(devil) {
  * 敵専用チェックボックスがチェックされている場合、
  * 敵専用のモノを追加します。
  */
+
 function createDevils() {
-//{{{
-// リストを空にしてから追加しないと重複してしまう
+  //{{{
+  // リストを空にしてから追加しないと重複してしまう
   $('#devil-id').empty();
   var isEnemyExclusive = $('#enemy-exclusive').checked();
-  for (i in devilMap) {
+  for(i in devilMap) {
     var devil = devilMap[i];
-    if (devil.playerUses) {
+    if(devil.playerUses) {
       $('#devil-id').append(createDevilOption(devil));
-    } else if (isEnemyExclusive) {
+    } else if(isEnemyExclusive) {
       // 敵専用チェックされていない限り追加しない
       $('#devil-id').append(createDevilOption(devil));
     }
@@ -144,48 +143,39 @@ function createDevils() {
  * 敵専用チェックボックスがチェックされている場合、
  * 敵専用のモノを追加します。
  */
+
 function createSkills() {
   /**
    * デモニカもどき専用スキルか判定します。
    */
-  var isSkillDemonikaModoki = function (skillID) {
-    return skillID == 228//{{{
-      || skillID == 231
-      || skillID == 240
-      || skillID == 241
-      || skillID == 243
-    //}}}
-  }
+  var isSkillDemonikaModoki = function(skillID) {
+      return skillID == 228 //{{{
+      ||
+      skillID == 231 || skillID == 240 || skillID == 241 || skillID == 243
+      //}}}
+    }
 
-  /**
-   * スキルデータからオプションエレメントを生成します。
-   */
-  var createSkillOptionElement = function (skill) {
-    var elm = '<option value="'+ skill.skillID +'" '+
-      'title ="' + skill.info() +'" '+
-      'class = "'+
-      ' element-' + skill.element.id +
-      ' attack-group-' + skill.attackGroup.id +
-      '"'+
-      '>' +skill.toDetailString();
-    return elm;
-  }
-  /**
-   * 敵専用スキルか判定します。
-   */
-  var isCheckedEnemyExclusiveSkill = function (skill) {
-    return skill.cost != -1
-      || isSkillDemonikaModoki(skill.skillID)
-      || $('#enemy-exclusive').checked()
-  }
+    /**
+     * スキルデータからオプションエレメントを生成します。
+     */
+  var createSkillOptionElement = function(skill) {
+      var elm = '<option value="' + skill.skillID + '" ' + 'title ="' + skill.info() + '" ' + 'class = "' + ' element-' + skill.element.id + ' attack-group-' + skill.attackGroup.id + '"' + '>' + skill.toDetailString();
+      return elm;
+    }
+    /**
+     * 敵専用スキルか判定します。
+     */
+  var isCheckedEnemyExclusiveSkill = function(skill) {
+      return skill.cost != -1 || isSkillDemonikaModoki(skill.skillID) || $('#enemy-exclusive').checked()
+    }
 
-  //***********  処理開始
-  $('.skills').empty();
+    //***********  処理開始
+    $('.skills').empty();
 
   // 追加する
-  for (var i in skillMap) {
+  for(var i in skillMap) {
     var skill = skillMap[i];
-    if (isCheckedEnemyExclusiveSkill(skill)) {
+    if(isCheckedEnemyExclusiveSkill(skill)) {
       $('#skills-master').append(createSkillOptionElement(skill));
       $('.skills').append(createSkillOptionElement(skill));
     }
@@ -194,8 +184,9 @@ function createSkills() {
 /**
  *
  */
+
 function toggleStatusMaxMin(select) {
-//{{{
+  //{{{
   var MAX = 99;
   var MIN = 1;
   select.val() == MAX ? select.val(MIN) : select.val(MAX);
@@ -204,10 +195,10 @@ function toggleStatusMaxMin(select) {
 //}}}
 
 
-
 /**
  * 悪魔の既定ステータスを画面へセットします。
  */
+
 function doSetDefault() {
   // 悪魔 ID の入力値を取得//{{{
   var devilID = $('#devil-id').val();
@@ -232,8 +223,8 @@ function doSetDefault() {
   $('.status').trigger('change');
 
   // スキル
-  for (var i = 0; i < devil.skill.length; i++) {
-    $('#slSkill'+i).val(devil.skill[i]);
+  for(var i = 0; i < devil.skill.length; i++) {
+    $('#slSkill' + i).val(devil.skill[i]);
   };
   $('.skills').trigger('change');
 
@@ -242,9 +233,11 @@ function doSetDefault() {
 };
 
 // 入力値更新時の処理
+
+
 function doRefresh() {
   //{{{
-  if (!isReady) {
+  if(!isReady) {
     return;
   }
 
@@ -269,22 +262,22 @@ function doRefresh() {
   outputMessage(message);
 
   // コスト画面出力
-  var cost = addComma(devil.totalCost)  + ' / ' +  addComma(Math.floor(devil.totalCost / 2));
+  var cost = addComma(devil.totalCost) + ' / ' + addComma(Math.floor(devil.totalCost / 2));
   $('#info-nowcost').html(cost);
 
-  setModalDialog(devil.toString(),message);
+  setModalDialog(devil.toString(), message);
   //}}}
 }
 
-function setSkills(devil){
+function setSkills(devil) {
   // スキル
-  for (var i = 0; i < devil.skill.length; i++) {
-    devil.skill[i] = $('#slSkill'+i).val();
+  for(var i = 0; i < devil.skill.length; i++) {
+    devil.skill[i] = $('#slSkill' + i).val();
   };
   return devil;
 }
 
-function setStatus (devil) {
+function setStatus(devil) {
   devil.lv = $('#lv').val();
   devil.exp = $('#exp').val();
 
@@ -300,18 +293,18 @@ function setStatus (devil) {
   return devil;
 }
 
-function createMessageObject(devil){
+function createMessageObject(devil) {
   var result = devil;
   result.skillFull = [];
-  for (var i = 0; i < result.skill.length; i++) {
+  for(var i = 0; i < result.skill.length; i++) {
     result.skillFull[i] = getSkill(result.skill[i]);
   };
-  result.password = generatePassword(result).replace(/\n/g,'<br>');
+  result.password = generatePassword(result).replace(/\n/g, '<br>');
 
   return result;
 }
 
-function setModalDialog (title,message) {
+function setModalDialog(title, message) {
   $('#data-info-title').html(title);
   $('#data-info-body').html(message);
 }
@@ -320,17 +313,17 @@ function setModalDialog (title,message) {
  * 能力値基準値を画面へ設定します。
  * @param {Devil} devil データの入った悪魔クラス
  */
+
 function setStatusBase(devil) {
   // 能力値・基準値
-  if ($('#cbBaseEqReal').checked()) {
+  if($('#cbBaseEqReal').checked()) {
     // 「□実値と同じ値を使う」チェックボックスがチェックされている場合
     $('#slStrBase').val(devil.strBase = devil.str);
     $('#slIntBase').val(devil.intBase = devil.int);
     $('#slVitBase').val(devil.vitBase = devil.vit);
     $('#slAgiBase').val(devil.agiBase = devil.agi);
     $('#slLucBase').val(devil.lucBase = devil.luc);
-  }
-  else {
+  } else {
     // 「■実値と同じ値を使う」チェックボックスがチェックされていない場合
     devil.strBase = $('#slStrBase').val();
     devil.intBase = $('#slIntBase').val();
@@ -345,9 +338,10 @@ function setStatusBase(devil) {
  * 最大経験値を画面に設定します。
  * @param {Devil} devil データの入った悪魔クラス
  */
+
 function setEXPMax(devil) {
   var elm = $('#exp');
-  elm.attr('max' , devil.expMax);
+  elm.attr('max', devil.expMax);
 
   //label
   $('#exp-max-label').html(devil.expMax);
@@ -355,31 +349,33 @@ function setEXPMax(devil) {
   // オーバーフローは補正する
   var result = 0;
   var inputEXP = parseInt(elm.val());
-  if (inputEXP > parseInt(devil.expMax)) {
+  if(inputEXP > parseInt(devil.expMax)) {
     result = devil.expMax;
     elm.val(result);
   }
-  if (inputEXP < 0) {
+  if(inputEXP < 0) {
     result = 0;
     elm.val(result);
   }
 }
 
 // パスワード入力ボタン押下時の処理
+
+
 function doInput() {
-//{{{
-  if (!isReady) {
+  //{{{
+  if(!isReady) {
     return;
   }
 
   var password = $('#password-input-area').val();
-  while (password.indexOf("\n") != -1) {
+  while(password.indexOf("\n") != -1) {
     password = password.replace("\n", "");
   }
 
   var msg;
   // 文字モード
-  if ($('#rbCharMode').checked()) {
+  if($('#rbCharMode').checked()) {
     password = password.toUpperCase();
     msg = analyzeCharPassword(password);
   }
@@ -388,13 +384,15 @@ function doInput() {
     msg = analyzeBitPassword(password);
   }
 
-  $('#message-dialog-area').html(msg.replace(/\n/g,"<br>")).trigger('change');
+  $('#message-dialog-area').html(msg.replace(/\n/g, "<br>")).trigger('change');
 }
 
 //}}}
 // 入力されたパスワードを解析する (文字モード)
+
+
 function analyzeCharPassword(password) {
-//{{{
+  //{{{
   var i;
   var msg = "";
 
@@ -407,7 +405,7 @@ function analyzeCharPassword(password) {
   msg += "> パスワード入力文字数チェック ... ";
 
   // 30 文字未満の場合、エラー
-  if (password.length < 31) {
+  if(password.length < 31) {
     msg += "ERROR.";
     msg += "\n";
     msg += "入力されたパスワードは無効です。";
@@ -417,7 +415,7 @@ function analyzeCharPassword(password) {
     return msg;
   }
   // 32 文字を超える場合、警告
-  else if (password.length > 32) {
+  else if(password.length > 32) {
     msg += "WARNING.";
     msg += "\n";
     msg += "パスワードが 33 文字以上入力されました。";
@@ -437,12 +435,12 @@ function analyzeCharPassword(password) {
 
   // パスワードをビット列に変換
   var src = "";
-  for (i = 0; i < 31; i++) {
+  for(i = 0; i < 31; i++) {
     var char = password.charAt(i);
     var value = letters.indexOf(char);
 
     // 不正な文字の検出
-    if (value == -1) {
+    if(value == -1) {
       msg += "ERROR.";
       msg += "\n";
       msg += "入力されたパスワードは無効です。";
@@ -458,13 +456,14 @@ function analyzeCharPassword(password) {
   msg += "OK.";
   msg += "\n";
 
-  return (analyzePassword(src, msg));
+  return(analyzePassword(src, msg));
 }
 //}}}
-
 // 入力されたパスワードを解析する (ビットモード)
+
+
 function analyzeBitPassword(password) {
-//{{{
+  //{{{
   var i;
   var msg = "";
 
@@ -477,7 +476,7 @@ function analyzeBitPassword(password) {
   msg += "> パスワード入力ビット数チェック ... ";
 
   // 184 文字未満の場合、エラー
-  if (password.length < 184) {
+  if(password.length < 184) {
     msg += "ERROR.";
     msg += "\n";
     msg += "入力されたパスワードは無効です。";
@@ -487,7 +486,7 @@ function analyzeBitPassword(password) {
     return msg;
   }
   // 192 文字を超える場合、警告
-  else if (password.length > 192) {
+  else if(password.length > 192) {
     msg += "WARNING.";
     msg += "\n";
     msg += "パスワードが 193 ビット以上入力されました。";
@@ -506,9 +505,9 @@ function analyzeBitPassword(password) {
   msg += "> パスワード入力文字チェック ... ";
 
   // パスワード入力文字チェック
-  for (i = 0; i < 184; i++) {
+  for(i = 0; i < 184; i++) {
     var char = password.charAt(i);
-    if (char != "0" && char != "1") {
+    if(char != "0" && char != "1") {
       msg += "ERROR.";
       msg += "\n";
       msg += "入力されたパスワードは無効です。";
@@ -522,13 +521,14 @@ function analyzeBitPassword(password) {
   msg += "OK.";
   msg += "\n";
 
-  return (analyzePassword(password, msg));
+  return(analyzePassword(password, msg));
 }
 //}}}
-
 // 入力されたパスワードを解析する (共通部)
+
+
 function analyzePassword(srcOld, msgOld) {
-//{{{
+  //{{{
   var i;
   var src = srcOld;
   var msg = msgOld;
@@ -544,10 +544,10 @@ function analyzePassword(srcOld, msgOld) {
 
   // バイト値に変換
   var srcBytes = new Array();
-  for (i = 0; i < 24; i++) {
+  for(i = 0; i < 24; i++) {
     srcBytes[i] = 0;
   }
-  for (i = 0; i < 22; i++) {
+  for(i = 0; i < 22; i++) {
     srcBytes[i] = parseInt(src.substr(i * 8, 8), 2);
     // マスク値と XOR
     srcBytes[i] ^= mask;
@@ -555,16 +555,16 @@ function analyzePassword(srcOld, msgOld) {
   srcBytes[22] = mask;
 
   // 未対応パターンならエラー
-  if (indexMap[mask] == undefined) {
+  if(indexMap[mask] == undefined) {
     msg += "ERROR.";
     msg += "\n";
     msg += "入力されたパスワードパターンは未対応です。";
     msg += "\n";
     // デバッグモード時のみデバッグ情報を付加
-    if ($('#debug-mode').checked()) {
+    if($('#debug-mode').checked()) {
       msg += "入力されたバイト列 : ";
       msg += "\n";
-      for (i = 0; i < 23; i++) {
+      for(i = 0; i < 23; i++) {
         //        msg += "" + i + " バイト目 : " + fillZero(8, eval(srcBytes[i]).toString(2));
         msg += fillZero(8, eval(srcBytes[i]).toString(2));
         msg += "\n";
@@ -578,17 +578,17 @@ function analyzePassword(srcOld, msgOld) {
 
   // 移送後用の配列を初期化する
   var dstBytes = new Array();
-  for (i = 0; i < 24; i++) {
+  for(i = 0; i < 24; i++) {
     dstBytes[i] = 0;
   }
   // バイト単位で移送
-  for (i = 0; i < 22; i++) {
+  for(i = 0; i < 22; i++) {
     dstBytes[i] = srcBytes[indexMap[currentPatternID][i]];
   }
 
   // 移送後バイト配列をビット文字列に変換
   var dst = "";
-  for (i = 0; i < 24; i++) {
+  for(i = 0; i < 24; i++) {
     dst += fillZero(8, eval(dstBytes[i]).toString(2))
   }
 
@@ -617,172 +617,153 @@ function analyzePassword(srcOld, msgOld) {
   // 有効範囲チェックをしながらフォームに適用
   // 悪魔ID (1 ～ 490)
   msg += "悪魔ID      = " + devilID;
-  if (1 <= devilID && devilID <= 490) {
+  if(1 <= devilID && devilID <= 490) {
     $('#devil-id').val(devilID).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // Lv (1 ～ 99)
   msg += "Lv          = " + lv;
-  if (1 <= lv && lv <= 99) {
+  if(1 <= lv && lv <= 99) {
     $('#lv').val(lv).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 経験値 (0 ～ 2097151)
   msg += "経験値      = " + exp;
-  if (0 <= exp && exp <= 2097151) {
+  if(0 <= exp && exp <= 2097151) {
     $('#exp').val(exp).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 力 (実値) (1 ～ 99)
   msg += "力 (実値)   = " + str;
-  if (1 <= str && str <= 99) {
+  if(1 <= str && str <= 99) {
     $('#slStr').val(str).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 魔 (実値) (1 ～ 99)
   msg += "魔 (実値)   = " + int;
-  if (1 <= int && int <= 99) {
+  if(1 <= int && int <= 99) {
     $('#slInt').val(int).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 体 (実値) (1 ～ 99)
   msg += "体 (実値)   = " + vit;
-  if (1 <= vit && vit <= 99) {
+  if(1 <= vit && vit <= 99) {
     $('#slVit').val(vit).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 速 (実値) (1 ～ 99)
   msg += "速 (実値)   = " + agi;
-  if (1 <= agi && agi <= 99) {
+  if(1 <= agi && agi <= 99) {
     $('#slAgi').val(agi).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 運 (実値) (1 ～ 99)
   msg += "運 (実値)   = " + luc;
-  if (1 <= luc && luc <= 99) {
+  if(1 <= luc && luc <= 99) {
     $('#slLuc').val(luc).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 力 (基準値) (1 ～ 99)
   msg += "力 (基準値) = " + strBase;
-  if (1 <= strBase && strBase <= 99) {
+  if(1 <= strBase && strBase <= 99) {
     $('#slStrBase').val(strBase).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 魔 (基準値) (1 ～ 99)
   msg += "魔 (基準値) = " + intBase;
-  if (1 <= intBase && intBase <= 99) {
+  if(1 <= intBase && intBase <= 99) {
     $('#slIntBase').val(intBase).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 体 (基準値) (1 ～ 99)
   msg += "体 (基準値) = " + vitBase;
-  if (1 <= vitBase && vitBase <= 99) {
+  if(1 <= vitBase && vitBase <= 99) {
     $('#slVitBase').val(vitBase).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 速 (基準値) (1 ～ 99)
   msg += "速 (基準値) = " + agiBase;
-  if (1 <= agiBase && agiBase <= 99) {
+  if(1 <= agiBase && agiBase <= 99) {
     $('#slAgiBase').val(agiBase).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // 運 (基準値) (1 ～ 99)
   msg += "運 (基準値) = " + lucBase;
-  if (1 <= lucBase && lucBase <= 99) {
+  if(1 <= lucBase && lucBase <= 99) {
     $('#slLucBase').val(lucBase).trigger('change');;
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // スキル[1] (0 ～ 419)
   msg += "スキル[1]   = " + skill[0];
-  if (0 <= skill[0] && skill[0] <= 419) {
+  if(0 <= skill[0] && skill[0] <= 419) {
     $('#slSkill0').val(skill[0]);
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // スキル[2] (0 ～ 419)
   msg += "スキル[2]   = " + skill[1];
-  if (0 <= skill[1] && skill[1] <= 419) {
+  if(0 <= skill[1] && skill[1] <= 419) {
     $('#slSkill1').val(skill[1]).trigger('change');
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // スキル[3] (0 ～ 419)
   msg += "スキル[3]   = " + skill[2];
-  if (0 <= skill[2] && skill[2] <= 419) {
+  if(0 <= skill[2] && skill[2] <= 419) {
     $('#slSkill2').val(skill[2]).trigger('change');
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // スキル[4] (0 ～ 419)
   msg += "スキル[4]   = " + skill[3];
-  if (0 <= skill[3] && skill[3] <= 419) {
+  if(0 <= skill[3] && skill[3] <= 419) {
     $('#slSkill3').val(skill[3]).trigger('change');
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // スキル[5] (0 ～ 419)
   msg += "スキル[5]   = " + skill[4];
-  if (0 <= skill[4] && skill[4] <= 419) {
+  if(0 <= skill[4] && skill[4] <= 419) {
     $('#slSkill4').val(skill[4]).trigger('change');
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
   // スキル[6] (0 ～ 419)
   msg += "スキル[6]   = " + skill[5];
-  if (0 <= skill[5] && skill[5] <= 419) {
+  if(0 <= skill[5] && skill[5] <= 419) {
     $('#slSkill5').val(skill[5]).trigger('change');
-  }
-  else {
+  } else {
     msg += " (NG)";
   }
   msg += "\n";
@@ -793,38 +774,19 @@ function analyzePassword(srcOld, msgOld) {
 }
 //}}}
 // 指定した悪魔のパスワードを生成して返す。
+
+
 function generatePassword(devil) {
-//{{{
+  //{{{
   var i;
 
   // 各ステータスを 2 進数文字列に変換し、連結する
-  var src = fillZero(4, "0")
-      + fillZero(9, eval(devil.devilID).toString(2))
-      + fillZero(7, eval(devil.lv).toString(2))
-      + fillZero(9, eval(devil.skill[5]).toString(2))
-      + fillZero(9, eval(devil.skill[4]).toString(2))
-      + fillZero(9, eval(devil.skill[3]).toString(2))
-      + fillZero(9, eval(devil.skill[2]).toString(2))
-      + fillZero(9, eval(devil.skill[1]).toString(2))
-      + fillZero(9, eval(devil.skill[0]).toString(2))
-      + fillZero(32, eval(devil.exp).toString(2))
-      + fillZero(7, eval(devil.intBase).toString(2))
-      + fillZero(7, eval(devil.lucBase).toString(2))
-      + fillZero(7, eval(devil.agiBase).toString(2))
-      + fillZero(7, eval(devil.vitBase).toString(2))
-      + fillZero(7, eval(devil.strBase).toString(2))
-      + fillZero(7, eval(devil.int).toString(2))
-      + fillZero(7, eval(devil.luc).toString(2))
-      + fillZero(7, eval(devil.agi).toString(2))
-      + fillZero(7, eval(devil.vit).toString(2))
-      + fillZero(7, eval(devil.str).toString(2))
-      + fillZero(8, eval(currentPatternID).toString(2))
-    ;
+  var src = fillZero(4, "0") + fillZero(9, eval(devil.devilID).toString(2)) + fillZero(7, eval(devil.lv).toString(2)) + fillZero(9, eval(devil.skill[5]).toString(2)) + fillZero(9, eval(devil.skill[4]).toString(2)) + fillZero(9, eval(devil.skill[3]).toString(2)) + fillZero(9, eval(devil.skill[2]).toString(2)) + fillZero(9, eval(devil.skill[1]).toString(2)) + fillZero(9, eval(devil.skill[0]).toString(2)) + fillZero(32, eval(devil.exp).toString(2)) + fillZero(7, eval(devil.intBase).toString(2)) + fillZero(7, eval(devil.lucBase).toString(2)) + fillZero(7, eval(devil.agiBase).toString(2)) + fillZero(7, eval(devil.vitBase).toString(2)) + fillZero(7, eval(devil.strBase).toString(2)) + fillZero(7, eval(devil.int).toString(2)) + fillZero(7, eval(devil.luc).toString(2)) + fillZero(7, eval(devil.agi).toString(2)) + fillZero(7, eval(devil.vit).toString(2)) + fillZero(7, eval(devil.str).toString(2)) + fillZero(8, eval(currentPatternID).toString(2));
   var checksum = 0;
 
   // 1 バイト単位でマスク値と XOR およびチェックサム計算
   var srcBytes = new Array();
-  for (i = 0; i < 22; i++) {
+  for(i = 0; i < 22; i++) {
     // 8 ビットずつ取得して 10 進数値に変換
     srcBytes[i] = parseInt(src.substr(i * 8, 8), 2);
     // XOR
@@ -838,7 +800,7 @@ function generatePassword(devil) {
 
   // バイト単位で移送
   var dstBytes = new Array();
-  for (i = 0; i < 22; i++) {
+  for(i = 0; i < 22; i++) {
     dstBytes[indexMap[currentPatternID][i]] = srcBytes[i];
   }
 
@@ -850,18 +812,18 @@ function generatePassword(devil) {
 
   // バイト列をビット文字列に変換
   var dst = "";
-  for (i = 0; i < 24; i++) {
+  for(i = 0; i < 24; i++) {
     dst += fillZero(8, eval(dstBytes[i]).toString(2))
   }
 
   // ビット列をパスワードに変換
   var password = "";
-  for (i = 0; i < 32; i++) {
+  for(i = 0; i < 32; i++) {
     // 6 ビットずつ対応する文字に変換して連結する
     var charcode = parseInt(dst.substr(i * 6, 6), 2);
     password += letters.charAt(charcode);
     // 半分で改行
-    if (i == 15) {
+    if(i == 15) {
       password += "\n";
     }
   }
@@ -898,17 +860,18 @@ function generatePassword(devil) {
   //    result += "\n\n";
   //    result += debugInfo;
   //  }
-
   return result;
 }
 //}}}
 // 指定桁数での前方 0 埋め
+
+
 function fillZero(place, value) {
-//{{{
+  //{{{
   var i;
-  for (i = value.length; i < place; i++) {
+  for(i = value.length; i < place; i++) {
     value = "0" + value;
-    if (i < 0) {
+    if(i < 0) {
       return;
     }
   }
@@ -916,12 +879,13 @@ function fillZero(place, value) {
   return value;
 }
 //}}}
-
 // 指定桁数での後方 0 埋め
+
+
 function fillZeroAfter(place, value) {
-//{{{
+  //{{{
   var i;
-  for (i = value.length; i < place; i++) {
+  for(i = value.length; i < place; i++) {
     value = value + "0";
   }
 
@@ -931,8 +895,8 @@ function fillZeroAfter(place, value) {
 
 function addComma(str) {
   var num = new String(str).replace(/,/g, '');
-  while (num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1,$2')));
-  if (num == undefined) {
+  while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1,$2')));
+  if(num == undefined) {
     return str;
   }
   return num;
@@ -940,92 +904,93 @@ function addComma(str) {
 // -------------------------------------------------------------------------------------------------
 // パターンクラス
 // -------------------------------------------------------------------------------------------------
+
+
 function Pattern(charList, indexArray, xorbit) {
-  this.indexArray = indexArray;//{{{
+  this.indexArray = indexArray; //{{{
   this.b2cMap = charList.split(",");
   this.c2bMap = null;
   this.xorbit = xorbit;
 
-  this.init = function () {
+  this.init = function() {
     this.c2bMap = new Array();
     var i;
-    for (i in this.b2cMap) {
+    for(i in this.b2cMap) {
       this.c2bMap[this.b2cMap[i]] = i;
     }
   };
 }
 //}}}
+var skillFiltering = function() {
+    var filterName = $("#skill-filter").val();
+    var filterClass = "." + filterName;
+    var selecter = ".skills option";
+    var options = $(selecter);
+    var target = $(selecter).filter(filterClass);
+    var other = $(selecter).not(filterClass);
 
-var skillFiltering = function () {
-  var filterName = $("#skill-filter").val();
-  var filterClass = "."+filterName;
-  var selecter = ".skills option";
-  var options = $(selecter);
-  var target = $(selecter).filter(filterClass);
-  var other = $(selecter).not(filterClass);
+    options.removeClass('highlight');
+    options.show();
+    options.css({
+      visibility: 'visible'
+    });
 
-  options.removeClass('highlight');
-  options.show();
-  options.css({
-    visibility: 'visible'
-  });
-
-  if (filterName != "none") {
-    if(_ua.Firefox){
-      other.hide();
-    } else {
-      other.css({
-        visibility: 'hidden'
-      });
-      target.addClass('highlight');
+    if(filterName != "none") {
+      if(_ua.Firefox) {
+        other.hide();
+      } else {
+        other.css({
+          visibility: 'hidden'
+        });
+        target.addClass('highlight');
+      }
     }
-  }
-};
+  };
 
-function stanceFiltering () {
+function stanceFiltering() {
   var elm = $('#stance-filter');
   var filterName = '.' + elm.val();
-  if(filterName === ".none"){
+  if(filterName === ".none") {
     $('#devil-id').empty().append($('#devils-clone option').clone());
   } else {
     $('#devil-id').empty().append($('#devils-clone').clone().find(filterName));
   }
 }
 
-function cloneDevilList () {
+function cloneDevilList() {
   $('#devils-clone').append($('#devil-id option').clone());
 }
 
 
-var View = (function () {
-  var _setTooltip = function (selector,message) {
-    $(selector).attr('title',message);
-  };
+var View = (function() {
+  var _setTooltip = function(selector, message) {
+      $(selector).attr('title', message);
+    };
 
-  var _toggleStatusBaseSelectDisabled = function(){
-    var status = $('.status-base');
-    if($('#cbBaseEqReal').checked()){
-      // 連動チェックされたので無効化
-      status.each(function (index,value) {
-        $(value).disabled(true);
-        var id = $(value).attr('id');
-        // スライダーも一緒に無効化
-        $('#'+id + '-slider' ).slider( "option", "disabled", true );
-      });
-    } else {
-      //有効化
-      status.each(function (index,value) {
-        $(value).disabled(false);
-        var id = $(value).attr('id');
-        $('#'+id + '-slider' ).slider( "option", "disabled", false );
-      });
+  var _toggleStatusBaseSelectDisabled = function() {
+      var status = $('.status-base');
+      if($('#cbBaseEqReal').checked()) {
+        // 連動チェックされたので無効化
+        status.each(function(index, value) {
+          $(value).disabled(true);
+          var id = $(value).attr('id');
+          // スライダーも一緒に無効化
+          $('#' + id + '-slider').slider("option", "disabled", true);
+        });
+      } else {
+        //有効化
+        status.each(function(index, value) {
+          $(value).disabled(false);
+          var id = $(value).attr('id');
+          $('#' + id + '-slider').slider("option", "disabled", false);
+        });
 
-    }
-  };
+      }
+    };
 
   return {
-    setTooltip:_setTooltip,
-    toggleStatusBaseSelectDisabled:_toggleStatusBaseSelectDisabled
+    setTooltip: _setTooltip,
+    toggleStatusBaseSelectDisabled: _toggleStatusBaseSelectDisabled
   }
 }());
 
@@ -1034,119 +999,125 @@ var View = (function () {
  * @param  String selector jQuery Selector
  * @return null
  */
-function createSliders(options){
+
+function createSliders(options) {
   var selector = options.selector;
   var min = options.min;
   var max = options.max;
 
   // ステータススライダー作成
-  $(selector).each(function (index,val) {
-      var select = $(val);
-      var id = $(val).attr('id');
-      var slider = $( "<div id='"+ id +"-slider' class='status-slider'></div>" ).insertAfter( select ).slider({
-          min: min,
-          max: max,
-          range: "min",
-          value: select[ 0 ].selectedIndex + 1,
-          slide: function( event, ui ) {
-              select.val(ui.value);
-              select.trigger('change');
-              // doRefresh();
-          }
-      });
+  $(selector).each(function(index, val) {
+    var select = $(val);
+    var id = $(val).attr('id');
+    var slider = $("<div id='" + id + "-slider' class='status-slider'></div>").insertAfter(select).slider({
+      min: min,
+      max: max,
+      range: "min",
+      value: select[0].selectedIndex + 1,
+      slide: function(event, ui) {
+        select.val(ui.value);
+        select.trigger('change');
+        // doRefresh();
+      }
+    });
 
-      //スライダーと値を連動させる
-      select.on('change',function () {
-        var id = $(this).attr('id');
-        var slider = $('#' +id+'-slider');
-        var val = $(this).val();
-        slider.slider({'value':val});
-      })
+    //スライダーと値を連動させる
+    select.on('change', function() {
+      var id = $(this).attr('id');
+      var slider = $('#' + id + '-slider');
+      var val = $(this).val();
+      slider.slider({
+        'value': val
+      });
+    })
   });
 }
 
-function hookStatusChange () {
-  $('select').on('change' ,function () {
+function hookStatusChange() {
+  $('select').on('change', function() {
     doRefresh();
   });
-  $('#cbBaseEqReal').on('change',(function () {
+  $('#cbBaseEqReal').on('change', (function() {
     View.toggleStatusBaseSelectDisabled();
     $('.status').trigger('change');
     $('.status-slider').trigger('change');
     doRefresh();
   }));
-  $('#exp').on('change',(function () {
+  $('#exp').on('change', (function() {
     doRefresh();
     var elm = $(this);
     var id = elm.attr('id');
     var maxEXP = elm.attr("max");
-    $('#' + id+'-slider').slider( "option", { max: maxEXP } );
+    $('#' + id + '-slider').slider("option", {
+      max: maxEXP
+    });
   }));
   $('#exp').trigger('change');
 
-  $('#password-pattern').on('change',(function () {
+  $('#password-pattern').on('change', (function() {
     doRefresh();
   }));
 
   // パスワード入力時変化時、自動でポップアップするように
-  $('#message-dialog-area').on('change',(function () {
+  $('#message-dialog-area').on('change', (function() {
     $('#message-dialog').modal();
   }));
 }
 
-function hookChangeEnemyExclusive () {
-  $('#enemy-exclusive').on('change',(function () {
+function hookChangeEnemyExclusive() {
+  $('#enemy-exclusive').on('change', (function() {
     changeEnemyExclusive();
     $('#stance-filter').trigger('change');
   }));
 }
 
-function hookFilters () {
-  $('#stance-filter').on('change',function () {
+function hookFilters() {
+  $('#stance-filter').on('change', function() {
     stanceFiltering();
   })
-  $('#skill-filter').on('change',function(){
+  $('#skill-filter').on('change', function() {
     skillFiltering()
   });
 }
 
-function hookToggleStatusMaxMin () {
-  var statusNames = [
-    "slStr","slInt","slVit",'slAgi','slLuc',
-    'slStrBase','slIntBase','slVitBase','slAgiBase','slLucBase'
-    ];
-  for (var i = 0; i < statusNames.length; i++) {
-    $('label[for="'+ statusNames[i] +'"]').on("dblclick", function () {
-      toggleStatusMaxMin($('#'+$(this).attr("for")));
+function hookToggleStatusMaxMin() {
+  var statusNames = ["slStr", "slInt", "slVit", 'slAgi', 'slLuc', 'slStrBase', 'slIntBase', 'slVitBase', 'slAgiBase', 'slLucBase'];
+  for(var i = 0; i < statusNames.length; i++) {
+    $('label[for="' + statusNames[i] + '"]').on("dblclick", function() {
+      toggleStatusMaxMin($('#' + $(this).attr("for")));
     });
   };
 }
 
-function hookSetDefault () {
-  $('#set-default').on('click',(function () {
+function hookSetDefault() {
+  $('#set-default').on('click', (function() {
     doSetDefault()
   }));
 }
 
-function hookPasswordParse () {
-  $('#password-parse').click(function () {
+function hookPasswordParse() {
+  $('#password-parse').click(function() {
     doInput();
   });
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // event binds
-$(function () {
+$(function() {
   init();
 
-  View.setTooltip(
-    ".status-label",
-    "ラベルをダブルクリックすると99になります。\n"+
-      "すでに99の場合は1になります。"
-  );
+  View.setTooltip(".status-label", "ラベルをダブルクリックすると99になります。\n" + "すでに99の場合は1になります。");
 
-  createSliders({selector:'.status',min:1,max:99});
-  createSliders({selector:'#exp',min:1,max:11});
+  createSliders({
+    selector: '.status',
+    min: 1,
+    max: 99
+  });
+  createSliders({
+    selector: '#exp',
+    min: 1,
+    max: 11
+  });
   hookStatusChange();
   hookChangeEnemyExclusive();
   hookFilters();
