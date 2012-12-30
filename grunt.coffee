@@ -6,9 +6,11 @@ module.exports = (grunt) ->
 
   # Project configuration.
   grunt.initConfig
-    clean: 
-      test: ['tmp']
-    
+    shell:
+      hogan:
+        command: 'hulk ./templates/*.mustaches > ./templates/templates.js'
+        stdout: true
+
     compress:
       zip:
         files:
@@ -16,11 +18,13 @@ module.exports = (grunt) ->
             "index.html"
             "js/**"
             "css/**"
+            "templates/**"
             "更新履歴.txt"
           ]
-          
+
   # Load
   grunt.loadNpmTasks "grunt-contrib"
+  grunt.loadNpmTasks "grunt-shell"
 
   # grunt.registerTask 'default', 'lint qunit concat min'
   grunt.registerTask "default", "compress"
