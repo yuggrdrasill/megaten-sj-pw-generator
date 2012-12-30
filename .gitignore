@@ -1,2 +1,6 @@
-.idea/
+memo.md
+node_modules/
 pub/
+web-server.cmd
+web-server.js
+.idea/

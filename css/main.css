@@ -45,11 +45,11 @@ body {
 
 hr {
     display: block;
+    margin: 1em 0;
+    padding: 0;
     height: 1px;
     border: 0;
     border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
 }
 
 /*
@@ -65,9 +65,9 @@ img {
  */
 
 fieldset {
-    border: 0;
     margin: 0;
     padding: 0;
+    border: 0;
 }
 
 /*
@@ -82,14 +82,19 @@ textarea {
    Author's custom styles
    ========================================================================== */
 body{
-  color: #eeeeee;
+  box-sizing:border-box;
   background-color: #2c2c2c;
+  color: #eeeeee;
+  moz-box-sizing:border-box;
+}
+#devil-name{
+  text-align: center;
 }
 .warning{
-  color:#fe5e59;
-  border-bottom: 2px solid #c0c0c0;
-  padding-bottom: 1em;
   margin-bottom: 2em;
+  padding-bottom: 1em;
+  border-bottom: 2px solid #c0c0c0;
+  color:#fe5e59;
 }
 a,a:link{
   color:#58b4fe;
@@ -101,9 +106,9 @@ select,label,input{
   margin-left: .5em;
 }
 select ,option,input,textarea{
-  background-color:#f0f0f0;
-  border-radius: 4px;
   padding:.35em;
+  border-radius: 4px;
+  background-color:#f0f0f0;
   font-size:90%;
 }
 #wrapper{
@@ -122,6 +127,99 @@ select ,option,input,textarea{
 #debug-mode-label{
   margin-left:0;
 }
+.attack-group-2{
+  background-color:#E0FDE6;
+}
+.attack-group-1{
+  background-color:#f8e0fd;
+}
+.highlight{
+  background-color:#fdfce0;
+}
+.status-slider{
+  display: inline-block;
+  margin-left: 20px;
+  width: 50%;
+}
+
+#output-area{
+  padding:1em;
+  border-radius: 4px;
+  box-shadow:1px 2px 4px rgba(200, 200, 200, 0.5);
+  font-size:90%;
+}
+
+#output-area h2{
+  font-size: 1.5em;
+}
+#output-area h3{
+  font-size: 1.3em;
+}
+#output-area ol > li{
+  display:inline-block;
+  width:30%;
+}
+.status{
+  width:5em;
+}
+label{
+  display: inline-block;
+}
+.inline-block{
+  display:inline-block;
+}
+legend{
+  margin-bottom: 0;
+  font-size: .8em;
+}
+fieldset{
+  margin-top: .5em;
+}
+#password-generator div{
+  margin-bottom: 0;
+}
+.skills {
+  width: 180px;
+}
+#password-input-area{
+  width:20em;
+}
+#data-info-button{
+  position: fixed;
+  top: 8px;
+  left: 95%;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background-color: #fafffa;
+  vertical-align: middle;
+  text-align: center;
+}
+#exp{
+  background-color: #fcfcfc;
+  color:#222;
+}
+.attr-weakpoint{
+  background-color: #C00;
+  color: #eee;
+}
+.attr-regists{
+  background-color: #5C8A00;
+  color:#eee;
+}
+.attr-null{
+  background-color: #666;
+  color:#eee;
+}
+.attr-reflect{
+  background-color: #CC6D00;
+  color:#eee;
+}
+.attr-drain{
+  background-color: #007399;
+  color:#eee;
+}
+
 /* ==========================================================================
    Helper classes
    ========================================================================== */
@@ -131,18 +229,18 @@ select ,option,input,textarea{
  */
 
 .ir {
-    background-color: transparent;
-    border: 0;
     overflow: hidden;
     /* IE 6/7 fallback */
+    border: 0;
+    background-color: transparent;
     *text-indent: -9999px;
 }
 
 .ir:before {
-    content: "";
     display: block;
     width: 0;
     height: 100%;
+    content: "";
 }
 
 /*
@@ -159,14 +257,14 @@ select ,option,input,textarea{
  */
 
 .visuallyhidden {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
     position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    padding: 0;
     width: 1px;
+    height: 1px;
+    border: 0;
 }
 
 /*
@@ -176,12 +274,12 @@ select ,option,input,textarea{
 
 .visuallyhidden.focusable:active,
 .visuallyhidden.focusable:focus {
-    clip: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
     position: static;
+    overflow: visible;
+    clip: auto;
+    margin: 0;
     width: auto;
+    height: auto;
 }
 
 /*
@@ -206,8 +304,8 @@ select ,option,input,textarea{
 
 .clearfix:before,
 .clearfix:after {
-    content: " "; /* 1 */
     display: table; /* 2 */
+    content: " "; /* 1 */
 }
 
 .clearfix:after {
@@ -238,8 +336,8 @@ select ,option,input,textarea{
 @media print {
     * {
         background: transparent !important;
-        color: #000 !important; /* Black prints faster: h5bp.com/s */
         box-shadow: none !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
         text-shadow: none !important;
     }
 

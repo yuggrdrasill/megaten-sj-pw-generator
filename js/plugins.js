@@ -22,3 +22,36 @@
 }());
 
 // Place any jQuery/helper plugins in here.
+// フォームの要素を無効化したり有効化したりする機能追加
+jQuery.fn.extend({
+  checked:function(){
+    return jQuery(this).attr('checked');
+  },
+  disabled:function(value){
+    // 引数がないとき、disabledのときtrueを返す
+    if(value===undefined) return $(this).attr("disabled")!==undefined;
+
+    if(value){
+      // 引数がtrueのとき、無効化する
+      $(this).attr("disabled","disabled");
+    } else {
+      // 引数がfalseのとき、有効化する
+      $(this).removeAttr("disabled");
+    }
+  }
+});
+
+
+var _ua = (function(){
+return {
+  ltIE6:typeof window.addEventListener == "undefined" && typeof document.documentElement.style.maxHeight == "undefined",
+  ltIE7:typeof window.addEventListener == "undefined" && typeof document.querySelectorAll == "undefined",
+  ltIE8:typeof window.addEventListener == "undefined" && typeof document.getElementsByClassName == "undefined",
+  IE:document.uniqueID,
+  Firefox:window.sidebar,
+  Opera:window.opera,
+  Webkit:!document.uniqueID && !window.opera && !window.sidebar && window.localStorage && typeof window.orientation == "undefined",
+  Mobile:typeof window.orientation != "undefined"
+}
+})();
+

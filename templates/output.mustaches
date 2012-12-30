@@ -1,0 +1,56 @@
+<div id="devil-status-output" class="row-fluid">
+  <div class="span12">
+    <h2 id="devil-name">{{genus.name}}　{{name}}</h2>
+    <div class="span3">
+      <h3>コスト</h3>
+      <div id="devil-cost">
+        COST:{{totalCost}} <br>
+        100%時:{{halfCost}} <br>
+        最大スキルCOST:{{maxSkillCost}}
+      </div>
+    </div>
+    <div id="devil-status-wrapper" class="span5">
+      <h3>ステータス</h3>
+      <div id="devil-level">LV:{{lv}} 経験値:{{exp}}</div>
+      <span id="devil-status-hp">HP:{{HP}}</span>
+      <span id="devil-status-mp">MP:{{MP}}</span>
+      <div id="devil-status">
+        力:{{str}}({{strBase}}) 魔:{{int}}({{intBase}}) 体:{{vit}}({{vitBase}}) 速:{{agi}}({{agiBase}}) 運:{{luc}}({{lucBase}})
+      </div>
+    </div>
+    <div id="devil-status-attr-wapper" class="span3">
+      <h3>属性</h3>
+      <table id="devil-status-attr">
+        <tr>
+          <th>物</th>
+          <th>銃</th>
+          <th>火</th>
+          <th>氷</th>
+          <th>電</th>
+          <th>風</th>
+          <th>破</th>
+          <th>呪</th>
+        </tr>
+        <tr>
+          {{#attr}}
+          <td class="attr-{{key}}">{{name}}</td>
+          {{/attr}}
+        </tr>
+      </table>
+    </div>
+    <div class="span12">
+      <div id="devil-status-skill-wrapper" class="span6">
+        <h3>スキル</h3>
+        <ol id="devil-status-skill">
+          {{#skillFull}}
+          <li>{{name}}</li>
+          {{/skillFull}}
+        </ul>
+      </div>
+      <div id="devil-password" class="span6">
+        <h3>パスワード</h3>
+        {{{password}}}
+      </div>
+    </div>
+  </div>
+</div>
