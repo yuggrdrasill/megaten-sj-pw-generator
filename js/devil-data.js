@@ -82,6 +82,7 @@ function Devil(devil) {
     this.calculateMP();
     this.calculateEXPMax();
     this.halfCost = Math.floor(this.totalCost/2);
+    this.changeAttr();
     return this;
   }
 
@@ -125,6 +126,94 @@ function Devil(devil) {
     return this.expMax = Math.floor(expTable[this.lv] * expBaseScale - 1);//}}}
   }
 
+
+  /**
+   * 属性にスキルによる変化があるかチェックします。
+   * 変化のあるスキルを所持している場合、
+   * 該当スキルIDを含んだ配列を返却します。
+   * @return {Array} 属性変化スキルリスト
+   */
+  this.checkChangeAttr = function () {
+    result = [];
+    for (var i = 0; i < this.skill.length; i++) {
+      var skillID = parseInt(this.skill[i]);
+      if(isChangeAttr(skillID)){
+        result.push(skillID);
+      }
+    };
+    return result;
+  }
+
+  this.changeAttr = function () {
+    if(this.skill){
+      // 属性耐性が在るかにスキルを巡回
+      for (var i = this.skill.length - 1; i >= 0; i--) {
+        var registSkill;
+        if(registSkill = this.getRegistSkillAttr(this.skill[i])){
+          // 設定
+          this.attr[registSkill.attrID] = registSkill.attrStrength;
+        };
+      };
+    }
+  };
+
+  /**
+   * 引数を元に耐性スキルの属性と強度を取得します。
+   * 物 銃 火 氷 電 風 破 呪いずれかのIDと
+   * 耐性/無効/反射/吸収のオブジェクトが返却されます。
+   * どれにも適合しなかった場合NULLが返却されます。
+   *
+   * @param  {Integer} skillID スキルID
+   * @return {Object}          属性IDと属性強度IDが入ったオブジェクト
+   *         オブジェクトメンバ
+   *         attrID       物 銃 火 氷 電 風 破 呪いずれかのID
+   *         attrStrength 耐性/無効/反射/吸収のオブジェクト
+   */
+  this.getRegistSkillAttr = function (skillID) {
+    var skill = getSkill(skillID)
+
+    var attrStrengthID;
+    if(skill.name.match(/耐性/)){
+      attrStrengthID =  3;
+    } else if(skill.name.match(/無効/)){
+      attrStrengthID =  4;
+    } else if(skill.name.match(/反射/)){
+      attrStrengthID =  5;
+    } else if(skill.name.match(/吸収/)){
+      attrStrengthID =  6;
+    }
+
+    var attrID;
+    if(skill.name.match(/物理/)){
+      attrID =  0;
+    } else if(skill.name.match(/銃/)){
+      attrID =  1;
+    } else if(skill.name.match(/火炎/)){
+      attrID =  2;
+    } else if(skill.name.match(/氷結/)){
+      attrID =  3;
+    } else if(skill.name.match(/電撃/)){
+      attrID =  4;
+    } else if(skill.name.match(/疾風/)){
+      attrID =  5;
+    } else if(skill.name.match(/破魔/)){
+      attrID =  6;
+    } else if(skill.name.match(/呪殺/)){
+      attrID =  7;
+    }
+
+    return attrID === 0 || attrStrengthID && attrID ?
+      {attrID:attrID,attrStrength:getAttr(attrStrengthID)} :
+      null;
+  }
+
+  /**
+   * 属性変化があるスキルIDかチェックします。
+   * @return {Boolean} 変化可否
+   */
+  function isChangeAttr(skillID){
+    return skillID >= 351 &&  skillID <= 378
+  }
 
   /**
    * 活泉・魔脈スキルによるHP・MPの増加分%を返します。

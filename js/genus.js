@@ -24,11 +24,6 @@ function Genus(json) {
   //}}}
 }
 
-// 該当する種族を返す
-function getGenus(genusID) {//{{{
-  return (genusMap[genusID]);
-}//}}}
-
 var stance = [];
 stance[0] = "law";
 stance[1] = "neutral";

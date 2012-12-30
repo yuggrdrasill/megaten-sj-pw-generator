@@ -96,7 +96,7 @@
               <button id="set-default" name="setDefault" class="btn"
                   accesskey="d"
                   title="悪魔が本来持っているステータスとスキルを設定します。(alt+shift+d)">既定ステータスをセットする</button>
-              <label class="checkbox" for="allway-set-defualt"><input type="checkbox" id="allway-set-defualt" checked="checked">既定ステータスを常にセットする</label>
+              <label class="checkbox" for="allway-set-defualt"><input type="checkbox" id="allway-set-default" checked="checked">既定ステータスを常にセットする</label>
             </div>
           </fieldset>
 
@@ -124,36 +124,26 @@
           <div class="row-fluid">
             <fieldset id="status-effective" class="span6">
               <legend>□能力値・実値 (1～99)</legend>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slStr" class="status-label">力</label>
                   <select id="slStr" name="slStr" class="status"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slInt" class="status-label">魔</label>
                   <select id="slInt" name="slInt" class="status"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slVit" class="status-label">体</label>
                   <select id="slVit" name="slVit" class="status"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slAgi" class="status-label">速</label>
                   <select id="slAgi" name="slAgi" class="status"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slLuc" class="status-label">運</label>
                   <select id="slLuc" name="slLuc" class="status"></select>
                 </div>
-              </div>
               <div class="info-cost">
                 現在の召喚コスト:
                 <span id="info-nowcost">0</span>
@@ -162,45 +152,32 @@
 
             <fieldset id="status-base" class="span6">
               <legend class="inline-block">□能力値・基準値 (1～99)</legend>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slStrBase" class="status-label">力</label>
                   <select id="slStrBase" name="slStrBase" class="status status-base"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slIntBase" class="status-label">魔</label>
                   <select id="slIntBase" name="slIntBase" class="status status-base"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slVitBase" class="status-label">体</label>
                   <select id="slVitBase"
                         name="slVitBase" class="status status-base"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slAgiBase" class="status-label">速</label>
                   <select id="slAgiBase"
                         name="slAgiBase" class="status status-base"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <div class="status-controls">
                   <label for="slLucBase" class="status-label">運</label>
                   <select id="slLucBase"
                         name="slLucBase" class="status status-base"></select>
                 </div>
-              </div>
-              <div class="control-group">
                 <input type="checkbox" id="cbBaseEqReal" name="cbBaseEqReal">
                 <label class="checkbox inline" for="cbBaseEqReal">実値と連動させる</label>
-              </div>
-            </div>
-          </fieldset>
+            </fieldset>
         </div>
 
         <fieldset id="skills">
@@ -277,7 +254,7 @@
               <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
             </div>
           </div>
-          <div id="message-area" class=""></div>
+          <div id="message-area"></div>
           <div id="output-area"></div>
         </fieldset>
 
@@ -403,7 +380,6 @@
 <script type="text/javascript" src="js/indexmap.js"></script>
 <script type="text/javascript" src="js/exptable.js"></script>
 <script type="text/javascript" src="templates/templates.js"></script>
-
 <script type="text/javascript" src="js/MSJ_DevilSummoningProgram.js"></script>
 
 <script type="text/javascript">

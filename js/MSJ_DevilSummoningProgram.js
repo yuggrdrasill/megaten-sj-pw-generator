@@ -1074,7 +1074,7 @@ function hookStatusChange() {
     doRefresh();
   });
   $('#devil-id').on('change',(function  () {
-    if($('#allway-set-defualt').checked()){
+    if($('#allway-set-default').checked()){
       doSetDefault();
     }
   }))

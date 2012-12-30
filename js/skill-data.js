@@ -454,12 +454,6 @@ function Skill(skill) {
   //}}}
 }
 
-// 該当するスキルを返す
-function getSkill(skillID) {//{{{
-  return (skillMap[skillID]);
-}//}}}
-
-
 // スキル
 var skillMap = new Array();
 for (var i in skillJSON) {
