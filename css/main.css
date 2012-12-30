@@ -87,6 +87,9 @@ body{
   color: #eeeeee;
   moz-box-sizing:border-box;
 }
+#devil-name{
+  text-align: center;
+}
 .warning{
   margin-bottom: 2em;
   padding-bottom: 1em;
