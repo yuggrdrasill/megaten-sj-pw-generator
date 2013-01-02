@@ -155,7 +155,9 @@ function Devil(devil) {
             var registSkill;
               if(registSkill = this.getRegistSkillAttr(this.skill[i])){
                 // 設定
-                this.attr[registSkill.attrID] = registSkill.attrStrength;
+                if(this.attr[registSkill.attrID].id < registSkill.attrStrength.id){
+                  this.attr[registSkill.attrID] = registSkill.attrStrength;
+                }
               };
             }
         };
