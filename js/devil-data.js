@@ -144,16 +144,23 @@ function Devil(devil) {
     return result;
   }
 
+  /**
+   * 耐性スキルをチェックし、悪魔の属性耐性を切り替えます。
+   */
   this.changeAttr = function () {
     if(this.skill){
-      // 属性耐性が在るかにスキルを巡回
-      for (var i = this.skill.length - 1; i >= 0; i--) {
-        var registSkill;
-        if(registSkill = this.getRegistSkillAttr(this.skill[i])){
-          // 設定
-          this.attr[registSkill.attrID] = registSkill.attrStrength;
+        if(this.checkChangeAttr().length !=0){
+          // 属性耐性が在るかにスキルを巡回
+          for (var i = this.skill.length - 1; i >= 0; i--) {
+            var registSkill;
+              if(registSkill = this.getRegistSkillAttr(this.skill[i])){
+                // 設定
+                if(this.attr[registSkill.attrID].id < registSkill.attrStrength.id){
+                  this.attr[registSkill.attrID] = registSkill.attrStrength;
+                }
+              };
+            }
         };
-      };
     }
   };
 
@@ -201,6 +208,7 @@ function Devil(devil) {
     } else if(skill.name.match(/呪殺/)){
       attrID =  7;
     }
+
 
     return attrID === 0 || attrStrengthID && attrID ?
       {attrID:attrID,attrStrength:getAttr(attrStrengthID)} :
