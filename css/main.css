@@ -130,6 +130,9 @@ select ,option,input,textarea{
 .warning {
   list-style: none;
 }
+.warning li{
+  margin-bottom: 5px;
+}
 .warning li:before{
   content: "※ ";
 }
