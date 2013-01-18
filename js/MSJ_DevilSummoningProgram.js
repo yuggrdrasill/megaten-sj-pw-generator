@@ -258,10 +258,12 @@ function doRefresh() {
   outputMessage(message);
 
   // コスト画面出力
-  var cost = addComma(devil.totalCost) + ' / ' + addComma(Math.floor(devil.totalCost / 2));
+  var cost = addComma(devil.totalCost) + ' / ' + addComma(devil.halfCost);
+  //var cost = devil.totalCost + ' / ' + devil.halfCost;
   $('#info-nowcost').html(cost);
 
   setModalDialog(devil.toString(), message);
+  $('#status-attr').html($('#devil-status-attr').html());
   //}}}
 }
 
@@ -309,6 +311,17 @@ function createMessageObject(devil) {
     result.skillFull[i] = getSkill(result.skill[i]);
   };
   result.password = generatePassword(result).replace(/\n/g, '<br>');
+  result.comma = function () {
+            // 入力値と、描画用関数が渡ってくる
+            return function (str) {
+              var num = new String(str).replace(/[, ]/g, '');
+              while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1 $2')));
+              if(num == undefined) {
+                return render(str);
+              }
+              return render(num);
+            };
+          }
 
   return result;
 }
@@ -906,35 +919,7 @@ function fillZero(place, value) {
 }
 //}}}
 
-/**
- * 指定桁数での後方 0 埋め
- * @param  Integer place 埋める桁数
- * @param  Integer value 埋める値
- * @return Integer
- */
-function fillZeroAfter(place, value) {
-  //{{{
-  var i;
-  for(i = value.length; i < place; i++) {
-    value = value + "0";
-  }
 
-  return value;
-}
-//}}}
-
-/**
- * 指定された文字列に3桁ごとにカンマを加えます。
- * @param String str カンマを付けたい文字列
- */
-function addComma(str) {
-  var num = new String(str).replace(/,/g, '');
-  while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1,$2')));
-  if(num == undefined) {
-    return str;
-  }
-  return num;
-}
 // -------------------------------------------------------------------------------------------------
 // パターンクラス
 // -------------------------------------------------------------------------------------------------
@@ -1073,6 +1058,14 @@ function hookStatusChange() {
   $('select').on('change', function() {
     doRefresh();
   });
+  $('select').on('keyup',(function  () {
+    doRefresh();
+  }))
+  $('#devil-id').on('keyup',(function  () {
+    if($('#allway-set-default').checked()){
+      doSetDefault();
+    }
+  }))
   $('#devil-id').on('change',(function  () {
     if($('#allway-set-default').checked()){
       doSetDefault();

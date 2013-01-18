@@ -27,5 +27,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-shell"
 
   # grunt.registerTask 'default', 'lint qunit concat min'
-  grunt.registerTask "default", "compress"
+  grunt.registerTask "default", "shell compress"
 

@@ -55,3 +55,33 @@ return {
 }
 })();
 
+/**
+ * 指定桁数での後方 0 埋め
+ * @param  Integer place 埋める桁数
+ * @param  Integer value 埋める値
+ * @return Integer
+ */
+function fillZeroAfter(place, value) {
+  //{{{
+  var i;
+  for(i = value.length; i < place; i++) {
+    value = value + "0";
+  }
+
+  return value;
+}
+//}}}
+
+/**
+ * 指定された文字列に3桁ごとにカンマを加えます。
+ * @param String str カンマを付けたい文字列
+ */
+function addComma(str) {
+  var num = new String(str).replace(/,/g, '');
+  while(num != (num = num.replace(/^(-?\d+)(\d{3})/, '$1 ,$2')));
+  if(num == undefined) {
+    return str;
+  }
+  return num;
+}
+

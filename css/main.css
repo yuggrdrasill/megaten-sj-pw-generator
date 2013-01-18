@@ -23,6 +23,10 @@ body {
     line-height: 1.5;
 }
 
+h2{
+  font-size: 1.2em;
+}
+
 /*
  * Remove text-shadow in selection highlight: h5bp.com/i
  * These selection declarations have to be separate.
@@ -123,7 +127,12 @@ select ,option,input,textarea{
 .left-indent{
   margin-left: 1.5em;
 }
-
+.warning {
+  list-style: none;
+}
+.warning li:before{
+  content: "※ ";
+}
 #debug-mode-label{
   margin-left:0;
 }
@@ -175,6 +184,27 @@ legend{
 fieldset{
   margin-top: .5em;
 }
+@media (max-width: 639px){
+	#data-info tr td,#devil-cost tr td,#devil-cost tr th{
+	  display:block;
+	}
+}
+@media (max-width: 540px){
+	#data-info-button{
+	  display:none;
+	  pointer-events: none;
+	}
+	#output-area ol > li{
+      display:list-item;
+      width:auto;
+    }
+}
+#devil-status-wrapper li{
+  display:inline-block;
+}
+#devil-cost td{
+  text-align: right;
+}
 #password-generator div{
   margin-bottom: 0;
 }
@@ -219,7 +249,16 @@ fieldset{
   background-color: #007399;
   color:#eee;
 }
+.modal-body {
+    max-height: 450px;
+}
 
+.modal {
+  width: 580px;
+}
+.centered-text {
+    text-align:center
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */
